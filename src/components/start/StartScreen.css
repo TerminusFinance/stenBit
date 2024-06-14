@@ -1,0 +1,95 @@
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../../assets/font/Video_SemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'MyCustomFontMedium';
+    src: url('../../assets/font/Video_Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(180deg, #000000, #1a1a1a);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.back-button, .menu-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+}
+
+.title {
+    color: white;
+    text-align: center;
+    flex-grow: 1;
+    margin: 0;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.logo {
+    width: 150px;
+    height: 150px;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.social-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
+}
+
+.social-text {
+    font-size: 12px;
+    color: white;
+    font-family: 'MyCustomFontMedium', sans-serif;
+}
+
+.start-button {
+    background-color: yellow;
+    border: none;
+    padding: 16px 20px;
+    font-size: 18px;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 12px;
+    font-family: 'MyCustomFont', sans-serif;
+}

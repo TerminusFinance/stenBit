@@ -1,0 +1,27 @@
+.level-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background: linear-gradient(360deg, #121215, #171625, #351E22);
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.tx-title {
+    color: white;
+    font-family: 'MyCustomFontMedium', sans-serif;
+    font-size: 20px;
+}
+
+.tx-subtitle {
+    color: gray;
+    font-family: 'MyCustomFontMedium', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    margin-left: 16px;
+    margin-right: 16px;
+}

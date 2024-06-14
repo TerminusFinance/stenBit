@@ -1,0 +1,55 @@
+/* Ensure full width for the progress bar */
+.progress-bar-container-wrapper {
+    width: 100%;
+    padding: 0 10px;
+}
+
+.progress-bar-container {
+    width: 100%;
+    padding: 10px;
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    color: white;
+    font-family: 'MyCustomFontMedium', sans-serif;
+    box-sizing: border-box;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.progress-text .current {
+    color: white;
+    font-size: 24px;
+}
+
+.progress-text .divider {
+    color: #A2A8B5;
+    font-size: 24px;
+    margin: 0 5px;
+}
+
+.progress-text .max {
+    color: #A2A8B5;
+    font-size: 18px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: #333;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: linear-gradient(90deg, red, yellow);
+    transition: width 0.3s ease-in-out;
+}

@@ -1,0 +1,75 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(180deg, #121215, #1a1a1a);
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #121215;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    font-family: 'MyCustomFontMedium', sans-serif;
+    margin: 0;
+    padding: 5px 10px; /* Добавляем отступы всем элементам */
+    position: relative; /* Для псевдоэлемента */
+    transition: background-color 0.3s; /* Плавный переход */
+}
+
+.nav-link img {
+    width: 40px;
+    height: 40px;
+    padding-top: 5px;
+    margin-bottom: 5px;
+}
+
+.nav-link span {
+    padding-bottom: 12px;
+}
+
+/* Стили для активного элемента */
+.nav-link.active {
+    background-color: #1a1a1a; /* Полупрозрачный фон */
+    border-radius: 10px; /* Закругленные углы */
+    margin-bottom: 8px;
+    margin-top:  8px;
+}
+
+/* Псевдоэлемент для обводки */
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px; /* Закругленные углы */
+    pointer-events: none; /* Чтобы не мешал кликам */
+    box-sizing: border-box; /* Чтобы не влиял на размер элемента */
+}

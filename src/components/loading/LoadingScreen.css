@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../../assets/font/Video_SemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black;
+}
+
+.logo {
+    width: 150px;
+    height: 150px;
+}
+
+.loading-text {
+    color: white;
+    font-size: 24px;
+    margin-top: 20px;
+    font-family: 'MyCustomFont', sans-serif;
+}

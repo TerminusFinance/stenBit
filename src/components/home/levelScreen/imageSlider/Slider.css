@@ -1,0 +1,97 @@
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 10px;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.slider-wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+
+.slide {
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    opacity: 1;
+}
+
+.slide-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px; /* Adjust as necessary */
+    margin-bottom: 20px;
+    position: relative; /* Add this */
+}
+
+.slide-image {
+    width: 100px;
+    height: 100px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav-button {
+    position: absolute;
+    top: 50%; /* Center the button vertically */
+    transform: translateY(-50%); /* Center the button vertically */
+    background: none;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    padding: 10px;
+    z-index: 10;
+    transition: background 0.3s;
+}
+
+.nav-button.left {
+    left: 10px;
+}
+
+.nav-button.right {
+    right: 10px;
+}
+
+.nav-button:disabled,
+.nav-button.disabled {
+    cursor: not-allowed;
+}
+
+.image-nav {
+    filter: brightness(0) invert(1);
+}
+
+.image-nav.disabled {
+    filter: brightness(0) invert(0.5);
+}
+
+h2, p {
+    font-family: 'MyCustomFontMedium', sans-serif;
+    color: white;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+p {
+    color: #A2A8B5;
+    margin: 0;
+    text-align: center;
+}
