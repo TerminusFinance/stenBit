@@ -12,7 +12,7 @@ import TasksScreen from "./components/home/tasksScreen/TasksScreen.tsx";
 
 const App: React.FC = () => {
     return (
-        <Router>
+        <Router basename={"/stenBit"}>
             <Routes>
                 <Route path="/" element={<LoadingScreen/>}/>
                 <Route path="/start" element={<StartScreen/>}/>
