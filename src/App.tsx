@@ -15,7 +15,7 @@ import {DataProvider} from "./components/DataContext.tsx";
 const App: React.FC = () => {
     return (
         <DataProvider>
-            <Router basename={"/stenBit"}>
+            <Router>
                 <Routes>
                     <Route path="/" element={<LoadingScreen/>}/>
                     <Route path="/start" element={<StartScreen/>}/>
