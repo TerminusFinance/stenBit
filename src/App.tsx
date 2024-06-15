@@ -9,27 +9,31 @@ import HomeScreen from "./components/home/Home";
 import LevelScreen from "./components/home/levelScreen/LevelScreen.tsx";
 import ProfileScreen from "./components/home/profileScreen/ProfileScreen.tsx";
 import TasksScreen from "./components/home/tasksScreen/TasksScreen.tsx";
+import React from "react";
+import {DataProvider} from "./components/DataContext.tsx";
 
 const App: React.FC = () => {
     return (
-        <Router basename={"/stenBit"}>
-            <Routes>
-                <Route path="/" element={<LoadingScreen/>}/>
-                <Route path="/start" element={<StartScreen/>}/>
-                <Route path="/home" element={<HomeScreen/>}>
-                    <Route index element={<Navigate to="tap"/>}/>
-                    <Route path="tap" element={<TapScreen/>}/>
-                    <Route path="friends" element={<div>Friends Screen</div>}/>
-                    <Route path="tasks" element={<TasksScreen/>}/>
-                    <Route path="profile" element={<ProfileScreen/>}/>
-                    <Route path="level" element={<LevelScreen/>}/>
-                </Route>
-                <Route path="/tap" element={<TapScreen/>}/>
-                <Route path="/about" element={<About/>}/>
-                <Route path="/not-found" element={<NotFound/>}/>
-                <Route path="*" element={<NotFound/>}/>
-            </Routes>
-        </Router>
+        <DataProvider>
+            <Router basename={"/stenBit"}>
+                <Routes>
+                    <Route path="/" element={<LoadingScreen/>}/>
+                    <Route path="/start" element={<StartScreen/>}/>
+                    <Route path="/home" element={<HomeScreen/>}>
+                        <Route index element={<Navigate to="tap"/>}/>
+                        <Route path="tap" element={<TapScreen/>}/>
+                        <Route path="friends" element={<div>Friends Screen</div>}/>
+                        <Route path="tasks" element={<TasksScreen/>}/>
+                        <Route path="profile" element={<ProfileScreen/>}/>
+                        <Route path="level" element={<LevelScreen/>}/>
+                    </Route>
+                    <Route path="/tap" element={<TapScreen/>}/>
+                    <Route path="/about" element={<About/>}/>
+                    <Route path="/not-found" element={<NotFound/>}/>
+                    <Route path="*" element={<NotFound/>}/>
+                </Routes>
+            </Router>
+        </DataProvider>
     );
 };
 

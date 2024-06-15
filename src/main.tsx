@@ -1,11 +1,10 @@
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
-import {DataProvider} from "./components/DataContext.tsx";
+import React from 'react';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-
-        <DataProvider>
+    <React.StrictMode>
             <App/>
-        </DataProvider>
+    </React.StrictMode>
 )
