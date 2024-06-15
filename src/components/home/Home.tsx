@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import {NavLink, Outlet, } from 'react-router-dom';
 import ic_tap from '../../assets/tap_ico.png';
 import ic_telegram from '../../assets/ic_telegram.svg';
 import ic_profile from '../../assets/profile_ico.png';
@@ -7,6 +7,8 @@ import ic_tasks from "../../assets/tasks_ico.png";
 import './HomeScreen.css';
 
 const HomeScreen: React.FC = () => {
+
+
     return (
         <div className="main-container">
             <div className="content">
@@ -14,7 +16,9 @@ const HomeScreen: React.FC = () => {
             </div>
             <div className="bottom-nav">
                 <NavLink
-                    to="/home/tap"
+                    to={{
+                        pathname: "/home/tap"
+                    }}
                     className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
                     <img src={ic_tap} alt="Tap" />
                     <span>Tap</span>

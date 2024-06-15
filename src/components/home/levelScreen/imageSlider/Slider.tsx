@@ -89,6 +89,7 @@ const Slider: React.FC = () => {
                 <img src={leftArrow} alt="Previous"
                      className={`image-nav left ${currentSlide === 0 ? 'disabled' : ''}`}/>
             </button>
+
             <div className="slide-image-wrapper">
                 <div className="slider-wrapper">
                     <div className="slides" style={{
@@ -114,7 +115,7 @@ const Slider: React.FC = () => {
             <div style={{textAlign: 'center', width: '100%'}}>
                 <h2>{slides[currentSlide].title}</h2>
                 <p>{slides[currentSlide].description}</p>
-                <div style={{width: '100%'}}>
+                <div style={{width: '100%', paddingTop: 16}}>
                     {slides[currentSlide].currentProgress === 0 ? (
                         <ProgressBar progress={`From ${slides[currentSlide].maxProgress}`}/>
                     ) : (

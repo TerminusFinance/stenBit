@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './TapScreen.css';
 import coin from '../../../assets/ic_coins.svg';
 import arrow_right from '../../../assets/ic_arrow_right.svg';
 import bronze_cup from '../../../assets/bronze_cup.svg';
 import ProgressBar from "../progressBar/ProgressBar.tsx";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {useData} from "../../DataContext.tsx";
+import {updateUser} from "../../../core/dataWork/Back4app.ts";
 
 const TapScreen: React.FC = () => {
-    const [clicks, setClicks] = useState(12131110);
+    const { dataApp } = useData();
+    const [clicks, setClicks] = useState<number>(dataApp.coins !== undefined && dataApp.coins !== null ? dataApp.coins : 0);
     const [animations, setAnimations] = useState<{ x: number, y: number, id: number }[]>([]);
     const navigate = useNavigate();
     const currentProgress = 300;
     const maxProgress = 500;
+    const prevClicksRef = useRef<number>(clicks);
 
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
         const { clientX, clientY } = event;
@@ -26,6 +30,29 @@ const TapScreen: React.FC = () => {
     const handleNav = () => {
         navigate('/home/level');
     };
+
+     const sendClickData = async (clickCount: number) => {
+        if(dataApp.userId != undefined) {
+            const result = updateUser(dataApp.userId, {  coins: clickCount })
+            console.log("update result - ", await result)
+        }
+        // Здесь добавьте код для отправки данных о кликах на сервер или выполнения других необходимых действий
+    };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (prevClicksRef.current !== clicks) {
+                sendClickData(clicks);
+                prevClicksRef.current = clicks;
+            }
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [clicks]);
+
+    useEffect(() => {
+        console.log("dataApp - ", dataApp.coins);
+    }, [dataApp]);
 
     return (
         <div className="tap-container">
@@ -52,7 +79,10 @@ const TapScreen: React.FC = () => {
                     <div
                         key={animation.id}
                         className="increment"
-                        style={{ left: animation.x - 75, top: animation.y - 180 }} /* Увеличено на 180px для позиционирования над монетой */
+                        style={{
+                            left: animation.x - 75,
+                            top: animation.y - 180
+                        }} /* Увеличено на 180px для позиционирования над монетой */
                     >
                         +1
                     </div>
