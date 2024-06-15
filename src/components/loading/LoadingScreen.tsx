@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './LoadingScreen.css';
 import ic_coins_loading from '../../assets/ic_coins_loading.png'
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {getUserById} from "../../core/dataWork/Back4app.ts";
 import {useData} from "../DataContext.tsx";
 
@@ -15,31 +15,37 @@ interface UserData {
     error?: string;
 }
 
-
-
 const LoadingScreen: React.FC = () => {
-
+    const {search} = useLocation();
     const navigate = useNavigate();
+    const params = new URLSearchParams(search);
+    const id = params.get('id');
+    const name = params.get('name');
     const [data, setData] = useState<UserData | null>(null);
-    const { setDataApp } = useData();
+    const {setDataApp} = useData();
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const id = "1"
-                const result = await getUserById(id); // Пример ID пользователя
-
-                if (result.error === 'User not found') {
-                    console.log('User not found');
-                    navigate('/start', {
-                        state: {
-                            id: id
-                        }
-                    });
+                console.log("id переданный - ", id, "name переданный - ", name)
+                if (!id || !name) {
+                    navigate('/not-found');
                 } else {
-                    console.log("set up data - ", result.coins)
-                    setData(result);
-                    setDataApp(result)
-                    navigate('/home/tap');
+                    const thisId = id
+                    const result = await getUserById(thisId); // Пример ID пользователя
+                    if (result.error === 'User not found') {
+                        console.log('User not found');
+                        navigate('/start', {
+                            state: {
+                                id: thisId
+                            }
+                        });
+                    } else {
+                        console.log("set up data - ", result.coins)
+                        setData(result);
+                        setDataApp(result)
+                        navigate('/home/tap');
+                    }
+
                 }
             } catch (error) {
                 console.error('Error:', error);
