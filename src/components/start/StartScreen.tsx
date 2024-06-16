@@ -37,11 +37,7 @@ const StartScreen: React.FC = () => {
 
     return (
         <div className="main-container">
-            <div className="header">
-                <button className="back-button">X</button>
-                <h1 className="title">StenBit</h1>
-                <button className="menu-button">...</button>
-            </div>
+
             <div className="logo-container">
                 <img src={ic_coins} alt="Logo" className="logo"/>
             </div>
