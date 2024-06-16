@@ -29,7 +29,7 @@ const ProfileScreen: React.FC = () => {
                 </div>
             </div>
 
-            <button  className="start-button">START PLAYING →</button>
+            <button  className="start-button">Invite users →</button>
 
         </div>
     );
