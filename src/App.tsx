@@ -13,6 +13,7 @@ import React from "react";
 import {DataProvider} from "./components/DataContext.tsx";
 
 const App: React.FC = () => {
+
     return (
         <DataProvider>
             <Router>

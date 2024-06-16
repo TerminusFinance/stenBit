@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import './Slider.css';
-import bronze_cup from '../../../../assets/bronze_cup.svg';
-import silver_cup from '../../../../assets/silver_cup.svg';
-import gold_cup from '../../../../assets/gold_cup.svg';
+import bronze_cup from '../../../../assets/bronze_cup.png';
+import silver_cup from '../../../../assets/silver_cup.png';
+import gold_cup from '../../../../assets/gold_cup.png';
 import ProgressBar from "../../progressBar/ProgressBar.tsx";
 import leftArrow from "../../../../assets/ic_arrow_left.svg";
 import rightArrow from "../../../../assets/ic_arrow_right.svg";

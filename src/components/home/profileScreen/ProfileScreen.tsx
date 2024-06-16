@@ -1,15 +1,16 @@
 import React from "react";
 import "./ProfileScreen.css";
-import coinIcon from "../../../assets/ic_coins.svg";
+import coinIcon from "../../../assets/ic_coins.png";
+import {useData} from "../../DataContext.tsx";
 
 const ProfileScreen: React.FC = () => {
-
+    const { dataApp } = useData();
     return (
         <div className="profile-container">
 
             <div className="profile-information-container">
                 <div className="image-profile"/>
-                <p className="tx-name-profile">name</p>
+                <p className="tx-name-profile">{dataApp.userName}</p>
 
             </div>
 
@@ -18,7 +19,7 @@ const ProfileScreen: React.FC = () => {
                     <span className="badge-title">Reward</span>
                     <div className="badge-value">
                         <img src={coinIcon} alt="Coin" className="badge-icon"/>
-                        <span>1,900</span>
+                        <span>1000</span>
                     </div>
                 </div>
                 <div className="badge-divider"></div>

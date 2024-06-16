@@ -1,15 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './TapScreen.css';
-import coin from '../../../assets/ic_coins.svg';
+import coin from '../../../assets/ic_coins.png';
 import arrow_right from '../../../assets/ic_arrow_right.svg';
-import bronze_cup from '../../../assets/bronze_cup.svg';
+import bronze_cup from '../../../assets/bronze_cup.png';
 import ProgressBar from "../progressBar/ProgressBar.tsx";
 import {useNavigate} from "react-router-dom";
 import {useData} from "../../DataContext.tsx";
 import {updateUser} from "../../../core/dataWork/Back4app.ts";
 
 const TapScreen: React.FC = () => {
-    const { dataApp } = useData();
+    const { dataApp, setDataApp } = useData();
     const [clicks, setClicks] = useState<number>(dataApp.coins !== undefined && dataApp.coins !== null ? dataApp.coins : 0);
     const [animations, setAnimations] = useState<{ x: number, y: number, id: number }[]>([]);
     const navigate = useNavigate();
@@ -35,6 +35,7 @@ const TapScreen: React.FC = () => {
         if(dataApp.userId != undefined) {
             const result = updateUser(dataApp.userId, {  coins: clickCount })
             console.log("update result - ", await result)
+            setDataApp(await result)
         }
         // Здесь добавьте код для отправки данных о кликах на сервер или выполнения других необходимых действий
     };
@@ -45,7 +46,7 @@ const TapScreen: React.FC = () => {
                 sendClickData(clicks);
                 prevClicksRef.current = clicks;
             }
-        }, 5000);
+        }, 200);
 
         return () => clearInterval(interval);
     }, [clicks]);
@@ -73,6 +74,7 @@ const TapScreen: React.FC = () => {
                     src={coin}
                     alt="Coin"
                     className="coin"
+                    draggable="false"
                     onClick={handleClick}
                 />
                 {animations.map(animation => (

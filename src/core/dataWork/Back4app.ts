@@ -1,25 +1,13 @@
 import axios, {} from 'axios';
 
-interface UserData {
-    objectId?: string;
-    userId?: string;
-    clickCount?: number;
-    address?: string;
-    inviteCode?: string;
-    invitedFriends?: string[];
-    error?: string;
-}
 
-interface CreateUserResponse {
-    result: UserData;
-}
 
-export const createUser = async (userId: string, userName: string): Promise<UserData> => {
+export const createUser = async (userId: string, userName: string, coins: number): Promise<GetUserByResponse> => {
     try {
         console.log("createUser userId -", userId)
-        const response = await axios.post<CreateUserResponse>(
+        const response = await axios.post<{ result: GetUserByResponse }>(
             'https://parseapi.back4app.com/functions/createUser',
-            {userId, userName}, // Параметры тела запроса
+            {userId, userName, coins}, // Параметры тела запроса
             {
                 headers: {
                     'Content-Type': 'application/json',

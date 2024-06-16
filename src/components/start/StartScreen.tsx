@@ -1,28 +1,30 @@
 import React from 'react';
 import './StartScreen.css';
-import ic_coins from '../../assets/ic_coins.svg';
-import ic_telegram from '../../assets/ic_telegram.svg';
-import ic_website from '../../assets/ic_website.svg';
-import ic_discord from '../../assets/ic_discord.svg';
-import ic_x from '../../assets/ic_x.svg';
+import ic_coins from '../../assets/ic_coins.png';
+import ic_telegram from '../../assets/ic_telegram.png';
+import ic_website from '../../assets/ic_website.png';
+import ic_discord from '../../assets/ic_discord.png';
+import ic_x from '../../assets/ic_x.png';
 import {useLocation, useNavigate} from "react-router-dom";
 import {createUser} from "../../core/dataWork/Back4app.ts";
+import {useData} from "../DataContext.tsx";
 
 const StartScreen: React.FC = () => {
 
     const navigate = useNavigate();
 
     const location = useLocation()
-    const {id} = location.state as { id: string }
-
+    const {id, name} = location.state as { id: string, name: string }
+    const {setDataApp} = useData();
 
     const goToAbout = async () => {
         try {
             console.log("id from start - ", id)
-            const result = await createUser(id, "RomasTest");
+            const result = await createUser(id, name, 0);
 
             console.log("result", result);
 
+            setDataApp(result)
             navigate('/home', {
                 state: {
                     id: result
