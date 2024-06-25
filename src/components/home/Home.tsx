@@ -18,25 +18,25 @@ const HomeScreen: React.FC = () => {
                         pathname: "/home/tap"
                     }}
                     className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                    <img src={ic_tap} alt="Tap" />
+                    <img src={ic_tap} alt="Tap" className="img-nav" />
                     <span>Tap</span>
                 </NavLink>
                 <NavLink
                     to="/home/friends"
                     className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                    <img src={ic_telegram} alt="Friends" />
+                    <img src={ic_telegram} alt="Friends"  className="img-nav" />
                     <span>Friends</span>
                 </NavLink>
                 <NavLink
                     to="/home/tasks"
                     className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                    <img src={ic_tasks} alt="Tasks" />
+                    <img src={ic_tasks} alt="Tasks"   className="img-nav"/>
                     <span>Tasks</span>
                 </NavLink>
                 <NavLink
                     to="/home/profile"
                     className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                    <img src={ic_profile} alt="Profile" />
+                    <img src={ic_profile} alt="Profile"  className="img-nav"/>
                     <span>Profile</span>
                 </NavLink>
             </div>
