@@ -21,11 +21,8 @@ const ProfileScreen: React.FC = () => {
     };
 
     const handleCopy = (text: string) => {
-        navigator.clipboard.writeText(text).then(() => {
-            alert('Text copied to clipboard');
-        }).catch(err => {
-            console.error('Failed to copy text: ', err);
-        });
+        navigator.clipboard.writeText(text)
+        closeBottomSheet()
     };
 
     const updateAddressUsers = async (address: string) => {
@@ -90,7 +87,7 @@ const ProfileScreen: React.FC = () => {
                     content={
                         <div className="sheet-task-container">
                             <p className="tx-h1-link">Your link to invite friends</p>
-                            <p onClick={() => handleCopy(`https://t.me/StenBitTestBot/start=${dataApp.codeToInvite}`)}>https://t.me/StenBitTestBot/start={dataApp.codeToInvite}</p>
+                            <p className="tx-h2-link-c" onClick={() => handleCopy(`https://t.me/StenBitTestBot/start=${dataApp.codeToInvite}`)}>https://t.me/StenBitTestBot/start={dataApp.codeToInvite}</p>
                         </div>
                     }
                 />

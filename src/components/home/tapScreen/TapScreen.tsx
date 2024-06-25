@@ -1,11 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './TapScreen.css';
 import coin from '../../../assets/ic_coins.png';
 import arrow_right from '../../../assets/ic_arrow_right.svg';
 import ProgressBar from "../progressBar/ProgressBar.tsx";
-import {useNavigate} from "react-router-dom";
-import {useData} from "../../DataContext.tsx";
-import {updateUser} from "../../../core/dataWork/Back4app.ts";
+import { useNavigate } from "react-router-dom";
+import { useData } from "../../DataContext.tsx";
+import { updateUser } from "../../../core/dataWork/Back4app.ts";
 import whiteLevel from "../../../assets/diamont/ic_white_level.png";
 import oceanLevel from "../../../assets/diamont/ic_ocean_level.png";
 import redLevel from "../../../assets/diamont/ic_red_level.png";
@@ -54,25 +54,29 @@ const TapScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
     const [clicks, setClicks] = useState<number>(dataApp.coins !== undefined && dataApp.coins !== null ? dataApp.coins : 0);
     const [animations, setAnimations] = useState<{ x: number, y: number, id: number }[]>([]);
+    const [energy, setEnergy] = useState<number>(500);
     const navigate = useNavigate();
     const prevClicksRef = useRef<number>(clicks);
 
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
-        const { clientX, clientY } = event;
-        setClicks(prevClicks => prevClicks + 1);
-        const id = Date.now();
-        setAnimations(prevAnimations => [...prevAnimations, { x: clientX, y: clientY, id }]);
-        setTimeout(() => {
-            setAnimations(prevAnimations => prevAnimations.filter(animation => animation.id !== id));
-        }, 1000);
+        if (energy > 0) {
+            const { clientX, clientY } = event;
+            setClicks(prevClicks => prevClicks + 1);
+            setEnergy(prevEnergy => prevEnergy - 1);
+            const id = Date.now();
+            setAnimations(prevAnimations => [...prevAnimations, { x: clientX, y: clientY, id }]);
+            setTimeout(() => {
+                setAnimations(prevAnimations => prevAnimations.filter(animation => animation.id !== id));
+            }, 1000);
+        }
     };
 
     const handleNav = () => {
-        navigate('/home/level');
+        navigate('/home/level', { state: { levelTypes, currentLevel } });
     };
 
     const sendClickData = async (clickCount: number) => {
-        if(dataApp.userId != undefined) {
+        if (dataApp.userId !== undefined) {
             const result = updateUser(dataApp.userId, { coins: clickCount });
             console.log("update result - ", await result);
             setDataApp(await result);
@@ -94,17 +98,20 @@ const TapScreen: React.FC = () => {
         console.log("dataApp - ", dataApp.coins);
     }, [dataApp]);
 
+    useEffect(() => {
+        const energyRegenInterval = setInterval(() => {
+            setEnergy(prevEnergy => Math.min(prevEnergy + 1, 500)); // Восстанавливаем энергию до максимума 500
+        }, 1000); // Восстанавливаем 1 энергию каждую секунду
+
+        return () => clearInterval(energyRegenInterval);
+    }, []);
+
     const getCurrentLevel = (clicks: number): LevelType => {
         const level = levelTypes.find(level => clicks >= level.minProgress && clicks < level.maxProgress);
-        console.log("clicks: ", clicks, " level: ", level);
         return level || levelTypes[levelTypes.length - 1];
     };
 
     const currentLevel = getCurrentLevel(clicks);
-
-    const progressBarCurrent = currentLevel === levelTypes[levelTypes.length - 1] && clicks > currentLevel.maxProgress
-        ? currentLevel.maxProgress
-        : clicks;
 
     return (
         <div className="tap-container">
@@ -143,7 +150,7 @@ const TapScreen: React.FC = () => {
             </div>
 
             <div style={{ width: '100vw', padding: '0 10px' }}>
-                <ProgressBar progress={{ current: progressBarCurrent, max: currentLevel.maxProgress }} />
+                <ProgressBar progress={{ current: energy, max: 500 }} />
             </div>
         </div>
     );

@@ -62,7 +62,7 @@ const TasksScreen: React.FC = () => {
             checkIcon: TelegramIco,
             taskType: {
                 type: 'OpenUrl',
-                url: 'https://tonviewer.com/EQBZH1jb6opuqZAgxqUAScv50nda_yQkRO8MW6vz8rqe00r1'
+                url: 'https://t.me/+5rOLByXlu_g0MmIy'
             }
         },
         {
@@ -73,7 +73,7 @@ const TasksScreen: React.FC = () => {
             checkIcon: XIco,
             taskType: {
                 type: 'OpenUrl',
-                url: 'https://tonviewer.com/EQBZH1jb6opuqZAgxqUAScv50nda_yQkRO8MW6vz8rqe00r1'
+                url: 'https://t.me/+5rOLByXlu_g0MmIy'
             }
         },
         {
@@ -104,7 +104,7 @@ const TasksScreen: React.FC = () => {
             checkIcon: TelegramIco,
             taskType: {
                 type: 'OpenUrl',
-                url: 'https://tonviewer.com/EQBZH1jb6opuqZAgxqUAScv50nda_yQkRO8MW6vz8rqe00r1'
+                url: 'https://t.me/+5rOLByXlu_g0MmIy'
             }
         },
     ];

@@ -1,11 +1,8 @@
-import React from "react";
+import React from 'react';
 import './LevelScreen.css';
-import Slider from "./imageSlider/Slider.tsx";
-import whiteLevel from "../../../assets/diamont/ic_white_level.png";
-import oceanLevel from "../../../assets/diamont/ic_ocean_level.png";
-import redLevel from "../../../assets/diamont/ic_red_level.png";
-import purpleLevel from "../../../assets/diamont/ic_purple_level.png";
-import { useData } from "../../DataContext.tsx";
+import Slider from './imageSlider/Slider.tsx';
+import { useLocation } from 'react-router-dom';
+import {useData} from "../../DataContext.tsx";
 
 export interface SlidesType {
     title: string;
@@ -21,53 +18,27 @@ export interface SlidesTypeList {
 }
 
 const LevelScreen: React.FC = () => {
+    const location = useLocation();
     const { dataApp } = useData();
+    const { levelTypes, currentLevel } = location.state;
 
-    if (dataApp.coins != null) {
-        const slides: SlidesType[] = [
-            {
-                title: 'White Level',
-                description: 'Your number of shares determines the league you enter',
-                image: whiteLevel,
-                currentProgress: 0,
-                maxProgress: 5000,
-            },
-            {
-                title: 'Ocean Level',
-                description: 'Your number of shares determines the league you enter',
-                image: oceanLevel,
-                currentProgress: 0,
-                maxProgress: 50000,
-            },
-            {
-                title: 'Red Level',
-                description: 'Your number of shares determines the league you enter',
-                image: redLevel,
-                currentProgress: 0,
-                maxProgress: 150000,
-            },
-            {
-                title: 'Purple Level',
-                description: 'Your number of shares determines the league you enter',
-                image: purpleLevel,
-                currentProgress: 0,
-                maxProgress: 500000,
-            },
-        ];
-
-        let initialSlide = 0;
-        let remainingCoins = dataApp.coins;
-
-        for (let i = 0; i < slides.length; i++) {
-            if (remainingCoins >= slides[i].maxProgress) {
-                slides[i].currentProgress = slides[i].maxProgress;
-                remainingCoins -= slides[i].maxProgress;
-                initialSlide = i; // set the initialSlide to the highest level user qualifies for
-            } else {
-                slides[i].currentProgress = remainingCoins;
-                break;
+    if (levelTypes && currentLevel) {
+        const slides: SlidesType[] = levelTypes.map((level: any, index: number) => {
+            let currentProgress = 0;
+            const coinsCurrent = dataApp.coins
+            if (index < levelTypes.indexOf(currentLevel)) {
+                currentProgress = level.maxProgress;
+            } else if (index === levelTypes.indexOf(currentLevel) && coinsCurrent != undefined) {
+                // currentProgress = Math.min(currentLevel.maxProgress, currentLevel.currentProgress);
+                currentProgress = coinsCurrent
             }
-        }
+            return {
+                ...level,
+                currentProgress
+            };
+        });
+
+        const initialSlide = levelTypes.indexOf(currentLevel);
 
         return (
             <div className="level-container">
