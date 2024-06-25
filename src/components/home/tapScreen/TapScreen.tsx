@@ -59,11 +59,6 @@ const TapScreen: React.FC = () => {
     const prevClicksRef = useRef<number>(clicks);
 
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
-
-
-            navigator.vibrate(100); // вибрация на 100 миллисекунд
-
-
         if (energy > 0) {
             const { clientX, clientY } = event;
             setClicks(prevClicks => prevClicks + 1);
@@ -74,6 +69,7 @@ const TapScreen: React.FC = () => {
                 setAnimations(prevAnimations => prevAnimations.filter(animation => animation.id !== id));
             }, 1000);
         }
+        navigator.vibrate(200);
     };
 
     const handleNav = () => {
