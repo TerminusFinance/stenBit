@@ -1,0 +1,83 @@
+.tasks-container-true,
+.tasks-container-false {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; /* Ensure space between items */
+    align-items: center; /* Align items vertically */
+    width: 100%;
+    padding: 10px; /* Add padding for spacing */
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    font-family: 'MyCustomFontMedium', sans-serif;
+    box-sizing: border-box;
+}
+
+.tasks-container-true {
+    background-color: #1a1a1a;
+}
+
+.tasks-container-false {
+    background-color: #272A2F;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.progress-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 1; /* Allow the text container to take available space */
+}
+
+.ic-logo {
+    width: 48px;
+    height: 48px;
+    margin-left: 4px;
+}
+
+.action-status-acc {
+    width: 24px;
+    height: 24px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.coins-container {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-left: 4px;
+}
+
+.ic-coins {
+    width: 16px;
+    height: 16px;
+}
+
+.tx-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center the text vertically */
+    margin-left: 10px; /* Add margin for spacing */
+    flex: 1; /* Allow the text container to take available space */
+}
+
+.progress-text .current {
+    color: white;
+    font-size: 16px;
+    text-align: start;
+}
+
+.progress-text .divider {
+    color: #A2A8B5;
+    font-size: 14px;
+    margin: 0 5px;
+}
+
+.progress-text .max {
+    color: #A2A8B5;
+    font-size: 18px;
+}

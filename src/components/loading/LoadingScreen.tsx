@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import './LoadingScreen.css';
-import ic_coins_loading from '../../assets/ic_coins_loading.png'
-import {useLocation, useNavigate} from "react-router-dom";
+import ic_coins_loading from '../../assets/ic_coins_loading.png';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {getUserById} from "../../core/dataWork/Back4app.ts";
 import {useData} from "../DataContext.tsx";
+import {isDesktop, isMobile, isTablet} from 'react-device-detect';
 
 interface UserData {
     objectId?: string;
@@ -23,29 +24,37 @@ const LoadingScreen: React.FC = () => {
     const name = params.get('name');
     const [data, setData] = useState<UserData | null>(null);
     const {setDataApp} = useData();
+
+    const deviceType = (): string => {
+        if (isMobile) return 'Mobile';
+        if (isTablet) return 'Tablet';
+        if (isDesktop) return 'Desktop';
+        return 'Unknown';
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log("id переданный - ", id, "name переданный - ", name)
+                const deviceTypeResult = deviceType();
+                console.log("deviceType - ", deviceTypeResult);
+                if (deviceTypeResult !== 'Mobile') {
+                    navigate('/redirects');
+                    return;
+                }
+                console.log("id переданный - ", id, "name переданный - ", name);
                 if (!id || !name) {
                     navigate('/not-found');
                 } else {
-                    const thisId = id
-                    const result = await getUserById(thisId); // Пример ID пользователя
+                    const result = await getUserById(id);
                     if (result.error === 'User not found') {
                         console.log('User not found');
-                        navigate('/start', {
-                            state: {
-                                id: thisId
-                            }
-                        });
+                        navigate('/start', {state: {id}});
                     } else {
-                        console.log("set up data - ", result.coins)
+                        console.log("set up data - ", result.coins);
                         setData(result);
-                        setDataApp(result)
+                        setDataApp(result);
                         navigate('/home/tap');
                     }
-
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -54,15 +63,7 @@ const LoadingScreen: React.FC = () => {
 
         fetchData();
         console.log("result - ", data);
-
-        // const timer = setTimeout(() => {
-        //     console.log("Navigation triggered");
-        //     navigate('/start');
-        // }, 2000); // задержка 2 секунды
-        //
-        // return () => clearTimeout(timer); // очистка таймера при размонтировании компонента
     }, [navigate]);
-
 
     return (
         <div className="loading-container">

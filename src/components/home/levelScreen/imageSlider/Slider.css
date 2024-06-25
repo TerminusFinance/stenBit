@@ -3,13 +3,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    position: relative;
     width: 100%;
     max-width: 600px;
-    margin: 0 auto;
     border-radius: 10px;
-    padding: 20px;
-    overflow: hidden;
+    padding: 0 10px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: linear-gradient(360deg, #121215, #171625, #351E22);
 }
 
 .slider-wrapper {
@@ -34,6 +40,41 @@
     opacity: 1;
 }
 
+.under-slider {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    margin-top: 20px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 10px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.sub-title-cristall {
+    padding: 0 10px;
+}
+
+.btn-container .nav-button {
+    flex: 0 0 auto; /* Кнопки не будут растягиваться */
+}
+
+.btn-container h2 {
+    flex: 1; /* Текст занимает оставшееся пространство */
+    text-align: center; /* Выравнивание текста по центру */
+    margin: 0; /* Убираем внешние отступы */
+    position: absolute; /* Позиционируем текст абсолютно */
+    left: 50%; /* Центрируем относительно контейнера */
+    transform: translateX(-50%); /* Смещаем текст на половину его ширины влево */
+}
 
 .div-btn-slider {
     display: flex;
@@ -46,7 +87,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
     position: relative; /* Add this */
 }
 
@@ -57,9 +97,7 @@
 }
 
 .nav-button {
-    position: absolute;
-    top: 50%; /* Center the button vertically */
-    transform: translateY(-50%); /* Center the button vertically */
+ /* Center the button vertically */
     background: none;
     border: none;
     cursor: pointer;

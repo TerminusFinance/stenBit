@@ -90,3 +90,19 @@
     width: 90%;
     font-family: 'MyCustomFont', sans-serif;
 }
+
+.div-container-address-pr {
+    background-color: rgba(255, 255, 255, 0.02);
+    margin: 10px 24px;
+    border-radius: 16px;
+}
+
+.address-tx {
+    padding: 10px 20px;
+}
+
+.tx-h1-link {
+    color: white;
+    font-size: 18px;
+    padding-bottom: 16px;
+}

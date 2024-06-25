@@ -10,7 +10,7 @@
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
+    padding-bottom: 48px;
     position: relative; /* Добавляем позиционирование для .tap-container */
 }
 
@@ -48,8 +48,8 @@
 }
 
 .coin {
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     transition: transform 0.3s;
     position: relative;
     user-select: none; /* Запрещаем выделение текста и изображений */

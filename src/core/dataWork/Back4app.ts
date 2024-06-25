@@ -34,7 +34,8 @@ export interface GetUserByResponse {
     userId?: string;
     userName?: string;
     address?: string;
-    listUserInvite?: string[]; // Обновим на правильное название
+    listUserInvite?: string[];
+    completedTasks?: number[] | null;
     error?: string;
 }
 
@@ -69,20 +70,55 @@ export const getUserById = async (userId: string): Promise<GetUserByResponse> =>
 };
 
 
+// export interface UpdateUserRequest {
+//     userId?: string;
+//     coins?: number;
+//     userName?: string;
+//     address?: string;
+//     listUserInvite?: string[];
+// }
+//
+// export const updateUser = async (userId: string, updates: Partial<UpdateUserRequest>): Promise<GetUserByResponse> => {
+//     try {
+//         const response = await axios.post<{
+//             result: GetUserByResponse
+//         }>('https://parseapi.back4app.com/functions/updateUser',
+//             { userId, ...updates } as UpdateUserRequest,
+//             {
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'X-Parse-Application-Id': '35FDDTeCMqJUMhDYr9LFh2TEXPXTiRvYiRYbcG23',
+//                     'X-Parse-REST-API-Key': 'kAyRiID9BcXva11fhs5b6fX47nkcVlJjk34313qP',
+//                 }
+//             }
+//         );
+//
+//         return response.data.result;
+//     } catch (error) {
+//         console.error('Error updating user:', error);
+//         throw error;
+//     }
+// };
+
+
 export interface UpdateUserRequest {
     userId?: string;
     coins?: number;
     userName?: string;
     address?: string;
     listUserInvite?: string[];
+    completedTasks?: number[];
 }
 
 export const updateUser = async (userId: string, updates: Partial<UpdateUserRequest>): Promise<GetUserByResponse> => {
+    // Create the payload dynamically, including only defined fields
+    const payload = { userId, ...updates };
+    console.log("payload - ", payload)
     try {
         const response = await axios.post<{
             result: GetUserByResponse
         }>('https://parseapi.back4app.com/functions/updateUser',
-            { userId, ...updates } as UpdateUserRequest,
+            payload,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -98,6 +134,35 @@ export const updateUser = async (userId: string, updates: Partial<UpdateUserRequ
         throw error;
     }
 };
+
+
+export interface UpdateUserRequestCompletedTask {
+    userId?: string;
+    completedTasks: number[];
+}
+
+export const updateUserByCompletedTask = async (userId: string, updates: Partial<UpdateUserRequestCompletedTask>): Promise<GetUserByResponse> => {
+    try {
+        const response = await axios.post<{
+            result: GetUserByResponse
+        }>('https://parseapi.back4app.com/functions/updateUser',
+            { userId, ...updates } as UpdateUserRequestCompletedTask,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Parse-Application-Id': '35FDDTeCMqJUMhDYr9LFh2TEXPXTiRvYiRYbcG23',
+                    'X-Parse-REST-API-Key': 'kAyRiID9BcXva11fhs5b6fX47nkcVlJjk34313qP',
+                }
+            }
+        );
+
+        return response.data.result;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        throw error;
+    }
+};
+
 
 // (async () => {
 //     try {

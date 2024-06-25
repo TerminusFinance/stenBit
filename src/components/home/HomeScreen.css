@@ -17,6 +17,7 @@
     width: 100%;
     box-sizing: border-box;
     margin: 0;
+    padding-bottom: 60px; /* Отступ снизу для контента, чтобы не перекрывалось нижним навигатором */
 }
 
 .bottom-nav {
@@ -26,6 +27,10 @@
     background-color: #121215;
     width: 100%;
     box-sizing: border-box;
+    position: fixed; /* Фиксируем внизу экрана */
+    bottom: 0;
+    left: 0;
+    z-index: 1000; /* Устанавливаем высокий z-index, чтобы было выше контента */
 }
 
 .nav-link {

@@ -1,0 +1,58 @@
+.bottom-sheet-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 100px;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.bottom-sheet {
+    background-color: #1a1a1a;
+    width: 100%;
+    max-width: 500px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    transform: translateY(100%); /* Start position for the slide-up effect */
+    transition: transform 0.3s ease-out;
+}
+
+.bottom-sheet.open {
+    transform: translateY(0); /* End position for the slide-up effect */
+}
+
+.div-btn-close {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.bottom-sheet-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    color: white;
+}
+
+.img-view-task {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+}
+
+.bottom-sheet-content {
+    margin-top: 20px;
+    color: white;
+    max-height: 80vh;
+    overflow-y: auto;
+}

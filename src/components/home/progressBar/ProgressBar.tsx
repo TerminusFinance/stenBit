@@ -18,7 +18,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress }) => {
             <div className="progress-bar-container">
                 <div className="progress-text">
                     <img src={thunder}/>
-                    <span className="current">{current}</span>
+                    <span className="current-set">{current}</span>
                     <span className="divider">/</span>
                     <span className="max">{max}</span>
                 </div>

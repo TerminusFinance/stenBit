@@ -2,19 +2,59 @@ import React, {useEffect, useRef, useState} from 'react';
 import './TapScreen.css';
 import coin from '../../../assets/ic_coins.png';
 import arrow_right from '../../../assets/ic_arrow_right.svg';
-import bronze_cup from '../../../assets/bronze_cup.png';
 import ProgressBar from "../progressBar/ProgressBar.tsx";
 import {useNavigate} from "react-router-dom";
 import {useData} from "../../DataContext.tsx";
 import {updateUser} from "../../../core/dataWork/Back4app.ts";
+import whiteLevel from "../../../assets/diamont/ic_white_level.png";
+import oceanLevel from "../../../assets/diamont/ic_ocean_level.png";
+import redLevel from "../../../assets/diamont/ic_red_level.png";
+import purpleLevel from "../../../assets/diamont/ic_purple_level.png";
+
+export interface LevelType {
+    title: string;
+    description: string;
+    image: string;
+    minProgress: number;
+    maxProgress: number;
+}
+
+const levelTypes: LevelType[] = [
+    {
+        title: 'White Level',
+        description: 'Your number of shares determines the league you enter',
+        image: whiteLevel,
+        minProgress: 0,
+        maxProgress: 5000,
+    },
+    {
+        title: 'Ocean Level',
+        description: 'Your number of shares determines the league you enter',
+        image: oceanLevel,
+        minProgress: 5000,
+        maxProgress: 50000,
+    },
+    {
+        title: 'Red Level',
+        description: 'Your number of shares determines the league you enter',
+        image: redLevel,
+        minProgress: 50000,
+        maxProgress: 150000,
+    },
+    {
+        title: 'Purple Level',
+        description: 'Your number of shares determines the league you enter',
+        image: purpleLevel,
+        minProgress: 150000,
+        maxProgress: 500000,
+    },
+];
 
 const TapScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
     const [clicks, setClicks] = useState<number>(dataApp.coins !== undefined && dataApp.coins !== null ? dataApp.coins : 0);
     const [animations, setAnimations] = useState<{ x: number, y: number, id: number }[]>([]);
     const navigate = useNavigate();
-    const currentProgress = 300;
-    const maxProgress = 500;
     const prevClicksRef = useRef<number>(clicks);
 
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
@@ -31,13 +71,12 @@ const TapScreen: React.FC = () => {
         navigate('/home/level');
     };
 
-     const sendClickData = async (clickCount: number) => {
+    const sendClickData = async (clickCount: number) => {
         if(dataApp.userId != undefined) {
-            const result = updateUser(dataApp.userId, {  coins: clickCount })
-            console.log("update result - ", await result)
-            setDataApp(await result)
+            const result = updateUser(dataApp.userId, { coins: clickCount });
+            console.log("update result - ", await result);
+            setDataApp(await result);
         }
-        // Здесь добавьте код для отправки данных о кликах на сервер или выполнения других необходимых действий
     };
 
     useEffect(() => {
@@ -55,6 +94,18 @@ const TapScreen: React.FC = () => {
         console.log("dataApp - ", dataApp.coins);
     }, [dataApp]);
 
+    const getCurrentLevel = (clicks: number): LevelType => {
+        const level = levelTypes.find(level => clicks >= level.minProgress && clicks < level.maxProgress);
+        console.log("clicks: ", clicks, " level: ", level);
+        return level || levelTypes[levelTypes.length - 1];
+    };
+
+    const currentLevel = getCurrentLevel(clicks);
+
+    const progressBarCurrent = currentLevel === levelTypes[levelTypes.length - 1] && clicks > currentLevel.maxProgress
+        ? currentLevel.maxProgress
+        : clicks;
+
     return (
         <div className="tap-container">
             <div className="coin-wrapper">
@@ -63,8 +114,8 @@ const TapScreen: React.FC = () => {
                     <div className="click-count">{clicks}</div>
                 </div>
                 <div className="type-status" onClick={handleNav}>
-                    <img src={bronze_cup} alt="Bronze Cup" className="coin-small" />
-                    <p className="tx-type-status">Bronze</p>
+                    <img src={currentLevel.image} alt={currentLevel.title} className="coin-small" />
+                    <p className="tx-type-status">{currentLevel.title}</p>
                     <img src={arrow_right} alt="Arrow Right" />
                 </div>
             </div>
@@ -82,9 +133,9 @@ const TapScreen: React.FC = () => {
                         key={animation.id}
                         className="increment"
                         style={{
-                            left: animation.x - 75,
-                            top: animation.y - 180
-                        }} /* Увеличено на 180px для позиционирования над монетой */
+                            left: animation.x - 90,
+                            top: animation.y - 240
+                        }}
                     >
                         +1
                     </div>
@@ -92,7 +143,7 @@ const TapScreen: React.FC = () => {
             </div>
 
             <div style={{ width: '100vw', padding: '0 10px' }}>
-                <ProgressBar progress={{ current: currentProgress, max: maxProgress }} />
+                <ProgressBar progress={{ current: progressBarCurrent, max: currentLevel.maxProgress }} />
             </div>
         </div>
     );

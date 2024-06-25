@@ -1,4 +1,4 @@
-import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import {HashRouter  as Router, Routes, Route, Navigate} from 'react-router-dom';
 
 import About from './components/about/About';
 import NotFound from './components/notFound/NotFound';
@@ -11,6 +11,7 @@ import ProfileScreen from "./components/home/profileScreen/ProfileScreen.tsx";
 import TasksScreen from "./components/home/tasksScreen/TasksScreen.tsx";
 import React from "react";
 import {DataProvider} from "./components/DataContext.tsx";
+import {RedirectsScreen} from "./components/redirects/RedirectsScreen.tsx";
 
 const App: React.FC = () => {
 
@@ -32,6 +33,7 @@ const App: React.FC = () => {
                     <Route path="/about" element={<About/>}/>
                     <Route path="/not-found" element={<NotFound/>}/>
                     <Route path="*" element={<NotFound/>}/>
+                    <Route path="/redirects" element={<RedirectsScreen/>}/>
                 </Routes>
             </Router>
         </DataProvider>
