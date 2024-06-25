@@ -149,7 +149,7 @@ const TapScreen: React.FC = () => {
                             top: animation.y - 240
                         }}
                     >
-                        +2
+                        +1
                     </div>
                 ))}
             </div>
