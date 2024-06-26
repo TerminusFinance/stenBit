@@ -69,7 +69,7 @@ const TapScreen: React.FC = () => {
                 setAnimations(prevAnimations => prevAnimations.filter(animation => animation.id !== id));
             }, 1000);
         }
-        navigator.vibrate(100);
+        navigator.vibrate(50);
     };
 
     const handleNav = () => {
