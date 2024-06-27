@@ -26,18 +26,20 @@ const TasksScreen: React.FC = () => {
             setBottomSheetVisible(true);
         }
     };
-
-    const closeBottomSheet = () => {
-        setBottomSheetVisible(false);
-        setSelectedTask(null);
-    };
-
     // Создание состояния для хранения статусов задач
     const [taskStates, setTaskStates] = useState<Record<number, {
         isLoading: boolean;
         checkResult: ResultCheckNftItem | null;
         errorMessage: string | null;
     }>>({});
+
+
+    const closeBottomSheet = () => {
+        setBottomSheetVisible(false);
+        setSelectedTask(null);
+        setTaskStates({})
+    };
+
 
     const updateTaskState = (taskId: number, newState: Partial<typeof taskStates[number]>) => {
         setTaskStates(prevStates => ({
@@ -58,7 +60,7 @@ const TasksScreen: React.FC = () => {
         if (SselectedTask != null && CheckNftTask(SselectedTask.taskType) && userId != null && coindOld != null) {
             const collectionAddress = SselectedTask.taskType.checkCollectionsAddress;
 
-            if (userWallet != null) {
+            if (userWallet != undefined && userWallet !== "") {
                 updateTaskState(SselectedTask.id, { isLoading: true });
 
                 try {
@@ -80,6 +82,8 @@ const TasksScreen: React.FC = () => {
                 } finally {
                     updateTaskState(SselectedTask.id, { isLoading: false });
                 }
+            } else {
+                updateTaskState(SselectedTask.id, { errorMessage: 'У вас не привязан адресс TON' });
             }
         }
     };
@@ -231,7 +235,7 @@ const TasksScreen: React.FC = () => {
                             )}
 
                             {CheckNftTask(selectedTask.taskType) && (
-                                <div>
+                                <div className="sheet-task-container">
                                     <button
                                         className="button-action-sheet"
                                         onClick={checkNftItem}

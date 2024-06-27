@@ -37,15 +37,17 @@ const ProfileScreen: React.FC = () => {
         const addressWallet = wallet?.account?.address ? Address.parse(wallet?.account?.address as string) : undefined
         if ((dataApp.address === undefined || dataApp.address === "") && addressWallet !== undefined) {
             updateAddressUsers(addressWallet.toString());
+        } else if(addressWallet == null)  {
+            updateAddressUsers("");
         }
     }, [wallet])
 
-    const formatAddress = (address: string) => {
-        if (address && address.length > 10) {
-            return `${address.substring(0, 5)}...${address.substring(address.length - 5)}`;
-        }
-        return address;
-    };
+    // const formatAddress = (address: string) => {
+    //     if (address && address.length > 10) {
+    //         return `${address.substring(0, 5)}...${address.substring(address.length - 5)}`;
+    //     }
+    //     return address;
+    // };
 
     return (
         <div className="profile-container">
@@ -55,13 +57,15 @@ const ProfileScreen: React.FC = () => {
                     <p className="tx-name-profile">{dataApp.userName}</p>
                 </div>
 
-                {dataApp.address ? (
-                    <div className="div-container-address-pr">
-                        <p className="address-tx">{formatAddress(dataApp.address)}</p>
-                    </div>
-                ) : (
-                    <TonConnectButton/>
-                )}
+                {/*update visibli connect table*/}
+                {/*{dataApp.address ? (*/}
+                {/*    <div className="div-container-address-pr">*/}
+                {/*        <p className="address-tx">{formatAddress(dataApp.address)}</p>*/}
+                {/*    </div>*/}
+                {/*) : (*/}
+                {/*    <TonConnectButton/>*/}
+                {/*)}*/}
+                <TonConnectButton/>
             </div>
 
 
