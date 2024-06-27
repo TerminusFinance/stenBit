@@ -13,6 +13,10 @@ export const isOpenUrlTask = (taskType: TaskType): taskType is OpenUrlTask => {
     return taskType.type === 'OpenUrl';
 };
 
+export const CheckNftTask = (taskType: TaskType): taskType is CheckNftTask => {
+    return taskType.type === 'CheckNft';
+};
+
 export interface SampleTask {
     type: 'Sample';
 }
@@ -22,7 +26,14 @@ export interface OpenUrlTask {
     url: string;
 }
 
-export type TaskType = SampleTask | OpenUrlTask;
+export interface CheckNftTask {
+    type: 'CheckNft'
+    checkCollectionsAddress: string
+}
+
+
+
+export type TaskType = SampleTask | OpenUrlTask | CheckNftTask;
 
 export interface TaskCardProps {
     id: number; // Уникальный идентификатор задачи
