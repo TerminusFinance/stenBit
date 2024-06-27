@@ -164,6 +164,36 @@ export const updateUserByCompletedTask = async (userId: string, updates: Partial
 };
 
 
+export const processInvitationFromInviteCode = async (inviteCode: string, newUserId: string, newUserName: string): Promise<GetUserByResponse> => {
+    try {
+        const response = await axios.post<{
+            result: GetUserByResponse
+        }>('https://parseapi.back4app.com/functions/processInvitation',
+            { inviteCode, newUserId, newUserName },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Parse-Application-Id': '35FDDTeCMqJUMhDYr9LFh2TEXPXTiRvYiRYbcG23',
+                    'X-Parse-REST-API-Key': 'kAyRiID9BcXva11fhs5b6fX47nkcVlJjk34313qP'
+                }
+            }
+        );
+
+        return response.data.result;
+    } catch (error) {
+        console.error('Error processing invitation:', error);
+        if (axios.isAxiosError(error) && error.response) {
+            console.log('Axios error response data:', error.response.data);
+            if (error.response.data.error === 'User with the given invite code not found') {
+                return { error: 'User with the given invite code not found' };
+            } else if (error.response.data.error === 'User with this userId already exists') {
+                return { error: 'User with this userId already exists' };
+            }
+        }
+        throw error;
+    }
+};
+
 // (async () => {
 //     try {
 //         // Создание пользователя

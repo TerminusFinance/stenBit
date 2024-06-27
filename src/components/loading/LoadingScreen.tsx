@@ -22,6 +22,7 @@ const LoadingScreen: React.FC = () => {
     const params = new URLSearchParams(search);
     const id = params.get('id');
     const name = params.get('name');
+    const inviteCode = params.get('inviteCode');
     const [data, setData] = useState<UserData | null>(null);
     const {setDataApp} = useData();
 
@@ -47,8 +48,13 @@ const LoadingScreen: React.FC = () => {
                 } else {
                     const result = await getUserById(id);
                     if (result.error === 'User not found') {
-                        console.log('User not found');
-                        navigate('/start', {state: {id}});
+                        if(!inviteCode) {
+                            console.log('User not found');
+                            navigate('/start', {state: {id}});
+                        } else  {
+                            console.log('User not found');
+                            navigate('/start', {state: {id, name, inviteCode}});
+                        }
                     } else {
                         console.log("set up data - ", result.coins);
                         setData(result);
