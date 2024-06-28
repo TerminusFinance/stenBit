@@ -12,6 +12,7 @@ import TasksScreen from "./components/home/tasksScreen/TasksScreen.tsx";
 import React from "react";
 import {DataProvider} from "./components/DataContext.tsx";
 import {RedirectsScreen} from "./components/redirects/RedirectsScreen.tsx";
+import {FriendsScreen} from "./components/home/friendsScreen/FriendsScreen.tsx";
 
 const App: React.FC = () => {
 
@@ -24,7 +25,7 @@ const App: React.FC = () => {
                     <Route path="/home" element={<HomeScreen/>}>
                         <Route index element={<Navigate to="tap"/>}/>
                         <Route path="tap" element={<TapScreen/>}/>
-                        <Route path="friends" element={<div>Friends Screen</div>}/>
+                        <Route path="friends" element={<FriendsScreen/>}/>
                         <Route path="tasks" element={<TasksScreen/>}/>
                         <Route path="profile" element={<ProfileScreen/>}/>
                         <Route path="level" element={<LevelScreen/>}/>

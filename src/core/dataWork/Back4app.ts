@@ -26,6 +26,12 @@ export const createUser = async (userId: string, userName: string, coins: number
     }
 };
 
+export interface Invitee {
+    userId: string;
+    userName: string;
+    coinsReferral: number;
+}
+
 export interface GetUserByResponse {
     className?: string;
     codeToInvite?: string;
@@ -34,7 +40,7 @@ export interface GetUserByResponse {
     userId?: string;
     userName?: string;
     address?: string;
-    listUserInvite?: string[];
+    listUserInvite?: Invitee[];
     completedTasks?: number[] | null;
     error?: string;
 }

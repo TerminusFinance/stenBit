@@ -91,7 +91,7 @@ const ProfileScreen: React.FC = () => {
                     content={
                         <div className="sheet-task-container">
                             <p className="tx-h1-link">Your link to invite friends</p>
-                            <p className="tx-h2-link-c" onClick={() => handleCopy(`https://t.me/StenBitTestBot/start=${dataApp.codeToInvite}`)}>https://t.me/StenBitTestBot/start={dataApp.codeToInvite}</p>
+                            <p className="tx-h2-link-c" onClick={() => handleCopy(`https://t.me/StenBitTestBot/start=${dataApp.codeToInvite}`)}>https://t.me/StenBitTestBot?start={dataApp.codeToInvite}</p>
                         </div>
                     }
                 />
