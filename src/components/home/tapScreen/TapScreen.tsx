@@ -14,6 +14,7 @@ import {CoinsLevelUpp} from "../progressBar/coinsLevelUpp/CoinsLevelUpp.tsx";
 import IcDollar from "../../../assets/ic_dollar.svg";
 
 export interface LevelType {
+    id: number;
     title: string;
     description: string;
     image: string;
@@ -23,6 +24,7 @@ export interface LevelType {
 
 const levelTypes: LevelType[] = [
     {
+        id: 1,
         title: 'White Level',
         description: 'Your number of shares determines the league you enter',
         image: whiteLevel,
@@ -30,6 +32,7 @@ const levelTypes: LevelType[] = [
         maxProgress: 5000,
     },
     {
+        id: 2,
         title: 'Ocean Level',
         description: 'Your number of shares determines the league you enter',
         image: oceanLevel,
@@ -37,6 +40,7 @@ const levelTypes: LevelType[] = [
         maxProgress: 50000,
     },
     {
+        id: 3,
         title: 'Red Level',
         description: 'Your number of shares determines the league you enter',
         image: redLevel,
@@ -44,6 +48,7 @@ const levelTypes: LevelType[] = [
         maxProgress: 150000,
     },
     {
+        id: 4,
         title: 'Purple Level',
         description: 'Your number of shares determines the league you enter',
         image: purpleLevel,
@@ -124,6 +129,11 @@ const TapScreen: React.FC = () => {
         return num.toLocaleString('en-US');
     };
 
+    const calculateThousandsDifference = (current: number, max: number): number => {
+        const difference = max - current;
+        return Math.ceil(difference / 1000);
+    };
+
     return (
         <div className="tap-container">
             <div className="coin-wrapper">
@@ -131,7 +141,7 @@ const TapScreen: React.FC = () => {
                     <img src={IcDollar} alt="Coin" className="coin-small" />
                     <div className="click-count">{formatNumber(clicks)}</div>
                 </div>
-                <CoinsLevelUpp value={100} onClick={handleNav}/>
+                <CoinsLevelUpp value={calculateThousandsDifference(clicks, currentLevel.maxProgress)} onClick={handleNav}/>
             </div>
 
             <div className="coin-container">
@@ -161,7 +171,7 @@ const TapScreen: React.FC = () => {
 
             <div style={{ width: '100vw', padding: '0 10px', zIndex: 2 }}>
                 <EnergyBadge current={energy} max={2000} />
-                <ProgressBarLevel title={currentLevel.title} level='Level: 3/4' progress={clicks} maxProgress={currentLevel.maxProgress} onClick={handleNav} />
+                <ProgressBarLevel title={currentLevel.title} level={`Level: ${currentLevel.id}/${levelTypes.length}`} progress={clicks} maxProgress={currentLevel.maxProgress} onClick={handleNav} />
             </div>
         </div>
     );
