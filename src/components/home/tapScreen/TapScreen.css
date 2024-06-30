@@ -1,17 +1,16 @@
-/* TapScreen.css */
-
 .tap-container {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background: linear-gradient(360deg, #121215, #171625, #351E22);
+    background: linear-gradient(360deg, #161618, #191819, #171719);
     box-sizing: border-box;
     width: 100%;
     height: 100%;
     margin: 0;
     padding-bottom: 48px;
-    position: relative; /* Добавляем позиционирование для .tap-container */
+    overflow: hidden;
+    position: relative;
 }
 
 .coin-wrapper {
@@ -20,6 +19,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    z-index: 2; /* Добавляем z-index */
 }
 
 .count-div {
@@ -32,27 +32,29 @@
 }
 
 .coin-small {
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
     margin-right: 10px;
 }
 
 .click-count {
     color: white;
-    font-family: 'MyCustomFontMedium', sans-serif;
-    font-size: 22px;
+    font-family: 'MyCustomFont-bold', sans-serif;
+    font-size: 48px;
 }
 
 .coin-container {
     position: relative;
+    z-index: 2; /* Добавляем z-index */
 }
 
-.coin {
+.tap-coin {
     width: 200px;
     height: 200px;
     transition: transform 0.3s;
     position: relative;
     user-select: none; /* Запрещаем выделение текста и изображений */
+    z-index: 3; /* Добавляем z-index */
 }
 
 .type-status {
@@ -65,6 +67,7 @@
     padding: 10px 20px;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.02);
+    z-index: 2; /* Добавляем z-index */
 }
 
 .tx-type-status {
@@ -77,7 +80,7 @@
     transform: scale(1.2);
 }
 
-.coin::after {
+.tap-coin::after {
     content: '';
     position: absolute;
     width: 200%;
@@ -98,12 +101,33 @@
     }
 }
 
+.image-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    z-index: 1; /* Обновляем z-index */
+}
+
+.image-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%; /* Регулируйте размер сияния */
+    height: 200%; /* Регулируйте размер сияния */
+    background: radial-gradient(circle, rgba(255, 223, 0, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1; /* Обновляем z-index */
+    pointer-events: none; /* Убедитесь, что сияние не мешает взаимодействию */
+}
+
 .increment {
     position: absolute;
     font-size: 24px;
     color: white;
     opacity: 1;
     animation: moveUp 1s ease-out forwards; /* Добавляем forwards для сохранения состояния после анимации */
+    z-index: 4; /* Добавляем z-index */
 }
 
 @keyframes moveUp {
@@ -117,10 +141,10 @@
     }
 }
 
-/* Additional styles for progress bar */
 .progress-bar {
-    /* Add your styles here */
+    z-index: 2; /* Добавляем z-index */
 }
 
-/* Additional styles for other components */
-
+.energy-badge {
+    z-index: 2; /* Добавляем z-index */
+}

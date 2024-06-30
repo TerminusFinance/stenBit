@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import './LoadingScreen.css';
-import ic_coins_loading from '../../assets/ic_coins_loading.png';
+import ic_coins from '../../assets/ic_coins.png';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {getUserById} from "../../core/dataWork/Back4app.ts";
 import {useData} from "../DataContext.tsx";
@@ -72,8 +72,10 @@ const LoadingScreen: React.FC = () => {
     }, [navigate]);
 
     return (
-        <div className="loading-container">
-            <img src={ic_coins_loading} className="logo react" alt="React logo"/>
+        <div className="loading-coin-container">
+            <div className="image-container">
+                <img src={ic_coins} alt="Image with glow" className="glowing-image"/>
+            </div>
             <p className="loading-text">Loading...</p>
         </div>
     );

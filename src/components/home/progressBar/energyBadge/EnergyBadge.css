@@ -1,0 +1,68 @@
+.energy-badge-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Размещает элементы на противоположных концах */
+    padding: 10px 8px;
+    border-radius: 20px;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+}
+
+.energy-info {
+    display: flex;
+    align-items: center;
+}
+
+.energy-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.energy-text {
+    font-size: 18px;
+    color: white;
+    font-family: "MyCustomFont", sans-serif;
+}
+
+.energy-text-gray {
+    font-size: 18px;
+    color: gray;
+    font-family: "MyCustomFont", sans-serif;
+}
+
+.boost-button {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(360deg, #202026, #29292F, #313139);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    position: relative; /* Добавляем позиционирование для родительского элемента */
+}
+
+.boost-button::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 18px; /* Чуть больше радиус, чтобы учесть толщину обводки */
+    background: linear-gradient(360deg, #313135, #3A3A3F, #424249);
+    z-index: -1; /* Обеспечиваем, чтобы псевдоэлемент был под кнопкой */
+}
+
+
+.boost-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.boost-button:hover {
+    background-color: #4a4a4a; /* Цвет кнопки при наведении */
+}

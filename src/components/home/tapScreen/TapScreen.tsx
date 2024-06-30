@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './TapScreen.css';
 import coin from '../../../assets/ic_coins.png';
-import arrow_right from '../../../assets/ic_arrow_right.svg';
-import ProgressBar from "../progressBar/ProgressBar.tsx";
 import { useNavigate } from "react-router-dom";
 import { useData } from "../../DataContext.tsx";
 import { updateUser } from "../../../core/dataWork/Back4app.ts";
@@ -10,6 +8,10 @@ import whiteLevel from "../../../assets/diamont/ic_white_level.png";
 import oceanLevel from "../../../assets/diamont/ic_ocean_level.png";
 import redLevel from "../../../assets/diamont/ic_red_level.png";
 import purpleLevel from "../../../assets/diamont/ic_purple_level.png";
+import ProgressBarLevel from "../progressBar/progressBarLevel/ProgressBarLevel.tsx";
+import EnergyBadge from "../progressBar/energyBadge/EnergyBadge.tsx";
+import {CoinsLevelUpp} from "../progressBar/coinsLevelUpp/CoinsLevelUpp.tsx";
+import IcDollar from "../../../assets/ic_dollar.svg";
 
 export interface LevelType {
     title: string;
@@ -54,7 +56,7 @@ const TapScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
     const [clicks, setClicks] = useState<number>(dataApp.coins !== undefined && dataApp.coins !== null ? dataApp.coins : 0);
     const [animations, setAnimations] = useState<{ x: number, y: number, id: number }[]>([]);
-    const [energy, setEnergy] = useState<number>(500);
+    const [energy, setEnergy] = useState<number>(2000);
     const navigate = useNavigate();
     const prevClicksRef = useRef<number>(clicks);
 
@@ -101,7 +103,7 @@ const TapScreen: React.FC = () => {
 
     useEffect(() => {
         const energyRegenInterval = setInterval(() => {
-            setEnergy(prevEnergy => Math.min(prevEnergy + 1, 500)); // Восстанавливаем энергию до максимума 500
+            setEnergy(prevEnergy => Math.min(prevEnergy + 1, 2000)); // Восстанавливаем энергию до максимума 500
         }, 1000); // Восстанавливаем 1 энергию каждую секунду
 
         return () => clearInterval(energyRegenInterval);
@@ -114,28 +116,35 @@ const TapScreen: React.FC = () => {
 
     const currentLevel = getCurrentLevel(clicks);
 
+    const formatNumber = (num: number): string => {
+        if (num < 1000) {
+            return num.toString();
+        }
+
+        return num.toLocaleString('en-US');
+    };
+
     return (
         <div className="tap-container">
             <div className="coin-wrapper">
                 <div className="count-div">
-                    <img src={coin} alt="Coin" className="coin-small" />
-                    <div className="click-count">{clicks}</div>
+                    <img src={IcDollar} alt="Coin" className="coin-small" />
+                    <div className="click-count">{formatNumber(clicks)}</div>
                 </div>
-                <div className="type-status" onClick={handleNav}>
-                    <img src={currentLevel.image} alt={currentLevel.title} className="coin-small" />
-                    <p className="tx-type-status">{currentLevel.title}</p>
-                    <img src={arrow_right} alt="Arrow Right" />
-                </div>
+                <CoinsLevelUpp value={100} onClick={handleNav}/>
             </div>
 
             <div className="coin-container">
-                <img
-                    src={coin}
-                    alt="Coin"
-                    className="coin"
-                    draggable="false"
-                    onClick={handleClick}
-                />
+                <div className="image-container">
+                    <img
+                        src={coin}
+                        alt="Coin"
+                        className="tap-coin"
+                        draggable="false"
+                        onClick={handleClick}
+                    />
+                </div>
+
                 {animations.map(animation => (
                     <div
                         key={animation.id}
@@ -150,11 +159,13 @@ const TapScreen: React.FC = () => {
                 ))}
             </div>
 
-            <div style={{ width: '100vw', padding: '0 10px' }}>
-                <ProgressBar progress={{ current: energy, max: 500 }} />
+            <div style={{ width: '100vw', padding: '0 10px', zIndex: 2 }}>
+                <EnergyBadge current={energy} max={2000} />
+                <ProgressBarLevel title={currentLevel.title} level='Level: 3/4' progress={clicks} maxProgress={currentLevel.maxProgress} onClick={handleNav} />
             </div>
         </div>
     );
+
 };
 
 export default TapScreen;

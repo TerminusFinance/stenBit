@@ -1,0 +1,34 @@
+
+.coins-level-upp-container {
+    display: flex;
+    flex-direction: row;
+    background: rgba(255, 255, 255, 4%);
+    border-radius: 16px;
+    padding: 10px 8px;
+    align-content: center;
+    align-items: center;
+}
+
+.coins-ico-stat {
+    width: 18px;
+    height: 18px;
+    margin: 0 4px;
+}
+
+.coins-level-basic-tx {
+    font-family: MyCustomFont, sans-serif;
+    font-size: 14px;
+}
+
+.coins-level-tx-value {
+    font-family: MyCustomFont-bold, sans-serif;
+    font-size: 14px;
+}
+
+.coins-level-container-value {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    margin-left: 8px;
+}

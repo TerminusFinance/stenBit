@@ -1,12 +1,12 @@
 @font-face {
     font-family: 'MyCustomFont';
-    src: url('../../assets/font/Video_SemiBold.ttf') format('truetype');
+    src: url('../../assets/font/Inter-Black.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
-    font-family: 'MyCustomFontMedium';
-    src: url('../../assets/font/Video_Medium.ttf') format('truetype');
+    font-family: 'MyCustomFont';
+    src: url('../../assets/font/Inter-Medium.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
