@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import './LoadingScreen.css';
-import ic_coins from '../../assets/ic_coins.png';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {getUserById} from "../../core/dataWork/Back4app.ts";
 import {useData} from "../DataContext.tsx";
 import {isDesktop, isMobile, isTablet} from 'react-device-detect';
+import coin from "../../assets/ic_coins.png";
 
 interface UserData {
     objectId?: string;
@@ -73,9 +73,17 @@ const LoadingScreen: React.FC = () => {
 
     return (
         <div className="loading-coin-container">
-            <div className="image-container">
-                <img src={ic_coins} alt="Image with glow" className="glowing-image"/>
+
+            <div className="image-container-loading">
+                <img
+                    src={coin}
+                    className="glowing-image"
+                    draggable="false"
+                />
             </div>
+            {/*<div className="image-container">*/}
+            {/*    <img src={coin} alt="Image with glow" className="glowing-image"/>*/}
+            {/*</div>*/}
             <p className="loading-text">Loading...</p>
         </div>
     );
