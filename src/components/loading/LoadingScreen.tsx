@@ -5,6 +5,7 @@ import {getUserById} from "../../core/dataWork/Back4app.ts";
 import {useData} from "../DataContext.tsx";
 import {isDesktop, isMobile, isTablet} from 'react-device-detect';
 import coin from "../../assets/ic_coins.svg";
+import {retrieveLaunchParams} from "@tma.js/sdk";
 
 interface UserData {
     objectId?: string;
@@ -25,7 +26,7 @@ const LoadingScreen: React.FC = () => {
     const inviteCode = params.get('inviteCode');
     const [data, setData] = useState<UserData | null>(null);
     const {setDataApp} = useData();
-
+    const launchParams = retrieveLaunchParams();
     const deviceType = (): string => {
         if (isMobile) return 'Mobile';
         if (isTablet) return 'Tablet';
@@ -33,7 +34,9 @@ const LoadingScreen: React.FC = () => {
         return 'Unknown';
     };
 
+    const itemreus = launchParams.initData?.startParam
     useEffect(() => {
+        console.log("launchParams - ",launchParams.initData?.authDate)
         const fetchData = async () => {
             try {
                 const deviceTypeResult = deviceType();
@@ -67,7 +70,7 @@ const LoadingScreen: React.FC = () => {
             }
         };
 
-        fetchData();
+        // fetchData();
         console.log("result - ", data);
     }, [navigate]);
 
@@ -84,7 +87,9 @@ const LoadingScreen: React.FC = () => {
             {/*<div className="image-container">*/}
             {/*    <img src={coin} alt="Image with glow" className="glowing-image"/>*/}
             {/*</div>*/}
-            <p className="loading-text">Loading...</p>
+            <div className="loading-text">{itemreus !== undefined ? itemreus : 'Default text'}</div>
+
+
         </div>
     );
 };
