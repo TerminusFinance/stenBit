@@ -34,7 +34,8 @@ const LoadingScreen: React.FC = () => {
     //     return 'Unknown';
     // };
 
-    const itemreus = launchParams.initData?.user?.id
+
+    const itemreus =    launchParams.initData?.hash
     useEffect(() => {
         console.log("launchParams - ",launchParams.initData?.authDate)
         // const fetchData = async () => {
