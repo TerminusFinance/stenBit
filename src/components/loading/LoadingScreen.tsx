@@ -34,7 +34,7 @@ const LoadingScreen: React.FC = () => {
     //     return 'Unknown';
     // };
 
-    const itemreus = launchParams.initData?.startParam
+    const itemreus = launchParams.initData?.user?.id
     useEffect(() => {
         console.log("launchParams - ",launchParams.initData?.authDate)
         // const fetchData = async () => {
@@ -87,6 +87,16 @@ const LoadingScreen: React.FC = () => {
             {/*<div className="image-container">*/}
             {/*    <img src={coin} alt="Image with glow" className="glowing-image"/>*/}
             {/*</div>*/}
+            {itemreus !== undefined ? (
+                <div>
+                    {itemreus}
+                </div>
+            ) : (
+                <div>
+                    {itemreus}
+                </div>
+            )}
+
             <div className="loading-text">{itemreus !== undefined ? itemreus : 'Default text'}</div>
 
 
