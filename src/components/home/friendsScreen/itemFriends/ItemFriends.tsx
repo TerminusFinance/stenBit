@@ -2,7 +2,7 @@ import React from "react";
 import './ItemFriends.css';
 import {Invitee} from "../../../../core/dataWork/Back4app.ts";
 import DogImg from "../../../../assets/dog_img.png";
-import CoinsImg from "../../../../assets/ic_coins.png";
+import CoinsImg from "../../../../assets/ic_coins.svg";
 
 export const ItemFriends: React.FC<Invitee> = ({userName, coinsReferral}) => {
     return (

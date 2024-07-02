@@ -1,6 +1,6 @@
 import React from "react";
 import './ItemTask.css';
-import CoinsIco from '../../../../assets/ic_coins.png';
+import CoinsIco from '../../../../assets/ic_coins.svg';
 import IcCheck from '../../../../assets/ic_check.svg';
 import icRightArrow from "../../../../assets/ic_arrow_right.svg";
 

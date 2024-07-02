@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './TapScreen.css';
-import coin from '../../../assets/ic_coins.png';
+import coin from '../../../assets/ic_coins.svg';
 import { useNavigate } from "react-router-dom";
 import { useData } from "../../DataContext.tsx";
 import { updateUser } from "../../../core/dataWork/Back4app.ts";

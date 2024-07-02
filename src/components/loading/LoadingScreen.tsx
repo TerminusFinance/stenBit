@@ -4,7 +4,7 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import {getUserById} from "../../core/dataWork/Back4app.ts";
 import {useData} from "../DataContext.tsx";
 import {isDesktop, isMobile, isTablet} from 'react-device-detect';
-import coin from "../../assets/ic_coins.png";
+import coin from "../../assets/ic_coins.svg";
 
 interface UserData {
     objectId?: string;

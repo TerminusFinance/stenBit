@@ -1,12 +1,11 @@
 import React, {useState} from "react";
 import './TasksScreen.css';
-import coin from "../../../assets/ic_coins.png";
+import coin from "../../../assets/ic_coins.svg";
 import ItemTask, {TaskCardProps, isOpenUrlTask, OpenUrlTask, isSampleTask, CheckNftTask} from "./itemTask/ItemTask";
 import TelegramIco from "../../../assets/ic_telegram.png";
 import XIco from "../../../assets/ic_x.png";
 import ProfileIco from "../../../assets/profile_ico.png";
 import BottomSheetTask from "./bottomSheetTask/BottomSheetTask";
-import CoinsIco from "../../../assets/ic_coins.png";
 import {useData} from "../../DataContext.tsx";
 import {updateUser} from "../../../core/dataWork/Back4app.ts";
 import {
@@ -265,7 +264,7 @@ const TasksScreen: React.FC = () => {
                             )}
 
                             <div className='coins-container'>
-                                <img src={CoinsIco} className='ic-coins' />
+                                <img src={coin} className='ic-coins' />
                                 <span className="divider">+{selectedTask.coins}</span>
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import './StartScreen.css';
-import ic_coins from '../../assets/ic_coins.png';
+import ic_coins from '../../assets/ic_coins.svg';
 import ic_telegram from '../../assets/ic_telegram.png';
 import ic_website from '../../assets/ic_website.png';
 import ic_discord from '../../assets/ic_discord.png';

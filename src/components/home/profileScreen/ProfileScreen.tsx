@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import "./ProfileScreen.css";
-import coinIcon from "../../../assets/ic_coins.png";
+import coinIcon from "../../../assets/ic_coins.svg";
 import {useData} from "../../DataContext.tsx";
 import {TonConnectButton, useTonWallet} from "@tonconnect/ui-react";
 import {updateUser} from "../../../core/dataWork/Back4app.ts";
