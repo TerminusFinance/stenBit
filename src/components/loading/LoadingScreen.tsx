@@ -49,21 +49,21 @@ const LoadingScreen: React.FC = () => {
                         if(launchParams.initData?.hash != undefined) {
                             const newId = launchParams.initData.hash
                             setlaunchedeParams(newId)
-                            const result = await getUserById(newId);
-                            if (typeof result ==="string") {
-                                if(!inviteCode) {
-                                    console.log('User not found');
-                                    // navigate('/start', {state: {newId}});
-                                } else  {
-                                    console.log('User not found');
-                                    // navigate('/start', {state: {newId, name: "name", inviteCode}});
-                                }
-                            } else if (typeof result === 'object'){
-                                console.log("set up data - ", result.coins);
-                                // setData(result);
-                                // setDataApp(result);
-                                // navigate('/tap');
-                            }
+                            // const result = await getUserById(newId);
+                            // if (typeof result ==="string") {
+                            //     if(!inviteCode) {
+                            //         console.log('User not found');
+                            //         navigate('/start', {state: {newId}});
+                                // } else  {
+                                //     console.log('User not found');
+                                //     navigate('/start', {state: {newId, name: "name", inviteCode}});
+                                // }
+                            // } else if (typeof result === 'object'){
+                            //     console.log("set up data - ", result.coins);
+                            //     setData(result);
+                            //     setDataApp(result);
+                            //     navigate('/tap');
+                            // }
                         }
                     } catch (e) {
                         navigate('/not-found', {});
