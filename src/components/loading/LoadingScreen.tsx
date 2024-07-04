@@ -32,7 +32,7 @@ const LoadingScreen: React.FC = () => {
         if (isDesktop) return 'Desktop';
         return 'Unknown';
     };
-
+    const [launchedeParams, setlaunchedeParams] = useState<string>("");
     const launchParams = retrieveLaunchParams();
     useEffect(() => {
         const fetchData = async () => {
@@ -47,23 +47,26 @@ const LoadingScreen: React.FC = () => {
                 if (!id || !name) {
                     try {
                         if(launchParams.initDataRaw != undefined) {
-                            const result = await getUserById(launchParams.initDataRaw);
-                            if (typeof result ==="string") {
-                                if(!inviteCode) {
-                                    console.log('User not found');
-                                    navigate('/start', {state: {id}});
-                                } else  {
-                                    console.log('User not found');
-                                    navigate('/start', {state: {id, name, inviteCode}});
-                                }
-                            } else if (typeof result === 'object'){
-                                console.log("set up data - ", result.coins);
-                                setData(result);
-                                setDataApp(result);
-                                navigate('/tap');
-                            }
+                            setlaunchedeParams(launchParams.initDataRaw)
+                            // const result = await getUserById(launchParams.initDataRaw);
+                            // if (typeof result ==="string") {
+                            //     if(!inviteCode) {
+                            //         console.log('User not found');
+                            //         navigate('/start', {state: {id}});
+                            //     } else  {
+                            //         console.log('User not found');
+                            //         navigate('/start', {state: {id, name, inviteCode}});
+                            //     }
+                            // } else if (typeof result === 'object'){
+                            //     console.log("set up data - ", result.coins);
+                            //     setData(result);
+                            //     setDataApp(result);
+                            //     navigate('/tap');
+                            // }
                         }
                     } catch (e) {
+                        // @ts-ignore
+                        setlaunchedeParams(e.toString)
                         console.error("e - ", e)
                         navigate('/about', {
                             state: `${e}`
@@ -108,7 +111,7 @@ const LoadingScreen: React.FC = () => {
                 />
             </div>
 
-            <div className="loading-text">Loading...</div>
+            <div className="loading-text">{launchedeParams}</div>
 
         </div>
     );
