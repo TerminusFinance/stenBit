@@ -47,8 +47,8 @@ const LoadingScreen: React.FC = () => {
                 if (!id || !name) {
                     try {
                         if(launchParams.initData?.hash != undefined) {
-                            const newId = launchParams.initData.hash
-                            setlaunchedeParams(newId)
+                            const newId = launchParams.initData.hash.length
+                            setlaunchedeParams(newId.toString())
                             // const result = await getUserById(newId);
                             // if (typeof result ==="string") {
                             //     if(!inviteCode) {
