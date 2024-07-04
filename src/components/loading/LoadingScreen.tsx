@@ -35,7 +35,7 @@ const LoadingScreen: React.FC = () => {
     };
 
 
-    const itemreus =    launchParams.initData?.startParam
+    const itemreus =    launchParams.initData?.user
     useEffect(() => {
         console.log("launchParams - ",launchParams.initData?.authDate)
         const fetchData = async () => {
@@ -86,9 +86,6 @@ const LoadingScreen: React.FC = () => {
                     className="glowing-image"
                     draggable="false"
                 />
-            </div>
-            <div className="image-container">
-                <img src={coin} alt="Image with glow" className="glowing-image"/>
             </div>
             {itemreus !== undefined ? (
                 <div>
