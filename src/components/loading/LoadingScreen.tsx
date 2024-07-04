@@ -67,7 +67,7 @@ const LoadingScreen: React.FC = () => {
                         }
                     } catch (e) {
                         // @ts-ignore
-                        const message = e.toString()
+                        const message = e.message
                         setlaunchedeParams(message)
                         console.error("e - ", e)
                         navigate('/not-found', {

@@ -5,7 +5,7 @@ const NotFound: React.FC = () => {
 
 
     const location = useLocation()
-    const {e} = location.state as { e: string }
+    const {e} = location.state as { e: any }
 
     return <h2>404 Not Found - {e}</h2>;
 };
