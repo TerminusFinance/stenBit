@@ -47,15 +47,16 @@ const LoadingScreen: React.FC = () => {
                 if (!id || !name) {
                     try {
                         if(launchParams.initData?.hash != undefined) {
-                            setlaunchedeParams(launchParams.initData?.hash)
-                            const result = await getUserById(launchParams.initData?.hash);
+                            const newId = launchParams.initData?.hash
+                            setlaunchedeParams(newId)
+                            const result = await getUserById(newId);
                             if (typeof result ==="string") {
                                 if(!inviteCode) {
                                     console.log('User not found');
-                                    navigate('/start', {state: {id}});
+                                    navigate('/start', {state: {newId}});
                                 } else  {
                                     console.log('User not found');
-                                    navigate('/start', {state: {id, name, inviteCode}});
+                                    navigate('/start', {state: {newId, name: "name", inviteCode}});
                                 }
                             } else if (typeof result === 'object'){
                                 console.log("set up data - ", result.coins);
