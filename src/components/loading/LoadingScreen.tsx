@@ -46,24 +46,24 @@ const LoadingScreen: React.FC = () => {
                 console.log("id переданный - ", id, "name переданный - ", name);
                 if (!id || !name) {
                     try {
-                        if(launchParams.initData?.hash != undefined) {
-                            const newId = launchParams.initData.hash.length
-                            setlaunchedeParams(newId.toString())
-                            // const result = await getUserById(newId);
-                            // if (typeof result ==="string") {
-                            //     if(!inviteCode) {
-                            //         console.log('User not found');
-                            //         navigate('/start', {state: {newId}});
-                                // } else  {
-                                //     console.log('User not found');
-                                //     navigate('/start', {state: {newId, name: "name", inviteCode}});
-                                // }
-                            // } else if (typeof result === 'object'){
-                            //     console.log("set up data - ", result.coins);
-                            //     setData(result);
-                            //     setDataApp(result);
-                            //     navigate('/tap');
-                            // }
+                        if(launchParams.initData?.user?.id != undefined) {
+                            const newId = launchParams.initData.user?.id
+                            setlaunchedeParams(newId?.toString())
+                            const result = await getUserById(newId?.toString());
+                            if (typeof result ==="string") {
+                                if(!inviteCode) {
+                                    console.log('User not found');
+                                    navigate('/start', {state: {newId}});
+                                } else  {
+                                    console.log('User not found');
+                                    navigate('/start', {state: {newId, name: "name", inviteCode}});
+                                }
+                            } else if (typeof result === 'object'){
+                                console.log("set up data - ", result.coins);
+                                setData(result);
+                                setDataApp(result);
+                                navigate('/tap');
+                            }
                         }
                     } catch (e) {
                         navigate('/not-found', {});
