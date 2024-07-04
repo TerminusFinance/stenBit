@@ -33,7 +33,6 @@ const LoadingScreen: React.FC = () => {
         return 'Unknown';
     };
     const [launchedeParams, setlaunchedeParams] = useState<string>("");
-    const launchParams = retrieveLaunchParams();
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -46,6 +45,7 @@ const LoadingScreen: React.FC = () => {
                 console.log("id переданный - ", id, "name переданный - ", name);
                 if (!id || !name) {
                     try {
+                        const launchParams = retrieveLaunchParams();
                         const params = launchParams.initData
                         if(params != undefined) {
                             const user = params.user
