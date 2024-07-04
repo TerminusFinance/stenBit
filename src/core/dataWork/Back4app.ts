@@ -75,38 +75,6 @@ export const getUserById = async (userId: string): Promise<GetUserByResponse> =>
     }
 };
 
-
-// export interface UpdateUserRequest {
-//     userId?: string;
-//     coins?: number;
-//     userName?: string;
-//     address?: string;
-//     listUserInvite?: string[];
-// }
-//
-// export const updateUser = async (userId: string, updates: Partial<UpdateUserRequest>): Promise<GetUserByResponse> => {
-//     try {
-//         const response = await axios.post<{
-//             result: GetUserByResponse
-//         }>('https://parseapi.back4app.com/functions/updateUser',
-//             { userId, ...updates } as UpdateUserRequest,
-//             {
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'X-Parse-Application-Id': '35FDDTeCMqJUMhDYr9LFh2TEXPXTiRvYiRYbcG23',
-//                     'X-Parse-REST-API-Key': 'kAyRiID9BcXva11fhs5b6fX47nkcVlJjk34313qP',
-//                 }
-//             }
-//         );
-//
-//         return response.data.result;
-//     } catch (error) {
-//         console.error('Error updating user:', error);
-//         throw error;
-//     }
-// };
-
-
 export interface UpdateUserRequest {
     userId?: string;
     coins?: number;
@@ -200,20 +168,24 @@ export const processInvitationFromInviteCode = async (inviteCode: string, newUse
     }
 };
 
-// (async () => {
-//     try {
-//         // Создание пользователя
-//         const newUser = await createUser('uniqueUserId123', '123 Main St');
-//         console.log('Created User:', newUser.result);
-//
-//         // Получение пользователя по userId
-//         const user = await getUserById('uniqueUserId123');
-//         console.log('Fetched User:', user.result);
-//
-//         // Обновление пользователя
-//         const updatedUser = await updateUser('uniqueUserId123', { clickCount: 10, address: '456 New St' });
-//         console.log('Updated User:', updatedUser.result);
-//     } catch (error) {
-//         console.error('Operation failed:', error);
-//     }
-// })();
+interface LeagueLevel {
+    level: string;
+    maxEnergy: number;
+    minCoins: number;
+    maxCoins: number;
+}
+
+export const getLevelLeague = async (): Promise<LeagueLevel[]> => {
+    try {
+        const response = await axios.get<LeagueLevel[]>('http://95.163.235.93/leagues');
+
+        console.log("response.data - ", response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error processing invitation:', error);
+        if (axios.isAxiosError(error) && error.response) {
+            console.log('Axios error response data:', error.response.data);
+        }
+        throw error;
+    }
+}

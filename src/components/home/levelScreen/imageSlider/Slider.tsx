@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './Slider.css';
 import ProgressBar from "../../progressBar/ProgressBar.tsx";
-import leftArrow from "../../../../assets/ic_arrow_left.svg";
-import rightArrow from "../../../../assets/ic_arrow_right.svg";
+import leftArrow from "../../../../assets/btn-nav-left.svg";
+import rightArrow from "../../../../assets/btn-nav-right.svg";
 import { SlidesTypeList } from "../LevelScreen.tsx";
+import {ProgressBarLeagues} from "../../progressBar/progressBarLeagues/ProgressBarLeagues.tsx";
 
 const Slider: React.FC<SlidesTypeList> = ({ itemList, initialSlide }) => {
     const [currentSlide, setCurrentSlide] = useState(initialSlide);
@@ -50,7 +51,7 @@ const Slider: React.FC<SlidesTypeList> = ({ itemList, initialSlide }) => {
     };
 
     return (
-        <div className="main-container">
+        <div className="main-container-slider">
             <div className="slider-container"
                  onTouchStart={handleTouchStart}
                  onTouchMove={handleTouchMove}
@@ -64,7 +65,9 @@ const Slider: React.FC<SlidesTypeList> = ({ itemList, initialSlide }) => {
                         }} onTransitionEnd={handleTransitionEnd}>
                             {itemList.map((slide, index) => (
                                 <div key={index} className="slide">
+                                    <div className="image-container-slider">
                                     <img src={slide.image} alt={slide.title} className="slide-image"/>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -94,15 +97,17 @@ const Slider: React.FC<SlidesTypeList> = ({ itemList, initialSlide }) => {
                              className={`image-nav right ${currentSlide === itemList.length - 1 ? 'disabled' : ''}`}/>
                     </button>
                 </div>
-                <p className="sub-title-cristall">{itemList[currentSlide].description}</p>
                 <div style={{width: '100%', paddingTop: 16, paddingLeft: 8, paddingRight: 8}}>
                     {itemList[currentSlide].currentProgress === 0 ? (
                         <ProgressBar progress={`From ${itemList[currentSlide].maxProgress}`}/>
                     ) : (
-                        <ProgressBar progress={{
+                        <ProgressBarLeagues progress={{
                             current: itemList[currentSlide].currentProgress,
                             max: itemList[currentSlide].maxProgress
-                        }}/>
+                        }} energy={{
+                            current: 1253,
+                            max: 2000
+                        }} type={ itemList[currentSlide].title}/>
                     )}
                 </div>
             </div>

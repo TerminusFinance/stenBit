@@ -1,0 +1,26 @@
+/* Кнопка пригласить друзей */
+.btn-invite-friends {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 16px;
+    background: linear-gradient(360deg, #FFC060, #F3A52E);
+    padding: 24px 0;
+    box-shadow: 0 0 0 1px #FFCF86; /* Эффект обводки */
+    width: calc(100% - 2px);
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.img-btn-invite-friends {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.tx-btn-invite-friends {
+    color: black;
+    font-size: 16px;
+    font-family: MyCustomFont-bold, sans-serif;
+}
+

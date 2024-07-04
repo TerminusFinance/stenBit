@@ -4,14 +4,15 @@ import coin from '../../../assets/ic_coins.svg';
 import { useNavigate } from "react-router-dom";
 import { useData } from "../../DataContext.tsx";
 import { updateUser } from "../../../core/dataWork/Back4app.ts";
-import whiteLevel from "../../../assets/diamont/ic_white_level.png";
-import oceanLevel from "../../../assets/diamont/ic_ocean_level.png";
-import redLevel from "../../../assets/diamont/ic_red_level.png";
-import purpleLevel from "../../../assets/diamont/ic_purple_level.png";
+import bronzeLevel from "../../../assets/diamont/diamond-level-bronze.svg";
+import silverLevel from "../../../assets/diamont/diamond-level-silver.svg";
+import goldLevel from "../../../assets/diamont/diamond-level-gold.svg";
+import platinumLevel from "../../../assets/diamont/diamond-level-platinum.svg";
 import ProgressBarLevel from "../progressBar/progressBarLevel/ProgressBarLevel.tsx";
 import EnergyBadge from "../progressBar/energyBadge/EnergyBadge.tsx";
-import {CoinsLevelUpp} from "../progressBar/coinsLevelUpp/CoinsLevelUpp.tsx";
+import { CoinsLevelUpp } from "../progressBar/coinsLevelUpp/CoinsLevelUpp.tsx";
 import IcDollar from "../../../assets/ic_dollar.svg";
+import NavigationBar from "../../navigationBar/NavigationBar.tsx";
 
 export interface LevelType {
     id: number;
@@ -25,39 +26,40 @@ export interface LevelType {
 const levelTypes: LevelType[] = [
     {
         id: 1,
-        title: 'White Level',
+        title: 'Bronze',
         description: 'Your number of shares determines the league you enter',
-        image: whiteLevel,
+        image: bronzeLevel,
         minProgress: 0,
         maxProgress: 5000,
     },
     {
         id: 2,
-        title: 'Ocean Level',
+        title: 'Silver',
         description: 'Your number of shares determines the league you enter',
-        image: oceanLevel,
+        image: silverLevel,
         minProgress: 5000,
         maxProgress: 50000,
     },
     {
         id: 3,
-        title: 'Red Level',
+        title: 'Gold',
         description: 'Your number of shares determines the league you enter',
-        image: redLevel,
+        image: goldLevel,
         minProgress: 50000,
         maxProgress: 150000,
     },
     {
         id: 4,
-        title: 'Purple Level',
+        title: 'Platinum',
         description: 'Your number of shares determines the league you enter',
-        image: purpleLevel,
+        image: platinumLevel,
         minProgress: 150000,
         maxProgress: 500000,
     },
 ];
 
 const TapScreen: React.FC = () => {
+
     const { dataApp, setDataApp } = useData();
     const [clicks, setClicks] = useState<number>(dataApp.coins !== undefined && dataApp.coins !== null ? dataApp.coins : 0);
     const [animations, setAnimations] = useState<{ x: number, y: number, id: number }[]>([]);
@@ -79,8 +81,12 @@ const TapScreen: React.FC = () => {
         navigator.vibrate(50);
     };
 
-    const handleNav = () => {
-        navigate('/home/level', { state: { levelTypes, currentLevel } });
+    const handleNav = (marsh: string) => {
+        if(marsh == "level") {
+            navigate('/level', { state: { levelTypes, currentLevel } });
+        } else  {
+            navigate(`/${marsh}`);
+        }
     };
 
     const sendClickData = async (clickCount: number) => {
@@ -134,48 +140,68 @@ const TapScreen: React.FC = () => {
         return Math.ceil(difference / 1000);
     };
 
+
+
     return (
         <div className="tap-container">
-            <div className="coin-wrapper">
-                <div className="count-div">
-                    <img src={IcDollar} alt="Coin" className="coin-small" />
-                    <div className="click-count">{formatNumber(clicks)}</div>
-                </div>
-                <CoinsLevelUpp value={calculateThousandsDifference(clicks, currentLevel.maxProgress)} onClick={handleNav}/>
-            </div>
-
-            <div className="coin-container">
-                <div className="image-container">
-                    <img
-                        src={coin}
-                        alt="Coin"
-                        className="tap-coin"
-                        draggable="false"
-                        onClick={handleClick}
+            <div className="tap-raspred-container">
+                <div className="coin-wrapper">
+                    <div className="count-div">
+                        <img src={IcDollar} alt="Coin" className="coin-small" />
+                        <div className="click-count">{formatNumber(clicks)}</div>
+                    </div>
+                    <CoinsLevelUpp
+                        value={calculateThousandsDifference(clicks, currentLevel.maxProgress)}
+                        onClick={() =>handleNav('level')}
                     />
                 </div>
 
-                {animations.map(animation => (
-                    <div
-                        key={animation.id}
-                        className="increment"
-                        style={{
-                            left: animation.x - 90,
-                            top: animation.y - 240
-                        }}
-                    >
-                        +1
+                <div className="coin-container">
+                    <div className="image-container">
+                        <img
+                            src={coin}
+                            alt="Coin"
+                            className="tap-coin"
+                            draggable="false"
+                            onClick={handleClick}
+                        />
                     </div>
-                ))}
+
+                    {animations.map(animation => (
+                        <div
+                            key={animation.id}
+                            className="increment"
+                            style={{
+                                left: animation.x - 90,
+                                top: animation.y - 240,
+                            }}
+                        >
+                            +1
+                        </div>
+                    ))}
+                </div>
+
+                <div style={{ width: '100vw', padding: '0 10px', zIndex: 2, marginBottom: '16px', marginTop: '8px' }}>
+                    <EnergyBadge current={energy} max={2000} />
+                    <ProgressBarLevel
+                        title={currentLevel.title}
+                        level={`Level: ${currentLevel.id}/${levelTypes.length}`}
+                        progress={clicks}
+                        maxProgress={currentLevel.maxProgress}
+                        onClick={() =>handleNav("level")}
+                    />
+                </div>
             </div>
 
-            <div style={{ width: '100vw', padding: '0 10px', zIndex: 2 }}>
-                <EnergyBadge current={energy} max={2000} />
-                <ProgressBarLevel title={currentLevel.title} level={`Level: ${currentLevel.id}/${levelTypes.length}`} progress={clicks} maxProgress={currentLevel.maxProgress} onClick={handleNav} />
-            </div>
+            <NavigationBar
+                initialSelected={"Earn"}
+                onEarnClick={() => {}}
+                onInviteClick={() =>handleNav("friends")}
+                onProfileClick={() =>handleNav("profile")}
+                onTasksClick={() =>handleNav("tasks")}
+            />
         </div>
     );
-
 };
 
 export default TapScreen;

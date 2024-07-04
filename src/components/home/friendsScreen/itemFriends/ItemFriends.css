@@ -8,7 +8,7 @@
     border-radius: 16px;
     align-items: center;
     justify-content: space-between;
-    background-color: #1a1a1a;
+    background-color: #1B1B1E;
 }
 
 .dog-container {
@@ -16,22 +16,50 @@
     border-radius: 16px;
     align-items: center;
     align-content: center;
-    padding: 8px 8px ;
+    padding: 8px 8px;
+    margin: 8px 0;
+}
+
+.container-left-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.container-user-stats {
+    display: flex;
+    margin-left: 8px;
+    flex-direction: column;
 }
 
 .coins-ref-container {
     display: flex;
     flex-direction: row;
     align-content: center;
+    align-items: center;
+
 }
 
 .ic-dog {
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
+
 }
 
-.ic-coins {
-    width: 24px;
-    height: 24px;
+.ic-coins-friends {
+    width: 16px;
+    height: 16px;
     margin: 0 4px;
+}
+
+.tx-coin-plus-friends {
+    font-family: MyCustomFont, sans-serif;
+    font-size: 14px;
+    color: #9CA5B2
+}
+
+.tx-name-friends {
+    font-family: MyCustomFont-bold, sans-serif;
+    font-size: 16px;
+    color: white;
 }

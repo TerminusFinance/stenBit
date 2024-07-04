@@ -1,16 +1,24 @@
 .tap-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     background: linear-gradient(360deg, #161618, #191819, #171719);
     box-sizing: border-box;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     margin: 0;
-    padding-bottom: 48px;
     overflow: hidden;
     position: relative;
+}
+
+.tap-raspred-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex-grow: 1;
 }
 
 .coin-wrapper {
@@ -19,7 +27,9 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    z-index: 2; /* Добавляем z-index */
+    margin-top: 24px;
+    margin-bottom: 16px;
+    z-index: 2;
 }
 
 .count-div {
@@ -44,8 +54,12 @@
 }
 
 .coin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
-    z-index: 2; /* Добавляем z-index */
+    flex-grow: 1;
+    z-index: 2;
 }
 
 .tap-coin {
@@ -53,8 +67,8 @@
     height: 200px;
     transition: transform 0.3s;
     position: relative;
-    user-select: none; /* Запрещаем выделение текста и изображений */
-    z-index: 3; /* Добавляем z-index */
+    user-select: none;
+    z-index: 3;
 }
 
 .type-status {
@@ -67,7 +81,7 @@
     padding: 10px 20px;
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.02);
-    z-index: 2; /* Добавляем z-index */
+    z-index: 2;
 }
 
 .tx-type-status {
@@ -105,7 +119,7 @@
     position: relative;
     width: 200px;
     height: 200px;
-    z-index: 1; /* Обновляем z-index */
+    z-index: 1;
 }
 
 .image-container::before {
@@ -113,12 +127,12 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 200%; /* Регулируйте размер сияния */
-    height: 200%; /* Регулируйте размер сияния */
+    width: 200%;
+    height: 200%;
     background: radial-gradient(circle, rgba(255, 223, 0, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
     transform: translate(-50%, -50%);
-    z-index: -1; /* Обновляем z-index */
-    pointer-events: none; /* Убедитесь, что сияние не мешает взаимодействию */
+    z-index: -1;
+    pointer-events: none;
 }
 
 .increment {
@@ -126,8 +140,8 @@
     font-size: 24px;
     color: white;
     opacity: 1;
-    animation: moveUp 1s ease-out forwards; /* Добавляем forwards для сохранения состояния после анимации */
-    z-index: 4; /* Добавляем z-index */
+    animation: moveUp 1s ease-out forwards;
+    z-index: 4;
 }
 
 @keyframes moveUp {
@@ -136,15 +150,22 @@
         opacity: 1;
     }
     100% {
-        transform: translateY(-180px); /* Изменено на -180px для позиционирования над монетой */
+        transform: translateY(-180px);
         opacity: 0;
     }
 }
 
+.progress-energy-container {
+    width: 100%;
+    padding: 0 10px;
+    z-index: 2;
+    margin-bottom: 10px;
+}
+
 .progress-bar {
-    z-index: 2; /* Добавляем z-index */
+    z-index: 2;
 }
 
 .energy-badge {
-    z-index: 2; /* Добавляем z-index */
+    z-index: 2;
 }

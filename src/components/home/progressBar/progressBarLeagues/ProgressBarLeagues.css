@@ -1,0 +1,95 @@
+.progress-bar-league {
+    position: relative; /* Делаем позиционирование относительным, чтобы дочерние элементы могли быть позиционированы относительно него */
+    width: 100%;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.progress-label {
+    position: absolute; /* Позиционируем абсолютно */
+    top: 0;
+    line-height: 40px; /* Выравниваем по вертикали по центру */
+    font-size: 14px; /* Размер шрифта */
+    color: white; /* Цвет текста */
+    font-weight: bold; /* Жирный шрифт */
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+.progress-league {
+    height: 100%;
+    background: linear-gradient(90deg, red, yellow);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Bronze {
+    height: 100%;
+    background: linear-gradient(90deg, #FF8329, #F67025, #EF6022);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Silver {
+    height: 100%;
+    background: linear-gradient(90deg, #E5E9F3, #C6CFE3, #ABB9D5);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Gold {
+    height: 100%;
+    background: linear-gradient(90deg, #FFC060, #F3A52E);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Platinum {
+    height: 100%;
+    background: linear-gradient(90deg, #A7DFF2, #47ABCD);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.tx-progress-leagues {
+    color: white;
+    font-family: MyCustomFont-bold, sans-serif;
+    margin-right: 8px;
+    font-size: 16px;
+    -webkit-text-stroke-width: 0.8px; /* Ширина обводки */
+    -webkit-text-stroke-color: black; /* Цвет обводки */
+}
+
+.container-energy {
+    display: flex;
+    flex-direction: row;
+    margin-left: 8px;
+    align-content: center;
+    align-items: center;
+}
+
+.ic-flash-leagues {
+    width: 24px;
+    height: 24px;
+}
+
+.tx-energy-current-leagues {
+    color: white;
+    font-size: 16px;
+    font-family: MyCustomFont-bold, sans-serif;
+    -webkit-text-stroke-width: 0.8px; /* Ширина обводки */
+    -webkit-text-stroke-color: black; /* Цвет обводки */
+}
+
+.tx-energy-max-leagues {
+    color: #9CA5B2;
+    font-size: 16px;
+    font-family: MyCustomFont-bold, sans-serif;
+    -webkit-text-stroke-width: 0.8px; /* Ширина обводки */
+    -webkit-text-stroke-color: black; /* Цвет обводки */
+}

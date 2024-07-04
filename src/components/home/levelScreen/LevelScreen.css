@@ -1,13 +1,13 @@
 .level-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    background: linear-gradient(360deg, #121215, #171625, #351E22);
+    background: linear-gradient(360deg, #161618, #191819, #171719);
     box-sizing: border-box;
     width: 100%;
     height: 100%;
-    margin: 0;
+    margin-bottom: 60px;
     padding: 0;
 }
 

@@ -3,6 +3,7 @@ import './LevelScreen.css';
 import Slider from './imageSlider/Slider.tsx';
 import { useLocation } from 'react-router-dom';
 import {useData} from "../../DataContext.tsx";
+import NavigationBar from "../../navigationBar/NavigationBar.tsx";
 
 export interface SlidesType {
     title: string;
@@ -22,6 +23,9 @@ const LevelScreen: React.FC = () => {
     const { dataApp } = useData();
     const { levelTypes, currentLevel } = location.state;
 
+    const beber = () => {
+
+    }
     if (levelTypes && currentLevel) {
         const slides: SlidesType[] = levelTypes.map((level: any, index: number) => {
             let currentProgress = 0;
@@ -42,7 +46,9 @@ const LevelScreen: React.FC = () => {
 
         return (
             <div className="level-container">
+                <div></div>
                 <Slider itemList={slides} initialSlide={initialSlide} />
+                <NavigationBar initialSelected={"Earn"} onEarnClick={beber} onInviteClick={beber} onProfileClick={beber} onTasksClick={beber}/>
             </div>
         );
     }

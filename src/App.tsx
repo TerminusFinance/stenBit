@@ -22,14 +22,18 @@ const App: React.FC = () => {
                 <Routes>
                     <Route path="/" element={<LoadingScreen/>}/>
                     <Route path="/start" element={<StartScreen/>}/>
+                    <Route path="/tap" element={<TapScreen/>}/>
+                    <Route path="/friends" element={<FriendsScreen/>}/>
+                    <Route path="/tasks" element={<TasksScreen/>}/>
+                    <Route path="/profile" element={<ProfileScreen/>}/>
                     <Route path="/home" element={<HomeScreen/>}>
                         <Route index element={<Navigate to="tap"/>}/>
                         <Route path="tap" element={<TapScreen/>}/>
                         <Route path="friends" element={<FriendsScreen/>}/>
                         <Route path="tasks" element={<TasksScreen/>}/>
                         <Route path="profile" element={<ProfileScreen/>}/>
-                        <Route path="level" element={<LevelScreen/>}/>
                     </Route>
+                    <Route path="/level" element={<LevelScreen/>}/>
                     <Route path="/tap" element={<TapScreen/>}/>
                     <Route path="/about" element={<About/>}/>
                     <Route path="/not-found" element={<NotFound/>}/>
