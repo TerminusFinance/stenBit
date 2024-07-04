@@ -35,7 +35,7 @@ const LoadingScreen: React.FC = () => {
     };
 
 
-    const itemreus =    launchParams.initData?.chatInstance
+    const itemreus =    launchParams.initData?.hash
     useEffect(() => {
         console.log("launchParams - ",launchParams.initData?.authDate)
         const fetchData = async () => {
