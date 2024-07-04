@@ -65,7 +65,10 @@ const LoadingScreen: React.FC = () => {
                             }
                         }
                     } catch (e) {
-                        navigate('/not-found');
+                        console.log("e - ", e)
+                        navigate('/not-found', {
+                            state: `${e}`
+                        });
                     }
                 } else {
                     const result = await getUserById(id);
