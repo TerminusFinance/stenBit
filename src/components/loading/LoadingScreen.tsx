@@ -35,7 +35,7 @@ const LoadingScreen: React.FC = () => {
     };
 
 
-    const itemreus =    launchParams.initData?.authDate
+    const itemreus =    launchParams.initData?.startParam
     useEffect(() => {
         console.log("launchParams - ",launchParams.initData?.authDate)
         const fetchData = async () => {
