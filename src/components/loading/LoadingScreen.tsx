@@ -65,7 +65,7 @@ const LoadingScreen: React.FC = () => {
                             }
                         }
                     } catch (e) {
-                        console.log("e - ", e)
+                        console.error("e - ", e)
                         navigate('/not-found', {
                             state: `${e}`
                         });
