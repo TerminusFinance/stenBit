@@ -47,32 +47,26 @@ const LoadingScreen: React.FC = () => {
                 if (!id || !name) {
                     try {
                         if(launchParams.initData?.hash != undefined) {
-                            const newId = launchParams.initData?.hash
+                            const newId = launchParams.initData.hash
                             setlaunchedeParams(newId)
                             const result = await getUserById(newId);
                             if (typeof result ==="string") {
                                 if(!inviteCode) {
                                     console.log('User not found');
-                                    navigate('/start', {state: {newId}});
+                                    // navigate('/start', {state: {newId}});
                                 } else  {
                                     console.log('User not found');
-                                    navigate('/start', {state: {newId, name: "name", inviteCode}});
+                                    // navigate('/start', {state: {newId, name: "name", inviteCode}});
                                 }
                             } else if (typeof result === 'object'){
                                 console.log("set up data - ", result.coins);
-                                setData(result);
-                                setDataApp(result);
-                                navigate('/tap');
+                                // setData(result);
+                                // setDataApp(result);
+                                // navigate('/tap');
                             }
                         }
                     } catch (e) {
-                        // @ts-ignore
-                        const message = e.message
-                        setlaunchedeParams(message)
-                        console.error("e - ", e)
-                        navigate('/not-found', {
-                            state: `${message}`
-                        });
+                        navigate('/not-found', {});
                     }
                 } else {
                     const result = await getUserById(id);
