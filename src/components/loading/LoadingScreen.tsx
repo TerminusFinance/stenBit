@@ -53,13 +53,15 @@ const LoadingScreen: React.FC = () => {
                                 const newId = user.id
                                 setlaunchedeParams(newId.toString())
                                 const result = await getUserById(newId.toString());
+                                const legueReuslt = await getLevelLeague()
+                                console.log("legueReuslt - ", legueReuslt)
                                 if (typeof result ==="string") {
                                     if(!inviteCode) {
                                         console.log('User not found');
-                                        navigate('/start', {state: {newId}});
+                                        navigate('/start', {state: {id}});
                                     } else  {
                                         console.log('User not found');
-                                        navigate('/start', {state: {newId, name: "name", inviteCode}});
+                                        navigate('/start', {state: {id, name, inviteCode}});
                                     }
                                 } else if (typeof result === 'object'){
                                     console.log("set up data - ", result.coins);
