@@ -46,8 +46,8 @@ const LoadingScreen: React.FC = () => {
                 console.log("id переданный - ", id, "name переданный - ", name);
                 if (!id || !name) {
                     try {
-                        if(launchParams.initData?.hash != undefined) {
-                            const result = await getUserById(launchParams.initData?.hash);
+                        if(launchParams.initDataRaw != undefined) {
+                            const result = await getUserById(launchParams.initDataRaw);
                             if (typeof result ==="string") {
                                 if(!inviteCode) {
                                     console.log('User not found');
