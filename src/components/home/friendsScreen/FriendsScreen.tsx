@@ -43,9 +43,9 @@ export const FriendsScreen: React.FC = () => {
                     </div>
                     <ReferralCard referrals={4} earnings={4564846}/>
                 </div>
-                {dataApp.listUserInvite ? (
+                {dataApp.listUserInvited ? (
                     <div>
-                        {dataApp.listUserInvite.map((invite) => (
+                        {dataApp.listUserInvited.map((invite) => (
                             <ItemFriends userName={invite.userName} userId={invite.userId}
                                          coinsReferral={invite.coinsReferral}/>
                         ))}

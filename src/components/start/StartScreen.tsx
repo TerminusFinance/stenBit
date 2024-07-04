@@ -24,21 +24,15 @@ const StartScreen: React.FC = () => {
                 const result = await createUser(id, name, 0);
                 console.log("result", result);
                 setDataApp(result)
-                navigate('/home', {
-                    state: {
-                        id: result
-                    }
-                });
+                navigate('/tap');
             } else {
                 console.log("id from start - ", id)
                 const result = await processInvitationFromInviteCode(inviteCode, id, name);
-                console.log("result", result);
-                setDataApp(result)
-                navigate('/home', {
-                    state: {
-                        id: result
-                    }
-                });
+                if(typeof result === 'object') {
+                    console.log("result", result);
+                    setDataApp(result)
+                    navigate('/tap');
+                }
             }
         } catch (error) {
             console.error("Error in goToAbout:", error);

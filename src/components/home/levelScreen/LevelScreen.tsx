@@ -4,6 +4,7 @@ import Slider from './imageSlider/Slider.tsx';
 import { useLocation } from 'react-router-dom';
 import {useData} from "../../DataContext.tsx";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
+import {postEvent} from "@tma.js/sdk";
 
 export interface SlidesType {
     title: string;
@@ -24,8 +25,9 @@ const LevelScreen: React.FC = () => {
     const { levelTypes, currentLevel } = location.state;
 
     const beber = () => {
-
+        postEvent('web_app_setup_back_button', { is_visible: true });
     }
+
     if (levelTypes && currentLevel) {
         const slides: SlidesType[] = levelTypes.map((level: any, index: number) => {
             let currentProgress = 0;

@@ -26,7 +26,6 @@ const LoadingScreen: React.FC = () => {
     const inviteCode = params.get('inviteCode');
     const [data, setData] = useState<UserData | null>(null);
     const {setDataApp} = useData();
-    const launchParams = retrieveLaunchParams();
     const deviceType = (): string => {
         if (isMobile) return 'Mobile';
         if (isTablet) return 'Tablet';
@@ -35,9 +34,7 @@ const LoadingScreen: React.FC = () => {
     };
 
 
-    const itemreus =    launchParams.initData?.hash
     useEffect(() => {
-        console.log("launchParams - ",launchParams.initData?.authDate)
         const fetchData = async () => {
             try {
                 const deviceTypeResult = deviceType();
@@ -48,12 +45,33 @@ const LoadingScreen: React.FC = () => {
                 }
                 console.log("id переданный - ", id, "name переданный - ", name);
                 if (!id || !name) {
-                    navigate('/not-found');
+                    try {
+                        const launchParams = retrieveLaunchParams();
+                        if(launchParams.initData?.hash != undefined) {
+                            const result = await getUserById(launchParams.initData?.hash);
+                            if (typeof result ==="string") {
+                                if(!inviteCode) {
+                                    console.log('User not found');
+                                    navigate('/start', {state: {id}});
+                                } else  {
+                                    console.log('User not found');
+                                    navigate('/start', {state: {id, name, inviteCode}});
+                                }
+                            } else if (typeof result === 'object'){
+                                console.log("set up data - ", result.coins);
+                                setData(result);
+                                setDataApp(result);
+                                navigate('/tap');
+                            }
+                        }
+                    } catch (e) {
+                        navigate('/not-found');
+                    }
                 } else {
                     const result = await getUserById(id);
                     const legueReuslt = await getLevelLeague()
                     console.log("legueReuslt - ", legueReuslt)
-                    if (result.error === 'User not found') {
+                    if (typeof result ==="string") {
                         if(!inviteCode) {
                             console.log('User not found');
                             navigate('/start', {state: {id}});
@@ -61,7 +79,7 @@ const LoadingScreen: React.FC = () => {
                             console.log('User not found');
                             navigate('/start', {state: {id, name, inviteCode}});
                         }
-                    } else {
+                    } else if (typeof result === 'object'){
                         console.log("set up data - ", result.coins);
                         setData(result);
                         setDataApp(result);
@@ -87,18 +105,8 @@ const LoadingScreen: React.FC = () => {
                     draggable="false"
                 />
             </div>
-            {itemreus !== undefined ? (
-                <div>
-                    {itemreus.toString()}
-                </div>
-            ) : (
-                <div>
-                    {itemreus}
-                </div>
-            )}
 
-            <div className="loading-text">{itemreus !== undefined ? itemreus.toString() : 'Default text'}</div>
-
+            <div className="loading-text">Loading...</div>
 
         </div>
     );

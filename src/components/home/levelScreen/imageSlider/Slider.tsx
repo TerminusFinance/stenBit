@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './Slider.css';
-import ProgressBar from "../../progressBar/ProgressBar.tsx";
 import leftArrow from "../../../../assets/btn-nav-left.svg";
 import rightArrow from "../../../../assets/btn-nav-right.svg";
 import { SlidesTypeList } from "../LevelScreen.tsx";
@@ -99,7 +98,10 @@ const Slider: React.FC<SlidesTypeList> = ({ itemList, initialSlide }) => {
                 </div>
                 <div style={{width: '100%', paddingTop: 16, paddingLeft: 8, paddingRight: 8}}>
                     {itemList[currentSlide].currentProgress === 0 ? (
-                        <ProgressBar progress={`From ${itemList[currentSlide].maxProgress}`}/>
+                        <ProgressBarLeagues progress={`From ${itemList[currentSlide].maxProgress}`} energy={{
+                            current: 1253,
+                            max: 2000
+                        }} type={ itemList[currentSlide].title}/>
                     ) : (
                         <ProgressBarLeagues progress={{
                             current: itemList[currentSlide].currentProgress,

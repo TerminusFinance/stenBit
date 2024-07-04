@@ -1,22 +1,14 @@
 import axios, {} from 'axios';
 
 
-
-export const createUser = async (userId: string, userName: string, coins: number): Promise<GetUserByResponse> => {
+export const createUser = async (userId: string, userName: string, coins: number): Promise<UserBasic> => {
     try {
         console.log("createUser userId -", userId)
-        const response = await axios.post<{ result: GetUserByResponse }>(
-            'https://parseapi.back4app.com/functions/createUser',
-            {userId, userName, coins}, // Параметры тела запроса
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Parse-Application-Id': '35FDDTeCMqJUMhDYr9LFh2TEXPXTiRvYiRYbcG23',
-                    'X-Parse-REST-API-Key': 'kAyRiID9BcXva11fhs5b6fX47nkcVlJjk34313qP',
-                }
-            }
+        const response = await axios.post<UserBasic>(
+            'http://95.163.235.93/users',
+            {userId, userName, coins}
         );
-        return response.data.result;
+        return response.data;
     } catch (error) {
         console.error('Error creating user:', error);
         if (axios.isAxiosError(error) && error.response) {
@@ -36,7 +28,6 @@ export interface GetUserByResponse {
     className?: string;
     codeToInvite?: string;
     coins?: number;
-    objectId?: string;
     userId?: string;
     userName?: string;
     address?: string;
@@ -45,64 +36,69 @@ export interface GetUserByResponse {
     error?: string;
 }
 
-export const getUserById = async (userId: string): Promise<GetUserByResponse> => {
+interface BoostItem {
+    boostName: string,
+    level: number,
+    price: number
+}
+
+interface listUserInvitedItem {
+    userId: string,
+    userName: string,
+    coinsReferral: number
+}
+
+export interface UserBasic {
+    userId?: string,
+    userName?: string,
+    coins?: number,
+    codeToInvite?: string,
+    address?: string,
+    listUserInvited?: listUserInvitedItem[],
+    currentEnergy?: number,
+    maxEnergy?: number,
+    boosts?: BoostItem[]
+    completedTasks?: number[] | null;
+}
+
+export const getUserById = async (userId: string): Promise<UserBasic | string> => {
     try {
         console.log('Sending request to get user by ID:', userId);
 
-        const response = await axios.post<{ result: GetUserByResponse }>(
-            'https://parseapi.back4app.com/functions/getUserById',
-            {userId}, // Параметры тела запроса в виде объекта
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Parse-Application-Id': '35FDDTeCMqJUMhDYr9LFh2TEXPXTiRvYiRYbcG23',
-                    'X-Parse-REST-API-Key': 'kAyRiID9BcXva11fhs5b6fX47nkcVlJjk34313qP',
-                }
-            }
+        const response = await axios.get<UserBasic>(
+            `http://95.163.235.93/users/${userId}`,
         );
 
-        console.log('Response data:', response.data.result.coins);
-        return response.data.result; // Вернем результат из объекта response.data
+        console.log('Response data:', typeof response.data);
+        if ('message' in response.data) {
+            return `${response.data.message}`; // Возвращаем сообщение об ошибке
+        }
+        return response.data; // Вернем результат из объекта response.data
     } catch (error) {
         console.error('Error getting user:', error);
         if (axios.isAxiosError(error) && error.response) {
             console.log('Axios error response data:', error.response.data);
-            if (error.response.status === 400 && error.response.data.error === 'Could not find user: User not found') {
-                return {error: 'User not found'}; // Возвращаем объект с сообщением об ошибке
-            }
+            return "User not found"
         }
         throw error;
     }
 };
 
 export interface UpdateUserRequest {
-    userId?: string;
     coins?: number;
     userName?: string;
     address?: string;
-    listUserInvite?: string[];
     completedTasks?: number[];
 }
 
-export const updateUser = async (userId: string, updates: Partial<UpdateUserRequest>): Promise<GetUserByResponse> => {
-    // Create the payload dynamically, including only defined fields
-    const payload = { userId, ...updates };
+export const updateUser = async (userId: string, updates: Partial<UpdateUserRequest>): Promise<UserBasic> => {
+    const payload = {...updates};
     console.log("payload - ", payload)
     try {
-        const response = await axios.post<{
-            result: GetUserByResponse
-        }>('https://parseapi.back4app.com/functions/updateUser',
+        const response = await axios.put<UserBasic>(`http://95.163.235.93/users/${userId}`,
             payload,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Parse-Application-Id': '35FDDTeCMqJUMhDYr9LFh2TEXPXTiRvYiRYbcG23',
-                    'X-Parse-REST-API-Key': 'kAyRiID9BcXva11fhs5b6fX47nkcVlJjk34313qP',
-                }
-            }
         );
-
-        return response.data.result;
+        return response.data;
     } catch (error) {
         console.error('Error updating user:', error);
         throw error;
@@ -120,7 +116,7 @@ export const updateUserByCompletedTask = async (userId: string, updates: Partial
         const response = await axios.post<{
             result: GetUserByResponse
         }>('https://parseapi.back4app.com/functions/updateUser',
-            { userId, ...updates } as UpdateUserRequestCompletedTask,
+            {userId, ...updates} as UpdateUserRequestCompletedTask,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -138,31 +134,22 @@ export const updateUserByCompletedTask = async (userId: string, updates: Partial
 };
 
 
-export const processInvitationFromInviteCode = async (inviteCode: string, newUserId: string, newUserName: string): Promise<GetUserByResponse> => {
+export const processInvitationFromInviteCode = async (inviteCode: string, newUserId: string, newUserName: string): Promise<UserBasic | string> => {
     try {
-        const response = await axios.post<{
+          await axios.post<{
             result: GetUserByResponse
-        }>('https://parseapi.back4app.com/functions/processInvitation',
-            { inviteCode, newUserId, newUserName },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Parse-Application-Id': '35FDDTeCMqJUMhDYr9LFh2TEXPXTiRvYiRYbcG23',
-                    'X-Parse-REST-API-Key': 'kAyRiID9BcXva11fhs5b6fX47nkcVlJjk34313qP'
-                }
-            }
+        }>('http://95.163.235.93/users/process-invitation',
+            {inviteCode, newUserId, newUserName},
         );
 
-        return response.data.result;
+        const userResult =await getUserById(newUserId)
+        return userResult;
     } catch (error) {
         console.error('Error processing invitation:', error);
+        console.error('Error getting user:', error);
         if (axios.isAxiosError(error) && error.response) {
             console.log('Axios error response data:', error.response.data);
-            if (error.response.data.error === 'User with the given invite code not found') {
-                return { error: 'User with the given invite code not found' };
-            } else if (error.response.data.error === 'User with this userId already exists') {
-                return { error: 'User with this userId already exists' };
-            }
+            return "User not found"
         }
         throw error;
     }

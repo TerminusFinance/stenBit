@@ -1,9 +1,9 @@
-import React, {useEffect, useRef} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./ModalInvite.css";
 import CloseIc from "../../../../assets/ic_close.svg";
 import IcInvite from "../../../../assets/modal/ic_invite.svg";
 import IcCopy from "../../../../assets/ic_copy.svg";
-import {MainActionBtn} from "../../../buttons/mainActionBtn/MainActionBtn.tsx";
+import { MainActionBtn } from "../../../buttons/mainActionBtn/MainActionBtn.tsx";
 import IcSend from "../../../../assets/ic_send.svg";
 
 interface ModalInviteProps {
@@ -12,25 +12,35 @@ interface ModalInviteProps {
     userCodeInvite: string;
 }
 
-export const ModalInvite: React.FC<ModalInviteProps> = ({isVisible, onClose, userCodeInvite}) => {
+export const ModalInvite: React.FC<ModalInviteProps> = ({ isVisible, onClose, userCodeInvite }) => {
+    const overlayRef = useRef<HTMLDivElement>(null);
     const sheetRef = useRef<HTMLDivElement>(null);
+    const [isAnimating, setIsAnimating] = useState(false);
 
     const handleCopy = (text: string) => {
-        navigator.clipboard.writeText(text)
+        navigator.clipboard.writeText(text);
     };
 
     const sendToTg = () => {
-
-    }
+        // Implement Telegram send functionality
+    };
 
     useEffect(() => {
         if (isVisible) {
-            if (sheetRef.current) {
+            setIsAnimating(true);
+            if (overlayRef.current && sheetRef.current) {
+                overlayRef.current.classList.add("open");
                 sheetRef.current.classList.add("open");
             }
         } else {
-            if (sheetRef.current) {
+            if (overlayRef.current && sheetRef.current) {
                 sheetRef.current.classList.remove("open");
+                setTimeout(() => {
+                    if (overlayRef.current) {
+                        overlayRef.current.classList.remove("open");
+                    }
+                    setIsAnimating(false);
+                }, 300); // Длительность анимации
             }
         }
     }, [isVisible]);
@@ -41,17 +51,17 @@ export const ModalInvite: React.FC<ModalInviteProps> = ({isVisible, onClose, use
         }
     };
 
-    if (!isVisible) return null;
+    if (!isVisible && !isAnimating) return null;
 
     return (
-        <div className="modal-overlay-invite" onClick={handleOverlayClick}>
+        <div className="modal-overlay-invite" ref={overlayRef} onClick={handleOverlayClick}>
             <div className="modal-invite" ref={sheetRef}>
                 <div className="div-btn-close">
                     <div className="container-title-invite">
-                        <img className="img-title-invite" src={IcInvite}/>
+                        <img className="img-title-invite" src={IcInvite} alt="Invite" />
                         <p className="tx-title-invite">Invite Friends</p>
                     </div>
-                    <img onClick={onClose} src={CloseIc} alt="Close"/>
+                    <img onClick={onClose} src={CloseIc} alt="Close" />
                 </div>
                 <div className="bottom-sheet-content">
                     <p className="tx-ref-link">Referral link</p>
@@ -59,19 +69,13 @@ export const ModalInvite: React.FC<ModalInviteProps> = ({isVisible, onClose, use
                         <div className="text-container">
                             <span className="text-content">https://t.me/StenBitTestBot?start={userCodeInvite}</span>
                         </div>
-                        <button className="copy-button"
-                                onClick={() => handleCopy(`https://t.me/StenBitTestBot?start=${userCodeInvite}`)}>
-                            <img src={IcCopy} alt="Copy"/>
+                        <button className="copy-button" onClick={() => handleCopy(`https://t.me/StenBitTestBot?start=${userCodeInvite}`)}>
+                            <img src={IcCopy} alt="Copy" />
                         </button>
                     </div>
-
-
                     <div className="btn-action-containe-modal-inviter">
-                        <MainActionBtn imageSourse={IcSend} txInBtn={"Send Link"}
-                                       onClick={sendToTg}/>
+                        <MainActionBtn imageSourse={IcSend} txInBtn={"Send Link"} onClick={sendToTg} />
                     </div>
-
-
                 </div>
             </div>
         </div>
