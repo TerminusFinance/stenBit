@@ -1,6 +1,6 @@
 import React from "react";
 import './ItemTask.css';
-import CoinsIco from '../../../../assets/ic_coins.svg';
+import CoinsIco from '../../../../assets/ic_dollar.svg';
 import IcCheck from '../../../../assets/ic_check.svg';
 import icRightArrow from "../../../../assets/ic_arrow_right.svg";
 
@@ -11,6 +11,10 @@ export const isSampleTask = (taskType: TaskType): taskType is SampleTask => {
 
 export const isOpenUrlTask = (taskType: TaskType): taskType is OpenUrlTask => {
     return taskType.type === 'OpenUrl';
+};
+
+export const isCheckFriendsTask = (taskType: TaskType): taskType is CheckFriendsTask => {
+    return taskType.type === 'CheckFriends';
 };
 
 export const CheckNftTask = (taskType: TaskType): taskType is CheckNftTask => {
@@ -31,9 +35,12 @@ export interface CheckNftTask {
     checkCollectionsAddress: string
 }
 
+export interface CheckFriendsTask {
+    type: 'CheckFriends';
+    numberOfFriends: number;
+}
 
-
-export type TaskType = SampleTask | OpenUrlTask | CheckNftTask;
+export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask;
 
 export interface TaskCardProps {
     id: number; // Уникальный идентификатор задачи
@@ -42,7 +49,7 @@ export interface TaskCardProps {
     completed: boolean;
     checkIcon: string;
     onClick?: () => void;
-    taskType: TaskType; // Новый пропс для типа задачи
+    taskType: TaskType;
 }
 
 const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, onClick }) => {
@@ -54,7 +61,7 @@ const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, 
                     <span className="current">{text}</span>
                     <div className='coins-container'>
                         <img src={CoinsIco} className='ic-coins' />
-                        <span className="divider">{coins}</span>
+                        <span className="divider-task">{coins}</span>
                     </div>
                 </div>
             </div>

@@ -120,10 +120,7 @@ const TapScreen: React.FC = () => {
         return () => clearInterval(energyRegenInterval);
     }, []);
 
-    const getCurrentLevel = (clicks: number): LevelType => {
-        const level = levelTypes.find(level => clicks >= level.minProgress && clicks < level.maxProgress);
-        return level || levelTypes[levelTypes.length - 1];
-    };
+
 
     const currentLevel = getCurrentLevel(clicks);
 
@@ -205,3 +202,8 @@ const TapScreen: React.FC = () => {
 };
 
 export default TapScreen;
+
+export const getCurrentLevel = (clicks: number): LevelType => {
+    const level = levelTypes.find(level => clicks >= level.minProgress && clicks < level.maxProgress);
+    return level || levelTypes[levelTypes.length - 1];
+};

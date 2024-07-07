@@ -1,0 +1,33 @@
+.task-selector {
+    display: flex;
+    gap: 10px;
+    padding: 5px;
+    background-color: #1B1B1E;
+    border-radius: 8px;
+    justify-content: space-around; /* Разделяет элементы равномерно */
+}
+
+.task-tab {
+    flex: 1; /* Все элементы будут равной ширины */
+    padding: 10px 0; /* Обновление отступов */
+    border: none;
+    border-radius: 8px;
+    background-color: #242427;
+    color: #9CA5B2;
+    cursor: pointer;
+    font-family: MyCustomFont, sans-serif;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    text-align: center; /* Центрирование текста */
+}
+
+.task-tab.active {
+    background: linear-gradient(360deg, #F4A630, #FBB64E, #FFBF5F);
+    color: #000000;
+    font-family: MyCustomFont, sans-serif;
+    font-size: 14px;
+}
+
+.task-tab:not(.active):hover {
+    background-color: #37373d;
+}

@@ -1,0 +1,19 @@
+.btn-second-action {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 16px;
+    background: linear-gradient(360deg, #32323A, #1E1E23);
+    padding: 24px 0;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 24%);
+    width: calc(100% - 2px);
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.tx-btn-second-action {
+    color: white;
+    font-size: 16px;
+    font-family: MyCustomFont-bold, sans-serif;
+}
+

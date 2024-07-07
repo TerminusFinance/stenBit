@@ -23,7 +23,12 @@ const LevelScreen: React.FC = () => {
     const location = useLocation();
     const { dataApp } = useData();
     const { levelTypes, currentLevel } = location.state;
-    postEvent('web_app_setup_back_button', { is_visible: true });
+
+    try {
+        postEvent('web_app_setup_back_button', { is_visible: true });
+    } catch (e ) {
+        console.log("error in postEvent - ", e)
+    }
     const beber = () => {
 
     }

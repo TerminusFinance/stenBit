@@ -8,7 +8,7 @@
     padding: 10px; /* Add padding for spacing */
     margin-top: 4px;
     margin-bottom: 4px;
-    border-radius: 10px;
+    border-radius: 16px;
     text-align: center;
     color: white;
     font-family: 'MyCustomFontMedium', sans-serif;
@@ -16,11 +16,11 @@
 }
 
 .tasks-container-true {
-    background-color: #1a1a1a;
+    background-color: #1B1B1E;
 }
 
 .tasks-container-false {
-    background-color: #272A2F;
+    background-color: #1B1B1E;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
@@ -69,12 +69,14 @@
     color: white;
     font-size: 16px;
     text-align: start;
+    font-family: MyCustomFont-bold, sans-serif;
 }
 
-.progress-text .divider {
-    color: #A2A8B5;
+.progress-text .divider-task {
+    color: #9CA5B2;
     font-size: 14px;
     margin: 0 5px;
+    font-family: MyCustomFont, sans-serif;
 }
 
 .progress-text .max {

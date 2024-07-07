@@ -38,10 +38,10 @@ export const FriendsScreen: React.FC = () => {
 
                 <div className="card-container">
                     <div className="card-row">
-                        <InviteCard title="Invite friends" reward={2000}/>
-                        <InviteCard title="Invite friends with premium" reward={10000}/>
+                        <InviteCard title="Invite friends" reward={"+2000"} imgSrc={coinIco}/>
+                        <InviteCard title="Invite friends with premium" reward={"+10000"} imgSrc={coinIco}/>
                     </div>
-                    <ReferralCard referrals={4} earnings={4564846}/>
+                    <ReferralCard referrals={dataApp.listUserInvited?.length ? dataApp.listUserInvited.length: 0} earnings={0}/>
                 </div>
                 {dataApp.listUserInvited ? (
                     <div>
@@ -74,13 +74,13 @@ export const FriendsScreen: React.FC = () => {
     );
 };
 
-const InviteCard: React.FC<{ title: string; reward: number }> = ({title, reward}) => {
+export const InviteCard: React.FC<{ title: string; reward: string, imgSrc: string }> = ({title, reward, imgSrc}) => {
     return (
         <div className="card">
             <div className="card-header">{title}</div>
             <div className="card-body">
-                <img src={coinIco} alt="Coin"/>
-                <span className="card-sum-invite">+{reward.toLocaleString()}</span>
+                <img src={imgSrc} alt="Coin"/>
+                <span className="card-sum-invite">{reward.toLocaleString()}</span>
             </div>
         </div>
     );

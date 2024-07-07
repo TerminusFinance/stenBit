@@ -13,34 +13,39 @@ import React from "react";
 import {DataProvider} from "./components/DataContext.tsx";
 import {RedirectsScreen} from "./components/redirects/RedirectsScreen.tsx";
 import {FriendsScreen} from "./components/home/friendsScreen/FriendsScreen.tsx";
+import {ToastProvider} from "./components/viewComponents/toast/ToastContext.tsx";
+import {CheckScreen} from "./components/loading/CheckScreen.tsx";
 
 const App: React.FC = () => {
 
     return (
         <DataProvider>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<LoadingScreen/>}/>
-                    <Route path="/start" element={<StartScreen/>}/>
-                    <Route path="/tap" element={<TapScreen/>}/>
-                    <Route path="/friends" element={<FriendsScreen/>}/>
-                    <Route path="/tasks" element={<TasksScreen/>}/>
-                    <Route path="/profile" element={<ProfileScreen/>}/>
-                    <Route path="/home" element={<HomeScreen/>}>
-                        <Route index element={<Navigate to="tap"/>}/>
-                        <Route path="tap" element={<TapScreen/>}/>
-                        <Route path="friends" element={<FriendsScreen/>}/>
-                        <Route path="tasks" element={<TasksScreen/>}/>
-                        <Route path="profile" element={<ProfileScreen/>}/>
-                    </Route>
-                    <Route path="/level" element={<LevelScreen/>}/>
-                    <Route path="/tap" element={<TapScreen/>}/>
-                    <Route path="/about" element={<About/>}/>
-                    <Route path="/not-found" element={<NotFound/>}/>
-                    <Route path="*" element={<NotFound/>}/>
-                    <Route path="/redirects" element={<RedirectsScreen/>}/>
-                </Routes>
-            </Router>
+            <ToastProvider>
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<LoadingScreen/>}/>
+                        <Route path="/check" element={<CheckScreen/>}/>
+                        <Route path="/start" element={<StartScreen/>}/>
+                        <Route path="/tap" element={<TapScreen/>}/>
+                        <Route path="/friends" element={<FriendsScreen/>}/>
+                        <Route path="/tasks" element={<TasksScreen/>}/>
+                        <Route path="/profile" element={<ProfileScreen/>}/>
+                        <Route path="/home" element={<HomeScreen/>}>
+                            <Route index element={<Navigate to="tap"/>}/>
+                            <Route path="tap" element={<TapScreen/>}/>
+                            <Route path="friends" element={<FriendsScreen/>}/>
+                            <Route path="tasks" element={<TasksScreen/>}/>
+                            <Route path="profile" element={<ProfileScreen/>}/>
+                        </Route>
+                        <Route path="/level" element={<LevelScreen/>}/>
+                        <Route path="/tap" element={<TapScreen/>}/>
+                        <Route path="/about" element={<About/>}/>
+                        <Route path="/not-found" element={<NotFound/>}/>
+                        <Route path="*" element={<NotFound/>}/>
+                        <Route path="/redirects" element={<RedirectsScreen/>}/>
+                    </Routes>
+                </Router>
+            </ToastProvider>
         </DataProvider>
     );
 };

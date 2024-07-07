@@ -1,25 +1,43 @@
 import React, {useState} from "react";
 import './TasksScreen.css';
-import coin from "../../../assets/ic_coins.svg";
-import ItemTask, {TaskCardProps, isOpenUrlTask, OpenUrlTask, isSampleTask, CheckNftTask} from "./itemTask/ItemTask";
-import TelegramIco from "../../../assets/ic_telegram.png";
-import XIco from "../../../assets/ic_x.png";
-import ProfileIco from "../../../assets/profile_ico.png";
-import BottomSheetTask from "./bottomSheetTask/BottomSheetTask";
+import ItemTask, {
+    isOpenUrlTask,
+    OpenUrlTask,
+    isSampleTask,
+    CheckNftTask,
+    isCheckFriendsTask
+} from "./itemTask/ItemTask";
 import {useData} from "../../DataContext.tsx";
-import {updateUser} from "../../../core/dataWork/Back4app.ts";
+import {updateTaskCompletion, updateUser, UserTask} from "../../../core/dataWork/Back4app.ts";
 import {
-    ResultCheckNftItem,
     sendToCheckUserHaveNftFromCollections
 } from "../../../core/tonWork/checkToNftItem/CheckToNftitem.tsx";
+import NavigationBar from "../../navigationBar/NavigationBar.tsx";
+import {useNavigate} from "react-router-dom";
+import TaskSelector from "./taskSelector/TaskSelector.tsx";
+import {ModalTaskMulti} from "./modalTaskMulti/ModalTaskMulti.tsx";
+import IcCopy from "../../../assets/ic_copy.svg";
+import {MainActionBtn} from "../../buttons/mainActionBtn/MainActionBtn.tsx";
+import IcSend from "../../../assets/ic_send.svg";
+import {SecondActionBtn} from "../../buttons/secondActionBtn/SecondActionBtn.tsx";
+import {useToast} from "../../viewComponents/toast/ToastContext.tsx";
+import IcCoins from "../../../assets/ic_dollar.svg";
+import {handleCopy, OpenUrl} from "../../viewComponents/Utils.tsx";
+
 
 const TasksScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
 
-    const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
-    const [selectedTask, setSelectedTask] = useState<TaskCardProps | null>(null);
+    const { showToast } = useToast();
 
-    const openBottomSheet = (task: TaskCardProps) => {
+    const handleShowToast = (message: string, type: 'success' | 'error' | 'info') => {
+        showToast(message, type);
+    };
+
+    const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+    const [selectedTask, setSelectedTask] = useState<UserTask | null>(null);
+    const navigate = useNavigate();
+    const openBottomSheet = (task: UserTask) => {
         if (!task.completed) {
             setSelectedTask(task);
             setBottomSheetVisible(true);
@@ -28,10 +46,9 @@ const TasksScreen: React.FC = () => {
     // Создание состояния для хранения статусов задач
     const [taskStates, setTaskStates] = useState<Record<number, {
         isLoading: boolean;
-        checkResult: ResultCheckNftItem | null;
+        checkResult: boolean | null;
         errorMessage: string | null;
     }>>({});
-
 
     const closeBottomSheet = () => {
         setBottomSheetVisible(false);
@@ -55,34 +72,39 @@ const TasksScreen: React.FC = () => {
         const userWallet = dataApp.address;
         const SselectedTask = selectedTask;
         const coindOld = dataApp.coins;
-        const completedTaskOld = dataApp.completedTasks || [];
         if (SselectedTask != null && CheckNftTask(SselectedTask.taskType) && userId != null && coindOld != null) {
             const collectionAddress = SselectedTask.taskType.checkCollectionsAddress;
 
             if (userWallet != undefined && userWallet !== "") {
-                updateTaskState(SselectedTask.id, { isLoading: true });
+                updateTaskState(SselectedTask.taskId, { isLoading: true });
 
                 try {
                     const checkResult = await sendToCheckUserHaveNftFromCollections(userWallet, collectionAddress);
-                    updateTaskState(SselectedTask.id, { checkResult, errorMessage: null });
+                    updateTaskState(SselectedTask.taskId, { checkResult: checkResult.state, errorMessage: null });
                     if(checkResult.state) {
-                        const updatedCompletedTasks = [...completedTaskOld, SselectedTask.id];
-                        const resultUpdate = await updateUser(userId, {
-                            coins: coindOld + SselectedTask.coins,
-                            completedTasks: updatedCompletedTasks
-                        });
-                        console.log("resultUdpate - ", resultUpdate)
-                        setDataApp(resultUpdate);
-                        closeBottomSheet()
+                        const resultSendTorequest = await updateTaskCompletion(userId, SselectedTask.taskId)
+
+                        console.log("resultUdpate - ", resultSendTorequest)
+                        if (typeof resultSendTorequest === 'object') {
+                            setDataApp(resultSendTorequest);
+                            handleShowToast("The checking was successful", 'success')
+                            closeBottomSheet()
+                        } else  {
+                            handleShowToast("An error occurred while checking the nft", 'error')
+                        }
                     }
                 } catch (error) {
                     console.error('Error checking NFT:', error);
-                    updateTaskState(SselectedTask.id, { errorMessage: 'Произошла ошибка при проверке NFT' });
+                    console.error('An error occurred while checking the nft');
+                    handleShowToast("An error occurred while checking the nft", 'error')
+                    updateTaskState(SselectedTask.taskId, { errorMessage: 'Произошла ошибка при проверке NFT' });
                 } finally {
-                    updateTaskState(SselectedTask.id, { isLoading: false });
+                    updateTaskState(SselectedTask.taskId, { isLoading: false });
                 }
             } else {
-                updateTaskState(SselectedTask.id, { errorMessage: 'У вас не привязан адресс TON' });
+                handleShowToast("You don t have a ton wallet address linked", 'error')
+                console.error('You don\'t have a ton wallet address linked');
+                updateTaskState(SselectedTask.taskId, { errorMessage: 'У вас не привязан адресс TON' });
             }
         }
     };
@@ -96,11 +118,9 @@ const TasksScreen: React.FC = () => {
             if (isOpenUrlTask(selectedTask.taskType)) {
                 window.open((selectedTask.taskType as OpenUrlTask).url, '_blank');
 
-                if (!completedTaskOld.includes(selectedTask.id)) {
-                    const updatedCompletedTasks = [...completedTaskOld, selectedTask.id];
+                if (!completedTaskOld.includes(selectedTask.taskId)) {
                     const resultUpdate = await updateUser(userId, {
                         coins: coindOld + selectedTask.coins,
-                        completedTasks: updatedCompletedTasks
                     });
                     setDataApp(resultUpdate);
                     closeBottomSheet()
@@ -108,121 +128,237 @@ const TasksScreen: React.FC = () => {
             }
         }
     };
+    const handleNav = (marsh: string) => {
+        navigate(`/${marsh}`);
+    };
 
-    const itemTaskLists: TaskCardProps[] = [
-        {
-            id: 1,
-            text: "Присоеденится к нашему telegram каналу",
-            coins: 5000,
-            completed: false,
-            checkIcon: TelegramIco,
-            taskType: {
-                type: 'OpenUrl',
-                url: 'https://t.me/+5rOLByXlu_g0MmIy'
-            }
-        },
-        {
-            id: 2,
-            text: "Следи за нами в x",
-            coins: 1,
-            completed: false,
-            checkIcon: XIco,
-            taskType: {
-                type: 'OpenUrl',
-                url: 'https://t.me/+5rOLByXlu_g0MmIy'
-            }
-        },
-        {
-            id: 3,
-            text: "Пригласи 3 друзей",
-            coins: 1,
-            completed: false,
-            checkIcon: ProfileIco,
-            taskType: {
-                type: 'Sample'
-            }
-        },
-        {
-            id: 4,
-            text: "Пригласи 10 друзей",
-            coins: 1,
-            completed: false,
-            checkIcon: ProfileIco,
-            taskType: {
-                type: 'Sample'
-            }
-        },
-        {
-            id: 5,
-            text: "Присоеденится к нашему telegram каналу",
-            coins: 5000,
-            completed: false,
-            checkIcon: TelegramIco,
-            taskType: {
-                type: 'OpenUrl',
-                url: 'https://t.me/+5rOLByXlu_g0MmIy'
-            }
-        },
-        {
-            id: 6,
-            text: "Приобрести Nft из коллекции",
-            coins: 125000,
-            completed: false,
-            checkIcon: TelegramIco,
-            taskType: {
-                type: 'CheckNft',
-                checkCollectionsAddress: 'kQBRvxhdrViPDimj46_hk2jv53-2UFbbP0bUUu-vDT2-kzqS'
-            }
-        },
-    ];
 
-    const updatedTaskLists = itemTaskLists.map((task, index) => ({
-        ...task,
-        completed: Array.isArray(dataApp.completedTasks) && dataApp.completedTasks.includes(index + 1)
-    }));
 
+
+
+    const [tabSelected, setTabSelected] = useState<string>("All Tasks");
+
+    const handleTabSelect = (selectedTab: string) => {
+        console.log(`Selected tab: ${selectedTab}`);
+        setTabSelected(selectedTab)
+    };
+
+    const sendToTg = () => {
+        // Implement Telegram send functionality
+        const message = 'Текст вашего сообщения'; // замените на текст вашего сообщения
+        const telegramURL = `https://t.me/share/url?url=&text=${encodeURIComponent(message)}`;
+
+        window.open(telegramURL, '_blank');
+    };
+
+
+    const handleCheckUserInvited =async (selectedsTask: UserTask) => {
+        if (isCheckFriendsTask(selectedsTask.taskType)) {
+            const numberOfFriends = selectedsTask.taskType.numberOfFriends;
+            console.log('Number of friends:', numberOfFriends);
+            const lengthUserInvited = dataApp.listUserInvited?.length ?? 0;
+
+            if(lengthUserInvited == numberOfFriends && dataApp.userId != null) {
+                updateTaskState(selectedsTask.taskId, {isLoading: true})
+                const resultSendTorequest = await updateTaskCompletion(dataApp.userId, selectedsTask.taskId)
+                if (typeof resultSendTorequest === 'object') {
+                    setDataApp(resultSendTorequest)
+                    updateTaskState(selectedsTask.taskId, { checkResult: true, errorMessage: null });
+                    handleShowToast("The checking was successful", 'success')
+                    closeBottomSheet()
+                } else {
+                    updateTaskState(selectedsTask.taskId, { checkResult: false, errorMessage: "" });
+                    console.error('Task type is not CheckFriendsTask');
+                }
+            } else  {
+                handleShowToast("The task is not completed", 'error')
+                updateTaskState(selectedsTask.taskId, { checkResult: false, errorMessage: "The task is not completed" });
+            }
+        } else {
+            console.error('Task type is not CheckFriendsTask');
+        }
+    };
+
+    console.log("tasks - ",dataApp.tasks)
     return (
         <div className="tasks-container">
-            <div className="div-container-money-h">
-                <img
-                    src={coin}
-                    alt="Coin"
-                    className="coin-visual"
-                    draggable="false"
-                    onClick={() => openBottomSheet(updatedTaskLists[0])}
-                />
-                <p className="tx-h1">Заработай больше монет</p>
+            <div className="task-raspred-container">
+                <div className="div-container-money-h">
+                    <p className="tx-h1">Tasks</p>
+                    <p className="div-tx-h2">Earn more coins by <br/>completing simple tasks</p>
+                    <div className="line-task-information"/>
+                </div>
+                <div className="list-task-container">
+
+                        <TaskSelector
+                            tabs={['All Tasks', 'Daily Tasks', 'Challenge']}
+                            onTabSelect={handleTabSelect}
+                        />
+
+                    {dataApp.tasks != null && (
+                        <div className="container-tasks-item-category">
+                            {tabSelected === "All Tasks" && (
+                                <div>
+
+                                    <p className="tx-h1-container-tasks-item-category">Daily Tasks</p>
+                                    {dataApp.tasks.map((task, index) => (
+                                        <div>
+                                            {task.type === "DailyTask" && (
+                                                <div>
+                                                    <ItemTask
+                                                        key={index}
+                                                        id={task.taskId}
+                                                        text={task.text}
+                                                        coins={task.coins}
+                                                        completed={task.completed}
+                                                        checkIcon={task.checkIcon}
+                                                        taskType={task.taskType}
+                                                        onClick={() => openBottomSheet(task)}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    ))}
+
+                                    <p className="tx-h1-container-tasks-item-category">Challenge</p>
+                                    {dataApp.tasks.map((task, index) => (
+                                        <div>
+                                            {task.type === "challenge" && (
+                                                <div>
+                                                    <ItemTask
+                                                        key={index}
+                                                        id={task.taskId}
+                                                        text={task.text}
+                                                        coins={task.coins}
+                                                        completed={task.completed}
+                                                        checkIcon={task.checkIcon}
+                                                        taskType={task.taskType}
+                                                        onClick={() => openBottomSheet(task)}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    ))}
+
+                                </div>
+                            )}
+
+                            {tabSelected === "Daily Tasks" && (
+                                <div>
+                                    <p className="tx-h1-container-tasks-item-category">Daily Tasks</p>
+                                    {dataApp.tasks.map((task, index) => (
+                                        <div>
+                                            {task.type === "DailyTask" && (
+                                                <div>
+                                                    <ItemTask
+                                                        key={index}
+                                                        id={task.taskId}
+                                                        text={task.text}
+                                                        coins={task.coins}
+                                                        completed={task.completed}
+                                                        checkIcon={task.checkIcon}
+                                                        taskType={task.taskType}
+                                                        onClick={() => openBottomSheet(task)}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    ))}
+                                </div>
+                            )}
+
+                            {tabSelected === "Challenge" && (
+                                <div>
+                                    <p className="tx-h1-container-tasks-item-category">Challenge</p>
+                                    {dataApp.tasks.map((task, index) => (
+                                        <div>
+                                            {task.type === "challenge" && (
+                                                <div>
+                                                    <ItemTask
+                                                        key={index}
+                                                        id={task.taskId}
+                                                        text={task.text}
+                                                        coins={task.coins}
+                                                        completed={task.completed}
+                                                        checkIcon={task.checkIcon}
+                                                        taskType={task.taskType}
+                                                        onClick={() => openBottomSheet(task)}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    ))}
+                                </div>
+                            )}
+
+                        </div>
+                    )}
+                </div>
             </div>
-            <div className="list-task-container">
-                <p className="tx-h2">Список заданий</p>
-                {updatedTaskLists.map((task, index) => (
-                    <ItemTask
-                        key={index}
-                        id={task.id}
-                        text={task.text}
-                        coins={task.coins}
-                        completed={task.completed}
-                        checkIcon={task.checkIcon}
-                        taskType={task.taskType}
-                        onClick={() => openBottomSheet(task)}
-                    />
-                ))}
-            </div>
+
+
+            <NavigationBar
+                initialSelected={"Tasks"}
+                onEarnClick={() => handleNav("tap")}
+                onInviteClick={() =>handleNav("friends")}
+                onProfileClick={() => handleNav("profile")}
+                onTasksClick={() => {}}
+            />
+
             {selectedTask && (
-                <BottomSheetTask
+                <ModalTaskMulti
                     isVisible={isBottomSheetVisible}
                     onClose={closeBottomSheet}
                     image={selectedTask.checkIcon}
                     title={selectedTask.text}
                     content={
-                        <div className="sheet-task-container">
+                        <div>
                             {isOpenUrlTask(selectedTask.taskType) && (
-                                <button className="button-action-sheet"
-                                        onClick={addedSuccessUrlSender}>
-                                    <p className="tx-action-sheet">
-                                        Подписаться
+                                <div className="bottom-sheet-content-task">
+                                    <p className="description-task">
+                                        Subscribe to our Telegram channel <br/>
+                                        and receive a bonus.
                                     </p>
-                                </button>
+                                    <div className="reward-container-task">
+                                        <img src={IcCoins} className="ic-reward-container-coins"/>
+                                        <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
+                                    </div>
+
+                                    <div style={{width: '24px', height: '24px'}}/>
+
+                                    <SecondActionBtn txInBtn={"Join our Telegram"}
+                                                     onClick={() => OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)}/>
+                                    <div style={{width: '16px', height: '16px'}}/>
+
+                                    <MainActionBtn
+                                        txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
+                                        onClick={addedSuccessUrlSender}/>
+                                </div>
+                            )}
+
+                            {isCheckFriendsTask(selectedTask.taskType) && (
+                                <div className="bottom-sheet-content-task">
+                                    <p className="tx-ref-link">Referral link</p>
+                                    <div className="copy-container-task">
+                                        <div className="text-container-task">
+                                            <span
+                                                className="text-content">https://t.me/StenBitTestBot?start={dataApp.codeToInvite}</span>
+                                        </div>
+                                        <button className="copy-button"
+                                                onClick={() => handleCopy(`https://t.me/StenBitTestBot?start=${dataApp.codeToInvite}`)}>
+                                            <img src={IcCopy} alt="Copy"/>
+                                        </button>
+                                    </div>
+                                    <div className="btn-action-containe-modal-inviter">
+                                        <SecondActionBtn txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'} onClick={() => handleCheckUserInvited(selectedTask)}/>
+                                        <div style={{width: '16px', height: '16px'}}/>
+                                        <MainActionBtn imageSourse={IcSend} txInBtn={"Send Link"} onClick={sendToTg}/>
+                                    </div>
+                                </div>
                             )}
 
                             {isSampleTask(selectedTask.taskType) && (
@@ -234,39 +370,24 @@ const TasksScreen: React.FC = () => {
                             )}
 
                             {CheckNftTask(selectedTask.taskType) && (
-                                <div className="sheet-task-container">
-                                    <button
-                                        className="button-action-sheet"
-                                        onClick={checkNftItem}
-                                        disabled={taskStates[selectedTask.id]?.isLoading}
-                                    >
-                                        <p className="tx-action-sheet">
-                                            {taskStates[selectedTask.id]?.isLoading ? 'Проверяем...' : 'Проверить'}
-                                        </p>
-                                    </button>
-                                    {!taskStates[selectedTask.id]?.isLoading && taskStates[selectedTask.id]?.checkResult && (
-                                        taskStates[selectedTask.id]?.checkResult?.state ? (
-                                            <div className="success-icon">
-                                                ✅ Всё хорошо
-                                            </div>
-                                        ) : (
-                                            <div className="error-message">
-                                                У вас нет такой NFT
-                                            </div>
-                                        )
-                                    )}
-                                    {!taskStates[selectedTask.id]?.isLoading && taskStates[selectedTask.id]?.errorMessage && (
-                                        <div className="error-message">
-                                            {taskStates[selectedTask.id]?.errorMessage}
-                                        </div>
-                                    )}
+                                <div className="bottom-sheet-content-task">
+                                    <p className="description-task">Create an account, purchase an NFT,<br/>and earn a bonus.</p>
+                                    <div className="reward-container-task">
+                                        <img src={IcCoins} className="ic-reward-container-coins"/>
+                                        <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
+                                    </div>
+                                    <div style={{width: '24px', height: '24px'}}/>
+
+                                    <SecondActionBtn txInBtn={"Buy NFT"} onClick={() => OpenUrl(`https://testnet.getgems.io/collection/${(selectedTask.taskType as CheckNftTask).checkCollectionsAddress}`)}/>
+                                    <div style={{width: '16px', height: '16px'}}/>
+
+                                    <MainActionBtn
+                                        txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
+                                        onClick={checkNftItem}/>
+
                                 </div>
                             )}
 
-                            <div className='coins-container'>
-                                <img src={coin} className='ic-coins' />
-                                <span className="divider">+{selectedTask.coins}</span>
-                            </div>
                         </div>
                     }
                 />

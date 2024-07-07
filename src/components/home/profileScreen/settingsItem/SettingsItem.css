@@ -1,0 +1,67 @@
+.settings-item-root {
+    display: flex;
+    flex-direction: row;
+    margin-left: 16px;
+    margin-right: 16px;
+    margin-top: 8px;
+    padding: 4px 8px;
+    border-radius: 16px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1B1B1E;
+}
+
+.ic-container {
+    border-radius: 16px;
+    align-items: center;
+    align-content: center;
+    margin: 8px 0;
+}
+
+.container-left-item-settings {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.container-settings-stats {
+    display: flex;
+    margin-left: 8px;
+    flex-direction: column;
+}
+
+.coins-ref-container {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+
+}
+
+.ic-settings {
+    width: 48px;
+    height: 48px;
+}
+
+.ic-coins-friends {
+    width: 16px;
+    height: 16px;
+    margin: 0 4px;
+}
+
+.tx-settings-sub-title {
+    font-family: MyCustomFont, sans-serif;
+    font-size: 14px;
+    color: #9CA5B2
+}
+
+.tx-settings-title {
+    font-family: MyCustomFont-bold, sans-serif;
+    font-size: 16px;
+    color: white;
+}
+
+.ic-setting-arrow {
+    width: 24px;
+    height: 24px;
+}

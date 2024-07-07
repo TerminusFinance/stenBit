@@ -15,6 +15,7 @@
 
 .friends-raspred-container {
     overflow-y: auto; /* Изменено с scroll на auto */
+    width: 100%;
     padding-bottom: 120px; /* Добавлено для отступа перед кнопкой */
 }
 

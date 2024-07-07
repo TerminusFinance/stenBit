@@ -1,4 +1,5 @@
 import axios, {} from 'axios';
+import {TaskType} from "../../components/home/tasksScreen/itemTask/ItemTask.tsx";
 
 
 export const createUser = async (userId: string, userName: string, coins: number): Promise<UserBasic> => {
@@ -59,7 +60,19 @@ export interface UserBasic {
     maxEnergy?: number,
     boosts?: BoostItem[]
     completedTasks?: number[] | null;
+    tasks?: UserTask[];
 }
+
+export interface UserTask {
+    taskId: number;
+    text: string;
+    coins: number;
+    checkIcon: string;
+    taskType: TaskType;
+    type: string;
+    completed: boolean;
+}
+
 
 export const getUserById = async (userId: string): Promise<UserBasic | string> => {
     try {
@@ -88,7 +101,6 @@ export interface UpdateUserRequest {
     coins?: number;
     userName?: string;
     address?: string;
-    completedTasks?: number[];
 }
 
 export const updateUser = async (userId: string, updates: Partial<UpdateUserRequest>): Promise<UserBasic> => {
@@ -172,6 +184,35 @@ export const getLevelLeague = async (): Promise<LeagueLevel[]> => {
         console.error('Error processing invitation:', error);
         if (axios.isAxiosError(error) && error.response) {
             console.log('Axios error response data:', error.response.data);
+        }
+        throw error;
+    }
+}
+
+interface UpdateTaskResult {
+    message: string;
+    errorMessage?: string;
+}
+
+export const updateTaskCompletion = async (userId: string, taskId: number): Promise<UserBasic | string> => {
+    try {
+        const completed = true
+        const response = await axios.patch<UpdateTaskResult>('http://95.163.235.93/task/updateTaskCompletion', {
+            userId, taskId, completed
+        });
+
+        console.log("response.data - ", response.data);
+        if(response.data.message == "Task completion status updated successfully") {
+            const userGetResponse =await getUserById(userId)
+            return userGetResponse
+        } else  {
+            return "error in update state task"
+        }
+    } catch (error) {
+        console.error('Error processing invitation:', error);
+        if (axios.isAxiosError(error) && error.response) {
+            console.log('Axios error response data:', error.response.data);
+            return "User not found"
         }
         throw error;
     }
