@@ -103,7 +103,7 @@ const LoadingScreen: React.FC = () => {
         // };
 
         // fetchData();
-        // navigate('/check');
+        navigate('/check');
         console.log("result - ", data);
     }, [navigate]);
 
