@@ -1,0 +1,82 @@
+.boost-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(360deg, #161618, #191819, #171719);
+    box-sizing: border-box;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.boost-raspred-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.tx-h1-boots {
+    font-family: MyCustomFont-bold, sans-serif;
+    color: white;
+    font-size: 40px;
+    margin-top: 32px;
+}
+
+.info-boost-container {
+    background: #1F1F21;
+    border-radius: 16px;
+    padding: 12px 12px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.info-boost-tx {
+    color: #9CA5B2;
+    font-family: MyCustomFont, sans-serif;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.info-boost-img {
+    width: 16px;
+    height: 16px;
+}
+
+.line-boost-information {
+    width: 100%;
+    height: 1px;
+    background: #1B1B1E;
+    margin-top: 32px;
+}
+
+.boost-container-tx-inf {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+}
+
+.tx-h2-boosts {
+    color: white;
+    font-size: 20px;
+    font-family: MyCustomFont-bold, sans-serif;
+    margin-left: 16px;
+    text-align: left;
+}
+
+.tx-h3-boosts {
+    color: #9CA5B2;
+    font-size: 14px;
+    font-family: MyCustomFont, sans-serif;
+    margin-left: 16px;
+    text-align: left;
+    margin-top: 4px;
+}

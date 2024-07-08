@@ -52,6 +52,8 @@ export interface TaskCardProps {
     taskType: TaskType;
 }
 
+
+
 const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, onClick }) => {
     return (
         <div className={`tasks-container-${completed}`} onClick={onClick}>

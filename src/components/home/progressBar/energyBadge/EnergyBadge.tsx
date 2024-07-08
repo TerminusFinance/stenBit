@@ -6,9 +6,10 @@ import rocketIcon from '../../../../assets/ic_rocket.svg';
 interface EnergyBadgeProps {
     current: number;
     max: number;
+    handlerNavBoost: () => void
 }
 
-const EnergyBadge: React.FC<EnergyBadgeProps> = ({ current, max }) => {
+const EnergyBadge: React.FC<EnergyBadgeProps> = ({ current, max, handlerNavBoost }) => {
     return (
         <div className="energy-badge-container">
             <div className="energy-info">
@@ -16,7 +17,7 @@ const EnergyBadge: React.FC<EnergyBadgeProps> = ({ current, max }) => {
                 <span className="energy-text">{current}</span>
                 <span className="energy-text-gray">/{max}</span>
             </div>
-            <button className="boost-button">
+            <button className="boost-button" onClick={handlerNavBoost}>
             <img src={rocketIcon} className="boost-icon" alt="boost icon" />
                 Boost
             </button>

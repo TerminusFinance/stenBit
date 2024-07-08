@@ -15,6 +15,7 @@ import {RedirectsScreen} from "./components/redirects/RedirectsScreen.tsx";
 import {FriendsScreen} from "./components/home/friendsScreen/FriendsScreen.tsx";
 import {ToastProvider} from "./components/viewComponents/toast/ToastContext.tsx";
 import {CheckScreen} from "./components/loading/CheckScreen.tsx";
+import {BoostScreen} from "./components/home/tapScreen/boostScreen/BoostScreen.tsx";
 
 const App: React.FC = () => {
 
@@ -24,7 +25,9 @@ const App: React.FC = () => {
                 <Router>
                     <Routes>
                         <Route path="/" element={<LoadingScreen/>}/>
+                        <Route path="/loading" element={<LoadingScreen/>}/>
                         <Route path="/check" element={<CheckScreen/>}/>
+                        <Route path="/boost" element={<BoostScreen/>}/>
                         <Route path="/start" element={<StartScreen/>}/>
                         <Route path="/tap" element={<TapScreen/>}/>
                         <Route path="/friends" element={<FriendsScreen/>}/>

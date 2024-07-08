@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './NavigationBar.css';
 import ernIc from "../../assets/navBar/ic-earn.svg";
 import ernIcSelect from "../../assets/navBar/ic-earn-select.svg";
@@ -24,10 +24,12 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                                                          onInviteClick,
                                                          onProfileClick
                                                      }) => {
-    const [selected, setSelected] = useState<string>(initialSelected);
+    const [selected, setSelected] = useState<string | null>(
+        initialSelected.trim() !== "" ? initialSelected : null
+    );
 
     useEffect(() => {
-        setSelected(initialSelected);
+        setSelected(initialSelected.trim() !== "" ? initialSelected : null);
     }, [initialSelected]);
 
     return (

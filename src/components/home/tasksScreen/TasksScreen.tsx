@@ -5,7 +5,7 @@ import ItemTask, {
     OpenUrlTask,
     isSampleTask,
     CheckNftTask,
-    isCheckFriendsTask
+    isCheckFriendsTask,
 } from "./itemTask/ItemTask";
 import {useData} from "../../DataContext.tsx";
 import {updateTaskCompletion, updateUser, UserTask} from "../../../core/dataWork/Back4app.ts";
@@ -23,7 +23,6 @@ import {SecondActionBtn} from "../../buttons/secondActionBtn/SecondActionBtn.tsx
 import {useToast} from "../../viewComponents/toast/ToastContext.tsx";
 import IcCoins from "../../../assets/ic_dollar.svg";
 import {handleCopy, OpenUrl} from "../../viewComponents/Utils.tsx";
-
 
 const TasksScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
@@ -134,8 +133,6 @@ const TasksScreen: React.FC = () => {
 
 
 
-
-
     const [tabSelected, setTabSelected] = useState<string>("All Tasks");
 
     const handleTabSelect = (selectedTab: string) => {
@@ -180,6 +177,7 @@ const TasksScreen: React.FC = () => {
     };
 
     console.log("tasks - ",dataApp.tasks)
+
     return (
         <div className="tasks-container">
             <div className="task-raspred-container">
@@ -330,7 +328,7 @@ const TasksScreen: React.FC = () => {
 
                                     <div style={{width: '24px', height: '24px'}}/>
 
-                                    <SecondActionBtn txInBtn={"Join our Telegram"}
+                                    <SecondActionBtn txInBtn={selectedTask.actionBtnTx ? selectedTask.actionBtnTx : "Join"}
                                                      onClick={() => OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 

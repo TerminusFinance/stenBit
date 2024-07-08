@@ -62,7 +62,6 @@ export interface UserBasic {
     completedTasks?: number[] | null;
     tasks?: UserTask[];
 }
-
 export interface UserTask {
     taskId: number;
     text: string;
@@ -71,8 +70,10 @@ export interface UserTask {
     taskType: TaskType;
     type: string;
     completed: boolean;
+    lastCompletedDate?: string | null;
+    actionBtnTx?: string | null;
+    txDescription?: string | null;
 }
-
 
 export const getUserById = async (userId: string): Promise<UserBasic | string> => {
     try {

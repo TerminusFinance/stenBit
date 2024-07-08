@@ -24,6 +24,7 @@ const LoadingScreen: React.FC = () => {
     // const id = params.get('id');
     // const name = params.get('name');
     // const inviteCode = params.get('inviteCode');
+
     // @ts-ignore
     const [data, setData] = useState<UserData | null>(null);
     // const {setDataApp} = useData();
@@ -33,6 +34,7 @@ const LoadingScreen: React.FC = () => {
     //     if (isDesktop) return 'Desktop';
     //     return 'Unknown';
     // };
+
     // @ts-ignore
     const [launchedeParams, setlaunchedeParams] = useState<string>("");
     useEffect(() => {
@@ -99,9 +101,9 @@ const LoadingScreen: React.FC = () => {
         //         console.error('Error:', error);
         //     }
         // };
-        //
+
         // fetchData();
-        navigate('/check');
+        // navigate('/check');
         console.log("result - ", data);
     }, [navigate]);
 
