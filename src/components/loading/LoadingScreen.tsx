@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import './LoadingScreen.css';
-import {useNavigate} from 'react-router-dom';
-// import {getLevelLeague, getUserById} from "../../core/dataWork/Back4app.ts";
-// import {useData} from "../DataContext.tsx";
-// import {isDesktop, isMobile, isTablet} from 'react-device-detect';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {getLevelLeague, getUserById} from "../../core/dataWork/Back4app.ts";
+import {useData} from "../DataContext.tsx";
+import {isDesktop, isMobile, isTablet} from 'react-device-detect';
 import coin from "../../assets/ic_coins.svg";
-// import {retrieveLaunchParams} from "@tma.js/sdk";
+import {retrieveLaunchParams} from "@tma.js/sdk";
 
 interface UserData {
     objectId?: string;
@@ -18,94 +18,94 @@ interface UserData {
 }
 
 const LoadingScreen: React.FC = () => {
-    // const {search} = useLocation();
+    const {search} = useLocation();
     const navigate = useNavigate();
-    // const params = new URLSearchParams(search);
-    // const id = params.get('id');
-    // const name = params.get('name');
-    // const inviteCode = params.get('inviteCode');
+    const params = new URLSearchParams(search);
+    const id = params.get('id');
+    const name = params.get('name');
+    const inviteCode = params.get('inviteCode');
 
-    // @ts-ignore
+
     const [data, setData] = useState<UserData | null>(null);
-    // const {setDataApp} = useData();
-    // const deviceType = (): string => {
-    //     if (isMobile) return 'Mobile';
-    //     if (isTablet) return 'Tablet';
-    //     if (isDesktop) return 'Desktop';
-    //     return 'Unknown';
-    // };
+    const {setDataApp} = useData();
+    const deviceType = (): string => {
+        if (isMobile) return 'Mobile';
+        if (isTablet) return 'Tablet';
+        if (isDesktop) return 'Desktop';
+        return 'Unknown';
+    };
 
-    // @ts-ignore
+
     const [launchedeParams, setlaunchedeParams] = useState<string>("");
     useEffect(() => {
-        // const fetchData = async () => {
-        //     try {
-        //         const deviceTypeResult = deviceType();
-        //         console.log("deviceType - ", deviceTypeResult);
-        //         if (deviceTypeResult !== 'Mobile') {
-        //             navigate('/redirects');
-        //             return;
-        //         }
-        //         console.log("id переданный - ", id, "name переданный - ", name);
-        //         if (!id || !name) {
-        //             try {
-        //                 const launchParams = retrieveLaunchParams();
-        //                 const params = launchParams.initData
-        //                 if(params != undefined) {
-        //                     const user = params.user
-        //                     if(user != undefined) {
-        //                         const newId = user.id
-        //                         setlaunchedeParams(newId.toString())
-        //                         const result = await getUserById(newId.toString());
-        //                         const legueReuslt = await getLevelLeague()
-        //                         console.log("legueReuslt - ", legueReuslt)
-        //                         if (typeof result ==="string") {
-        //                             if(!inviteCode) {
-        //                                 console.log('User not found');
-        //                                 navigate('/start', {state: {id}});
-        //                             } else  {
-        //                                 console.log('User not found');
-        //                                 navigate('/start', {state: {id, name, inviteCode}});
-        //                             }
-        //                         } else if (typeof result === 'object'){
-        //                             console.log("set up data - ", result.coins);
-        //                             setData(result);
-        //                             setDataApp(result);
-        //                             navigate('/tap');
-        //                         }
-        //                     }
-        //                 }
-        //             } catch (e) {
-        //                 navigate('/not-found', {});
-        //             }
-        //         } else {
-        //             const result = await getUserById(id);
-        //             const legueReuslt = await getLevelLeague()
-        //             console.log("legueReuslt - ", legueReuslt)
-        //             if (typeof result ==="string") {
-        //                 if(!inviteCode) {
-        //                     console.log('User not found');
-        //                     navigate('/start', {state: {id}});
-        //                 } else  {
-        //                     console.log('User not found');
-        //                     navigate('/start', {state: {id, name, inviteCode}});
-        //                 }
-        //             } else if (typeof result === 'object'){
-        //                 console.log("set up data - ", result.coins);
-        //                 setData(result);
-        //                 setDataApp(result);
-        //                 navigate('/tap');
-        //             }
-        //         }
-        //     } catch (error) {
-        //         console.error('Error:', error);
-        //     }
-        // };
+        const fetchData = async () => {
+            try {
+                const deviceTypeResult = deviceType();
+                console.log("deviceType - ", deviceTypeResult);
+                if (deviceTypeResult !== 'Mobile') {
+                    navigate('/redirects');
+                    return;
+                }
+                console.log("id переданный - ", id, "name переданный - ", name);
+                if (!id || !name) {
+                    try {
+                        const launchParams = retrieveLaunchParams();
+                        const params = launchParams.initData
+                        if(params != undefined) {
+                            const user = params.user
+                            if(user != undefined) {
+                                const newId = user.id
+                                setlaunchedeParams(newId.toString())
+                                const result = await getUserById(newId.toString());
+                                const legueReuslt = await getLevelLeague()
+                                console.log("legueReuslt - ", legueReuslt)
+                                if (typeof result ==="string") {
+                                    if(!inviteCode) {
+                                        console.log('User not found');
+                                        navigate('/start', {state: {id}});
+                                    } else  {
+                                        console.log('User not found');
+                                        navigate('/start', {state: {id, name, inviteCode}});
+                                    }
+                                } else if (typeof result === 'object'){
+                                    console.log("set up data - ", result.coins);
+                                    setData(result);
+                                    setDataApp(result);
+                                    navigate('/tap');
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        navigate('/not-found', {});
+                    }
+                } else {
+                    const result = await getUserById(id);
+                    const legueReuslt = await getLevelLeague()
+                    console.log("legueReuslt - ", legueReuslt)
+                    if (typeof result ==="string") {
+                        if(!inviteCode) {
+                            console.log('User not found');
+                            navigate('/start', {state: {id}});
+                        } else  {
+                            console.log('User not found');
+                            navigate('/start', {state: {id, name, inviteCode}});
+                        }
+                    } else if (typeof result === 'object'){
+                        console.log("set up data - ", result.coins);
+                        setData(result);
+                        setDataApp(result);
+                        navigate('/tap');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
 
-        // fetchData();
-        navigate('/check');
+        fetchData();
+        // navigate('/check');
         console.log("result - ", data);
-    }, [navigate]);
+    }, [navigate])
 
     return (
         <div className="loading-coin-container">
