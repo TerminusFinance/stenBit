@@ -70,7 +70,7 @@ const TapScreen: React.FC = () => {
     const prevClicksRef = useRef<number>(clicks);
 
     try {
-        postEvent('web_app_setup_main_button', { is_visible: true });
+        postEvent('web_app_setup_back_button', { is_visible: false});
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }

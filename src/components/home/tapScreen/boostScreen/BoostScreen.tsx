@@ -14,7 +14,7 @@ import {ModalBoostItem} from "./modalBoostItem/ModalBoostItem.tsx";
 import {BoostItem as boostestItems, updateLevel} from "../../../../core/dataWork/RemoteUtilsRequester.ts";
 import {useToast} from "../../../viewComponents/toast/ToastContext.tsx";
 import {formatNumberToK} from "../../../viewComponents/Utils.tsx";
-import {postEvent} from "@tma.js/sdk";
+import {on, postEvent} from "@tma.js/sdk";
 
 export const BoostScreen: React.FC = () => {
     const navigate = useNavigate();
@@ -27,6 +27,13 @@ export const BoostScreen: React.FC = () => {
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }
+
+    const removeListener = on('back_button_pressed', payload => {
+        navigate("/tap")
+        payload
+    });
+
+    removeListener()
 
     const handleShowToast = (message: string, type: 'success' | 'error' | 'info') => {
         showToast(message, type);
