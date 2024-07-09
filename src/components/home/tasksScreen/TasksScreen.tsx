@@ -74,11 +74,10 @@ const TasksScreen: React.FC = () => {
     };
 
     const checkNftItem = async () => {
-        const userId = dataApp.userId;
         const userWallet = dataApp.address;
         const SselectedTask = selectedTask;
         const coindOld = dataApp.coins;
-        if (SselectedTask != null && CheckNftTask(SselectedTask.taskType) && userId != null && coindOld != null) {
+        if (SselectedTask != null && CheckNftTask(SselectedTask.taskType) && coindOld != null) {
             const collectionAddress = SselectedTask.taskType.checkCollectionsAddress;
 
             if (userWallet != undefined && userWallet !== "") {
@@ -88,7 +87,7 @@ const TasksScreen: React.FC = () => {
                     const checkResult = await sendToCheckUserHaveNftFromCollections(userWallet, collectionAddress);
                     updateTaskState(SselectedTask.taskId, { checkResult: checkResult.state, errorMessage: null });
                     if(checkResult.state) {
-                        const resultSendTorequest = await updateTaskCompletion(userId, SselectedTask.taskId)
+                        const resultSendTorequest = await updateTaskCompletion(SselectedTask.taskId)
 
                         console.log("resultUdpate - ", resultSendTorequest)
                         if (typeof resultSendTorequest === 'object') {
@@ -125,7 +124,7 @@ const TasksScreen: React.FC = () => {
                 window.open((selectedTask.taskType as OpenUrlTask).url, '_blank');
 
                 if (!completedTaskOld.includes(selectedTask.taskId)) {
-                    const resultUpdate = await updateUser(userId, {
+                    const resultUpdate = await updateUser( {
                         coins: coindOld + selectedTask.coins,
                     });
                     setDataApp(resultUpdate);
@@ -164,7 +163,7 @@ const TasksScreen: React.FC = () => {
 
             if(lengthUserInvited == numberOfFriends && dataApp.userId != null) {
                 updateTaskState(selectedsTask.taskId, {isLoading: true})
-                const resultSendTorequest = await updateTaskCompletion(dataApp.userId, selectedsTask.taskId)
+                const resultSendTorequest = await updateTaskCompletion(selectedsTask.taskId)
                 if (typeof resultSendTorequest === 'object') {
                     setDataApp(resultSendTorequest)
                     updateTaskState(selectedsTask.taskId, { checkResult: true, errorMessage: null });

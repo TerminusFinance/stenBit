@@ -52,10 +52,9 @@ export const BoostScreen: React.FC = () => {
     };
 
     const updateLevelBoost = async () => {
-        const idUser = dataApp.userId
         const boostId = selectedBottomSheetItem?.boostName
-        if(idUser != undefined && boostId != undefined) {
-            const resultUpdate = await updateLevel(idUser, boostId)
+        if( boostId != undefined) {
+            const resultUpdate = await updateLevel(boostId)
             if (typeof resultUpdate === 'object') {
                 setDataApp(resultUpdate)
 

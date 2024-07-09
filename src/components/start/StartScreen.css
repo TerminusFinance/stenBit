@@ -11,13 +11,13 @@
     font-style: normal;
 }
 
-.main-container {
+.main-container-start {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(360deg, #121215, #171625, #351E22);
+    background: linear-gradient(360deg, #161618, #191819, #171719);
     padding: 20px;
     box-sizing: border-box;
 }
@@ -46,18 +46,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     flex-grow: 1;
 }
 
-.logo {
-    width: 150px;
-    height: 150px;
+.logo-start {
+    width: 240px;
+    height: 240px;
 }
 
 .social-icons {
     display: flex;
     justify-content: space-around;
-    width: 100%;
+    flex-direction: row;
+    background: rgb(255, 255, 255, 4%);
+    border-radius: 32px;
+    margin-bottom: 32px;
 }
 
 .social-button {
@@ -66,14 +70,14 @@
     color: white;
     font-size: 16px;
     display: flex;
+    margin: 10px 10px;
     flex-direction: column;
     align-items: center;
 }
 
 .icon {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 5px;
+    width: 48px;
+    height: 48px;
 }
 
 .social-text {
@@ -92,4 +96,10 @@
     margin-top: 20px;
     margin-bottom: 12px;
     font-family: 'MyCustomFont', sans-serif;
+}
+
+.tx-logo-start {
+    font-family: MyCustomFont-bold, sans-serif;
+    font-size: 32px;
+    color: white;
 }

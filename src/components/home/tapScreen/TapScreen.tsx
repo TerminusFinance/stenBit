@@ -99,7 +99,7 @@ const TapScreen: React.FC = () => {
 
     const sendClickData = async (clickCount: number) => {
         if (dataApp.userId !== undefined) {
-            const result = updateUser(dataApp.userId, { coins: clickCount });
+            const result = updateUser( { coins: clickCount });
             console.log("update result - ", await result);
             setDataApp(await result);
         }

@@ -4,29 +4,13 @@ import {retrieveLaunchParams} from "@tma.js/sdk";
 
 const BASE_URL = "https://wm-mariupol.com/"
 
-export const createUser = async (userId: string, userName: string, coins: number): Promise<UserBasic> => {
-    try {
-        console.log("createUser userId -", userId)
-        const response = await axios.post<UserBasic>(
-            `${BASE_URL}users`,
-            {userId, userName, coins}
-        );
-        return response.data;
-    } catch (error) {
-        console.error('Error creating user:', error);
-        if (axios.isAxiosError(error) && error.response) {
-            console.log('Axios error response data:', error.response.data);
-        }
-        throw error;
-    }
-};
+// const initDataRaw = "query_id=AAHaKAEtAAAAANooAS24JwaW&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1720545092&hash=698e053b30b92ea592fe52c24c628e4d460d4d0ce696e0d2aae77f1d8e37ef57"
+const { initDataRaw } = retrieveLaunchParams();
 
 export interface Invitee {
-    userId: string;
     userName: string;
     coinsReferral: number;
 }
-
 export interface GetUserByResponse {
     className?: string;
     codeToInvite?: string;
@@ -38,7 +22,6 @@ export interface GetUserByResponse {
     completedTasks?: number[] | null;
     error?: string;
 }
-
 export interface BoostItem {
     boostName: string,
     level: number,
@@ -64,6 +47,7 @@ export interface UserBasic {
     completedTasks?: number[] | null;
     tasks?: UserTask[];
 }
+
 export interface UserTask {
     taskId: number;
     text: string;
@@ -76,15 +60,27 @@ export interface UserTask {
     actionBtnTx?: string | null;
     txDescription?: string | null;
 }
+export const createUser = async (coins: number): Promise<UserBasic> => {
+    try {
+        const response = await axios.post<UserBasic>(
+            `${BASE_URL}users/createNewUsers`,
+            {coins}, {headers: {Authorization: `tma ${initDataRaw}`}}
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error creating user:', error);
+        if (axios.isAxiosError(error) && error.response) {
+            console.log('Axios error response data:', error.response.data);
+        }
+        throw error;
+    }
+};
 
-export const getUserById = async (userId: string): Promise<UserBasic | string> => {
+export const getUserById = async (): Promise<UserBasic | string> => {
 
     try {
-        const { initDataRaw } = retrieveLaunchParams();
-        console.log('Sending request to get user by ID:', userId);
-
         const response = await axios.get<UserBasic>(
-            `${BASE_URL}users/${userId}`, {headers: {Authorization: `tma ${initDataRaw}`}}
+            `${BASE_URL}users/getUser`, {headers: {Authorization: `tma ${initDataRaw}`}}
         );
 
         console.log('Response data:', typeof response.data);
@@ -108,12 +104,12 @@ export interface UpdateUserRequest {
     address?: string;
 }
 
-export const updateUser = async (userId: string, updates: Partial<UpdateUserRequest>): Promise<UserBasic> => {
+export const updateUser = async (updates: Partial<UpdateUserRequest>): Promise<UserBasic> => {
     const payload = {...updates};
     console.log("payload - ", payload)
     try {
-        const response = await axios.put<UserBasic>(`${BASE_URL}users/${userId}`,
-            payload,
+        const response = await axios.put<UserBasic>(`${BASE_URL}users/updateUsers`,
+            payload, {headers: {Authorization: `tma ${initDataRaw}`}}
         );
         return response.data;
     } catch (error) {
@@ -123,23 +119,16 @@ export const updateUser = async (userId: string, updates: Partial<UpdateUserRequ
 };
 
 
-export interface UpdateUserRequestCompletedTask {
-    userId?: string;
-    completedTasks: number[];
-}
 
-
-
-
-export const processInvitationFromInviteCode = async (inviteCode: string, newUserId: string, newUserName: string): Promise<UserBasic | string> => {
+export const processInvitationFromInviteCode = async (inviteCode: string): Promise<UserBasic | string> => {
     try {
           await axios.post<{
             result: GetUserByResponse
         }>(`${BASE_URL}users/process-invitation`,
-            {inviteCode, newUserId, newUserName},
+            {inviteCode,}, {headers: {Authorization: `tma ${initDataRaw}`}}
         );
 
-        const userResult =await getUserById(newUserId)
+        const userResult =await getUserById()
         return userResult;
     } catch (error) {
         console.error('Error processing invitation:', error);
@@ -179,16 +168,16 @@ interface UpdateTaskResult {
     errorMessage?: string;
 }
 
-export const updateTaskCompletion = async (userId: string, taskId: number): Promise<UserBasic | string> => {
+export const updateTaskCompletion = async (taskId: number): Promise<UserBasic | string> => {
     try {
         const completed = true
         const response = await axios.patch<UpdateTaskResult>(`${BASE_URL}task/updateTaskCompletion`, {
-            userId, taskId, completed
-        });
+            taskId, completed
+        }, {headers: {Authorization: `tma ${initDataRaw}`}});
 
         console.log("response.data - ", response.data);
         if(response.data.message == "Task completion status updated successfully") {
-            const userGetResponse = await getUserById(userId)
+            const userGetResponse = await getUserById()
             return userGetResponse
         } else  {
             return "error in update state task"
@@ -204,10 +193,10 @@ export const updateTaskCompletion = async (userId: string, taskId: number): Prom
 }
 
 
-export const updateLevel = async (userId: string, boostName: string) : Promise<UserBasic | string> => {
+export const updateLevel = async (boostName: string) : Promise<UserBasic | string> => {
     try {
         const response = await axios.post<UserBasic>(`${BASE_URL}users/updateBoost`, {
-            userId, boostName
+            boostName
         });
         console.log("response.data - ", response.data);
         if ('message' in response.data) {

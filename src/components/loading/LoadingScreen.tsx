@@ -5,7 +5,6 @@ import {getLevelLeague, getUserById} from "../../core/dataWork/RemoteUtilsReques
 import {useData} from "../DataContext.tsx";
 import {isDesktop, isMobile, isTablet} from 'react-device-detect';
 import coin from "../../assets/ic_coins.svg";
-import {retrieveLaunchParams} from "@tma.js/sdk";
 
 interface UserData {
     objectId?: string;
@@ -21,8 +20,6 @@ const LoadingScreen: React.FC = () => {
     const {search} = useLocation();
     const navigate = useNavigate();
     const params = new URLSearchParams(search);
-    const id = params.get('id');
-    const name = params.get('name');
     const inviteCode = params.get('inviteCode');
 
 
@@ -46,26 +43,25 @@ const LoadingScreen: React.FC = () => {
                     navigate('/redirects');
                     return;
                 }
-                console.log("id переданный - ", id, "name переданный - ", name);
-                if (!id || !name) {
                     try {
-                        const launchParams = retrieveLaunchParams();
-                        const params = launchParams.initData
+                        // const launchParams = retrieveLaunchParams();
+                        // const params = launchParams.initData
                         if(params != undefined) {
-                            const user = params.user
-                            if(user != undefined) {
-                                const newId = user.id
+                            // const user = params.user
+                            // if(user != undefined) {
+                            //     const newId = user.id
+                            const newId = 2
                                 setlaunchedeParams(newId.toString())
-                                const result = await getUserById(newId.toString());
+                                const result = await getUserById();
                                 const legueReuslt = await getLevelLeague()
                                 console.log("legueReuslt - ", legueReuslt)
                                 if (typeof result ==="string") {
                                     if(!inviteCode) {
                                         console.log('User not found');
-                                        navigate('/start', {state: {id}});
+                                        navigate('/start', {state: {newId}});
                                     } else  {
                                         console.log('User not found');
-                                        navigate('/start', {state: {id, name, inviteCode}});
+                                        navigate('/start', {state: {newId, inviteCode}});
                                     }
                                 } else if (typeof result === 'object'){
                                     console.log("set up data - ", result.coins);
@@ -73,30 +69,12 @@ const LoadingScreen: React.FC = () => {
                                     setDataApp(result);
                                     navigate('/tap');
                                 }
-                            }
+
                         }
                     } catch (e) {
                         navigate('/not-found', {});
                     }
-                } else {
-                    const result = await getUserById(id);
-                    const legueReuslt = await getLevelLeague()
-                    console.log("legueReuslt - ", legueReuslt)
-                    if (typeof result ==="string") {
-                        if(!inviteCode) {
-                            console.log('User not found');
-                            navigate('/start', {state: {id}});
-                        } else  {
-                            console.log('User not found');
-                            navigate('/start', {state: {id, name, inviteCode}});
-                        }
-                    } else if (typeof result === 'object'){
-                        console.log("set up data - ", result.coins);
-                        setData(result);
-                        setDataApp(result);
-                        navigate('/tap');
-                    }
-                }
+
             } catch (error) {
                 console.error('Error:', error);
             }

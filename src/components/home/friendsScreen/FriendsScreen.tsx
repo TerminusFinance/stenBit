@@ -52,7 +52,7 @@ export const FriendsScreen: React.FC = () => {
                 {dataApp.listUserInvited ? (
                     <div>
                         {dataApp.listUserInvited.map((invite) => (
-                            <ItemFriends userName={invite.userName} userId={invite.userId}
+                            <ItemFriends userName={invite.userName}
                                          coinsReferral={invite.coinsReferral}/>
                         ))}
                     </div>

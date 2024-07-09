@@ -33,11 +33,8 @@ const ProfileScreen: React.FC = () => {
     };
 
     const updateAddressUsers = async (address: string) => {
-        const id = dataApp.userId;
-        if (id != null) {
-            const result = updateUser(id, { address: address });
+            const result = updateUser({ address: address });
             setDataApp(await result);
-        }
     };
 
     const callAddressMenu = () => {
