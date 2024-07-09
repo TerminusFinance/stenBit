@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./ProfileScreen.css";
 import { useData } from "../../DataContext.tsx";
 import {useTonConnectUI, useTonWallet} from "@tonconnect/ui-react";
-import { updateUser } from "../../../core/dataWork/Back4app.ts";
+import { updateUser } from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import { Address } from "ton-core";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
 import { useNavigate } from "react-router-dom";
@@ -11,12 +11,19 @@ import {InviteCard} from "../friendsScreen/FriendsScreen.tsx";
 import {getCurrentLevel} from "../tapScreen/TapScreen.tsx";
 import {SettingsItem} from "./settingsItem/SettingsItem.tsx";
 import IcWallet from "../../../assets/ic_wallet.svg";
+import {postEvent} from "@tma.js/sdk";
 
 const ProfileScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
     const wallet = useTonWallet();
     const navigate = useNavigate();
     const [tonConnectUI] = useTonConnectUI();
+
+    try {
+        postEvent('web_app_setup_back_button', { is_visible: true });
+    } catch (e ) {
+        console.log("error in postEvent - ", e)
+    }
 
     // @ts-ignore
     const currentLevel = getCurrentLevel(dataApp.coins);

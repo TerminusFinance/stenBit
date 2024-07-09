@@ -1,12 +1,11 @@
 .boost-item-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between; /* Ensure space between items */
-    align-items: center; /* Align items vertically */
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    padding: 10px; /* Add padding for spacing */
-    margin-top: 4px;
-    margin-bottom: 4px;
+    padding: 10px;
+    margin: 0; /* Remove margins from BoostItem */
     border-radius: 16px;
     text-align: center;
     color: white;
@@ -15,11 +14,15 @@
     background-color: #1B1B1E;
 }
 
+/*.current-name-boost {*/
+/**/
+/*}*/
+
 .progress-text {
     display: flex;
     flex-direction: row;
     align-items: center;
-    flex: 1; /* Allow the text container to take available space */
+    flex: 1;
 }
 
 .ic-logo {
@@ -35,7 +38,7 @@
     margin-right: 4px;
 }
 
-.coins-container {
+.coins-container-boost-item {
     display: flex;
     align-items: center;
     margin-top: 4px;
@@ -48,26 +51,33 @@
     height: 16px;
 }
 
-.tx-container {
+.boost-tx-container {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center the text vertically */
-    margin-left: 10px; /* Add margin for spacing */
-    flex: 1; /* Allow the text container to take available space */
+    justify-content: center;
+    margin-left: 10px;
+    flex: 1;
 }
 
-.progress-text .current {
+.progress-text .current-name-boost {
     color: white;
     font-size: 16px;
     text-align: start;
+    margin-left: 4px;
     font-family: MyCustomFont-bold, sans-serif;
 }
 
-.progress-text .divider-task {
-    color: #9CA5B2;
-    font-size: 14px;
+.progress-text .divider-task-boost {
+    color: white;
+    font-size: 16px;
     margin: 0 5px;
+    font-family: MyCustomFont-bold, sans-serif;
+}
+
+.driver-lvl-boost {
+    color: #9CA5B2;
     font-family: MyCustomFont, sans-serif;
+    font-size: 16px;
 }
 
 .progress-text .max {

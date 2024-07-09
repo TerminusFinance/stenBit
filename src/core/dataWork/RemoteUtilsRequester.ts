@@ -1,12 +1,14 @@
 import axios, {} from 'axios';
 import {TaskType} from "../../components/home/tasksScreen/itemTask/ItemTask.tsx";
+import {retrieveLaunchParams} from "@tma.js/sdk";
 
+const BASE_URL = "https://wm-mariupol.com/"
 
 export const createUser = async (userId: string, userName: string, coins: number): Promise<UserBasic> => {
     try {
         console.log("createUser userId -", userId)
         const response = await axios.post<UserBasic>(
-            'http://95.163.235.93/users',
+            `${BASE_URL}users`,
             {userId, userName, coins}
         );
         return response.data;
@@ -37,7 +39,7 @@ export interface GetUserByResponse {
     error?: string;
 }
 
-interface BoostItem {
+export interface BoostItem {
     boostName: string,
     level: number,
     price: number
@@ -76,11 +78,13 @@ export interface UserTask {
 }
 
 export const getUserById = async (userId: string): Promise<UserBasic | string> => {
+
     try {
+        const { initDataRaw } = retrieveLaunchParams();
         console.log('Sending request to get user by ID:', userId);
 
         const response = await axios.get<UserBasic>(
-            `http://95.163.235.93/users/${userId}`,
+            `${BASE_URL}users/${userId}`, {headers: {Authorization: `tma ${initDataRaw}`}}
         );
 
         console.log('Response data:', typeof response.data);
@@ -108,7 +112,7 @@ export const updateUser = async (userId: string, updates: Partial<UpdateUserRequ
     const payload = {...updates};
     console.log("payload - ", payload)
     try {
-        const response = await axios.put<UserBasic>(`http://95.163.235.93/users/${userId}`,
+        const response = await axios.put<UserBasic>(`${BASE_URL}users/${userId}`,
             payload,
         );
         return response.data;
@@ -124,34 +128,14 @@ export interface UpdateUserRequestCompletedTask {
     completedTasks: number[];
 }
 
-export const updateUserByCompletedTask = async (userId: string, updates: Partial<UpdateUserRequestCompletedTask>): Promise<GetUserByResponse> => {
-    try {
-        const response = await axios.post<{
-            result: GetUserByResponse
-        }>('https://parseapi.back4app.com/functions/updateUser',
-            {userId, ...updates} as UpdateUserRequestCompletedTask,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Parse-Application-Id': '35FDDTeCMqJUMhDYr9LFh2TEXPXTiRvYiRYbcG23',
-                    'X-Parse-REST-API-Key': 'kAyRiID9BcXva11fhs5b6fX47nkcVlJjk34313qP',
-                }
-            }
-        );
 
-        return response.data.result;
-    } catch (error) {
-        console.error('Error updating user:', error);
-        throw error;
-    }
-};
 
 
 export const processInvitationFromInviteCode = async (inviteCode: string, newUserId: string, newUserName: string): Promise<UserBasic | string> => {
     try {
           await axios.post<{
             result: GetUserByResponse
-        }>('http://95.163.235.93/users/process-invitation',
+        }>(`${BASE_URL}users/process-invitation`,
             {inviteCode, newUserId, newUserName},
         );
 
@@ -177,7 +161,7 @@ interface LeagueLevel {
 
 export const getLevelLeague = async (): Promise<LeagueLevel[]> => {
     try {
-        const response = await axios.get<LeagueLevel[]>('http://95.163.235.93/leagues');
+        const response = await axios.get<LeagueLevel[]>(`${BASE_URL}leagues`);
 
         console.log("response.data - ", response.data);
         return response.data;
@@ -198,13 +182,13 @@ interface UpdateTaskResult {
 export const updateTaskCompletion = async (userId: string, taskId: number): Promise<UserBasic | string> => {
     try {
         const completed = true
-        const response = await axios.patch<UpdateTaskResult>('http://95.163.235.93/task/updateTaskCompletion', {
+        const response = await axios.patch<UpdateTaskResult>(`${BASE_URL}task/updateTaskCompletion`, {
             userId, taskId, completed
         });
 
         console.log("response.data - ", response.data);
         if(response.data.message == "Task completion status updated successfully") {
-            const userGetResponse =await getUserById(userId)
+            const userGetResponse = await getUserById(userId)
             return userGetResponse
         } else  {
             return "error in update state task"
@@ -216,5 +200,21 @@ export const updateTaskCompletion = async (userId: string, taskId: number): Prom
             return "User not found"
         }
         throw error;
+    }
+}
+
+
+export const updateLevel = async (userId: string, boostName: string) : Promise<UserBasic | string> => {
+    try {
+        const response = await axios.post<UserBasic>(`${BASE_URL}users/updateBoost`, {
+            userId, boostName
+        });
+        console.log("response.data - ", response.data);
+        if ('message' in response.data) {
+            return `${response.data.message}`; // Возвращаем сообщение об ошибке
+        }
+        return response.data;
+    } catch (e) {
+        return "error in update state task"
     }
 }

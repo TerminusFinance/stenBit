@@ -8,7 +8,7 @@ import ItemTask, {
     isCheckFriendsTask,
 } from "./itemTask/ItemTask";
 import {useData} from "../../DataContext.tsx";
-import {updateTaskCompletion, updateUser, UserTask} from "../../../core/dataWork/Back4app.ts";
+import {updateTaskCompletion, updateUser, UserTask} from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import {
     sendToCheckUserHaveNftFromCollections
 } from "../../../core/tonWork/checkToNftItem/CheckToNftitem.tsx";
@@ -23,11 +23,18 @@ import {SecondActionBtn} from "../../buttons/secondActionBtn/SecondActionBtn.tsx
 import {useToast} from "../../viewComponents/toast/ToastContext.tsx";
 import IcCoins from "../../../assets/ic_dollar.svg";
 import {handleCopy, OpenUrl} from "../../viewComponents/Utils.tsx";
+import {postEvent} from "@tma.js/sdk";
 
 const TasksScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
 
     const { showToast } = useToast();
+
+    try {
+        postEvent('web_app_setup_back_button', { is_visible: true });
+    } catch (e ) {
+        console.log("error in postEvent - ", e)
+    }
 
     const handleShowToast = (message: string, type: 'success' | 'error' | 'info') => {
         showToast(message, type);

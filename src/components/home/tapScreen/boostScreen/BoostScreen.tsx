@@ -11,12 +11,27 @@ import IcRocket from "../../../../assets/boost/ic_rocket.svg";
 import IcTap from "../../../../assets/boost/ic_tap-hand.svg";
 import {ModalBoostAbout} from "./modalBoostAbout/ModalBoostAbout.tsx";
 import {ModalBoostItem} from "./modalBoostItem/ModalBoostItem.tsx";
+import {BoostItem as boostestItems, updateLevel} from "../../../../core/dataWork/RemoteUtilsRequester.ts";
+import {useToast} from "../../../viewComponents/toast/ToastContext.tsx";
+import {formatNumberToK} from "../../../viewComponents/Utils.tsx";
+import {postEvent} from "@tma.js/sdk";
 
 export const BoostScreen: React.FC = () => {
     const navigate = useNavigate();
-    const {dataApp} = useData();
+    const {dataApp, setDataApp} = useData();
 
-    // Helper function to get boost image based on boostName
+    const { showToast } = useToast();
+
+    try {
+        postEvent('web_app_setup_back_button', { is_visible: true });
+    } catch (e ) {
+        console.log("error in postEvent - ", e)
+    }
+
+    const handleShowToast = (message: string, type: 'success' | 'error' | 'info') => {
+        showToast(message, type);
+    };
+
     const getBoostImage = (boostName: string) => {
         switch (boostName) {
             case "tapBoot":
@@ -28,7 +43,7 @@ export const BoostScreen: React.FC = () => {
             case "multitap":
                 return IcTap;
             default:
-                return IcTap; // Handle if boostName doesn't match any case
+                return IcTap;
         }
     };
 
@@ -36,8 +51,24 @@ export const BoostScreen: React.FC = () => {
         navigate(`/${marsh}`);
     };
 
+    const updateLevelBoost = async () => {
+        const idUser = dataApp.userId
+        const boostId = selectedBottomSheetItem?.boostName
+        if(idUser != undefined && boostId != undefined) {
+            const resultUpdate = await updateLevel(idUser, boostId)
+            if (typeof resultUpdate === 'object') {
+                setDataApp(resultUpdate)
+
+                handleShowToast("boost update level success", "success")
+            } else  {
+                handleShowToast("boost update level error", "error")
+            }
+        }
+    }
+
     const [isBottomSheetVisibleAbout, setBottomSheetVisibleAbout] = useState(false);
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+    const [selectedBottomSheetItem, setSelectedBottomSheetItem] = useState<boostestItems | null>(null);
 
     const openBottomSheet = () => {
         setBottomSheetVisibleAbout(true);
@@ -46,7 +77,13 @@ export const BoostScreen: React.FC = () => {
     const closeBottomSheet = () => {
         setBottomSheetVisibleAbout(false);
         setBottomSheetVisible(false);
+        setSelectedBottomSheetItem(null)
     };
+
+    const openBottomSheetBoostItem = (item: boostestItems) => {
+        setSelectedBottomSheetItem(item)
+        setBottomSheetVisible(true)
+    }
 
     return (
         <div className="boost-container">
@@ -69,13 +106,15 @@ export const BoostScreen: React.FC = () => {
                 </div>
 
                 {dataApp.boosts?.map((boost, index) => (
-                    <BoostItem
-                        key={index} // Assuming boost object has a unique identifier
-                        name={boost.boostName}
-                        price={boost.price}
-                        lvl={boost.level}
-                        checkIcon={getBoostImage(boost.boostName)}
-                    />
+                    <div key={index} className="boost-item-wrapper">
+                        <BoostItem
+                            name={boost.boostName}
+                            price={formatNumberToK(boost.price)}
+                            lvl={boost.level}
+                            checkIcon={getBoostImage(boost.boostName)}
+                            onClick={() => openBottomSheetBoostItem(boost)}
+                        />
+                    </div>
                 ))}
             </div>
 
@@ -89,9 +128,10 @@ export const BoostScreen: React.FC = () => {
 
             <ModalBoostAbout title={"How a boost works"} isVisible={isBottomSheetVisibleAbout}
                              onClose={closeBottomSheet}/>
-            <ModalBoostItem title={''} description={''} about={''} lvl={1} price={1} image={""}
-                            isVisible={isBottomSheetVisible} onClose={closeBottomSheet} onBtnClick={() => {
-            }}/>
+            {selectedBottomSheetItem != null && (
+                <ModalBoostItem title={selectedBottomSheetItem?.boostName} description={"Increase the number of coins you can earn with each tap by taking advantage of this opportunity."} about={selectedBottomSheetItem?.boostName} lvl={selectedBottomSheetItem?.level} price={selectedBottomSheetItem?.price} image={getBoostImage(selectedBottomSheetItem.boostName)}
+                                isVisible={isBottomSheetVisible} onClose={closeBottomSheet} onBtnClick={updateLevelBoost}/>
+            )}
         </div>
     );
 };

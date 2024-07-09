@@ -8,6 +8,7 @@ import coinIco from "../../../assets/ic_dollar.svg";
 import icAddUser from "../../../assets/ic-add-user.svg";
 import {ModalInvite} from "./modalInvite/ModalInvite.tsx";
 import {MainActionBtn} from "../../buttons/mainActionBtn/MainActionBtn.tsx";
+import {postEvent} from "@tma.js/sdk";
 
 export const FriendsScreen: React.FC = () => {
     const {dataApp} = useData();
@@ -17,6 +18,11 @@ export const FriendsScreen: React.FC = () => {
         navigate(`/${marsh}`);
     };
 
+    try {
+        postEvent('web_app_setup_back_button', { is_visible: true });
+    } catch (e ) {
+        console.log("error in postEvent - ", e)
+    }
 
     const openBottomSheet = () => {
         setBottomSheetVisible(true);

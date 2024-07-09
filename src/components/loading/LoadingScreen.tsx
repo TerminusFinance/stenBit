@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './LoadingScreen.css';
 import {useLocation, useNavigate} from 'react-router-dom';
-import {getLevelLeague, getUserById} from "../../core/dataWork/Back4app.ts";
+import {getLevelLeague, getUserById} from "../../core/dataWork/RemoteUtilsRequester.ts";
 import {useData} from "../DataContext.tsx";
 import {isDesktop, isMobile, isTablet} from 'react-device-detect';
 import coin from "../../assets/ic_coins.svg";

@@ -3,7 +3,7 @@ import './TapScreen.css';
 import coin from '../../../assets/ic_coins.svg';
 import { useNavigate } from "react-router-dom";
 import { useData } from "../../DataContext.tsx";
-import { updateUser } from "../../../core/dataWork/Back4app.ts";
+import { updateUser } from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import bronzeLevel from "../../../assets/diamont/diamond-level-bronze.svg";
 import silverLevel from "../../../assets/diamont/diamond-level-silver.svg";
 import goldLevel from "../../../assets/diamont/diamond-level-gold.svg";
@@ -13,6 +13,8 @@ import EnergyBadge from "../progressBar/energyBadge/EnergyBadge.tsx";
 import { CoinsLevelUpp } from "../progressBar/coinsLevelUpp/CoinsLevelUpp.tsx";
 import IcDollar from "../../../assets/ic_dollar.svg";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
+import {calculateThousandsDifference, formatNumber} from "../../viewComponents/Utils.tsx";
+import {postEvent} from "@tma.js/sdk";
 
 export interface LevelType {
     id: number;
@@ -66,6 +68,12 @@ const TapScreen: React.FC = () => {
     const [energy, setEnergy] = useState<number>(2000);
     const navigate = useNavigate();
     const prevClicksRef = useRef<number>(clicks);
+
+    try {
+        postEvent('web_app_setup_main_button', { is_visible: true });
+    } catch (e ) {
+        console.log("error in postEvent - ", e)
+    }
 
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
         if (energy > 0) {
@@ -126,20 +134,6 @@ const TapScreen: React.FC = () => {
 
 
     const currentLevel = getCurrentLevel(clicks);
-
-    const formatNumber = (num: number): string => {
-        if (num < 1000) {
-            return num.toString();
-        }
-
-        return num.toLocaleString('en-US');
-    };
-
-    const calculateThousandsDifference = (current: number, max: number): number => {
-        const difference = max - current;
-        return Math.ceil(difference / 1000);
-    };
-
 
 
     return (

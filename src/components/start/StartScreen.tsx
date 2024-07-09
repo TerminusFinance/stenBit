@@ -6,12 +6,19 @@ import ic_website from '../../assets/ic_website.png';
 import ic_discord from '../../assets/ic_discord.png';
 import ic_x from '../../assets/ic_x.png';
 import {useLocation, useNavigate} from "react-router-dom";
-import {createUser, processInvitationFromInviteCode} from "../../core/dataWork/Back4app.ts";
+import {createUser, processInvitationFromInviteCode} from "../../core/dataWork/RemoteUtilsRequester.ts";
 import {useData} from "../DataContext.tsx";
+import {postEvent} from "@tma.js/sdk";
 
 const StartScreen: React.FC = () => {
 
     const navigate = useNavigate();
+
+    try {
+        postEvent('web_app_setup_main_button', { is_visible: true });
+    } catch (e ) {
+        console.log("error in postEvent - ", e)
+    }
 
     const location = useLocation()
     const {id, name, inviteCode} = location.state as { id: string, name: string, inviteCode: string }

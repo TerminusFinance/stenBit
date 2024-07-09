@@ -3,6 +3,7 @@ import CloseIc from "../../../../../assets/ic_close.svg";
 import "./ModalBoostItem.css"
 import IcCoins from "../../../../../assets/ic_dollar.svg";
 import {MainActionBtn} from "../../../../buttons/mainActionBtn/MainActionBtn.tsx";
+import {formatNumberToK} from "../../../../viewComponents/Utils.tsx";
 
 interface ModalBoostItemProps {
     isVisible: boolean;
@@ -65,17 +66,17 @@ export const ModalBoostItem: React.FC<ModalBoostItemProps> = ({isVisible, onClos
 
                 <div className="bottom-sheet-content-task">
                     <div className="reward-container-task-modal-boost">
-                        <div>
+                        <div className="coins-boost-t-container">
                             <img src={IcCoins} className="ic-reward-container-coins"/>
-                            <p className="tx-reward-container-coins">+ {price}</p>
+                            <p className="tx-reward-container-coins">+ {formatNumberToK(price)}</p>
                         </div>
-                        <p>{lvl}lvl</p>
+                        <p className="lvl-item-boost">{lvl}lvl</p>
                     </div>
                     <div className="about-container-task-modal-boost">
-                        <p>{about}</p>
+                        <p className="about-tx-task-modal-boost">{about}</p>
                     </div>
 
-                    <p className="tx-description">
+                    <p className="tx-description-boost">
                         {description}
                     </p>
 

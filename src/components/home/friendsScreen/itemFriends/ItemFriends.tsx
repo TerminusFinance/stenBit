@@ -1,6 +1,6 @@
 import React from "react";
 import './ItemFriends.css';
-import {Invitee} from "../../../../core/dataWork/Back4app.ts";
+import {Invitee} from "../../../../core/dataWork/RemoteUtilsRequester.ts";
 import DogImg from "../../../../assets/dog_img.png";
 import CoinsImg from "../../../../assets/ic_dollar.svg";
 

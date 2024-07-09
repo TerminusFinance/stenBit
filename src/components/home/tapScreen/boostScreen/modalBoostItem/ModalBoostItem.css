@@ -146,7 +146,57 @@
 }
 
 .reward-container-task-modal-boost {
+    background-color: #1B1B1E;
+    display: flex;
+    border-radius: 16px;
+    padding: 8px;
+    width: 100%;
+    margin-top: 8px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coins-boost-t-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+}
+
+.lvl-item-boost {
+    font-family: "MyCustomFont", sans-serif;
+    font-size: 20px;
+    color: #9CA5B2;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
+.tx-description-boost {
+    font-family: "MyCustomFont", sans-serif;
+    color: #9CA5B2;
+    font-size: 16px;
+    text-align:center;
+    margin-top: 16px;
+    margin-bottom: 24px;
+}
+
+.about-container-task-modal-boost {
+    background-color: #1B1B1E;
+    display: flex;
+    border-radius: 12px;
+    padding: 8px;
+    width: 100%;
+    margin-top: 8px;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-tx-task-modal-boost {
+    font-size: 16px;
+    font-family: "MyCustomFont", sans-serif;
+    color: white;
+    text-align: center;
 }

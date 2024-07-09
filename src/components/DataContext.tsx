@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import {UserBasic} from "../core/dataWork/Back4app.ts";
+import {UserBasic} from "../core/dataWork/RemoteUtilsRequester.ts";
 
 // 1. Определение интерфейсов
 
