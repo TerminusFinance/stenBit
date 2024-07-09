@@ -33,7 +33,6 @@ const LoadingScreen: React.FC = () => {
     };
 
 
-    const [launchedeParams, setlaunchedeParams] = useState<string>("");
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -50,18 +49,16 @@ const LoadingScreen: React.FC = () => {
                             // const user = params.user
                             // if(user != undefined) {
                             //     const newId = user.id
-                            const newId = 2
-                                setlaunchedeParams(newId.toString())
                                 const result = await getUserById();
                                 const legueReuslt = await getLevelLeague()
                                 console.log("legueReuslt - ", legueReuslt)
                                 if (typeof result ==="string") {
                                     if(!inviteCode) {
                                         console.log('User not found');
-                                        navigate('/start', {state: {newId}});
+                                        navigate('/start' )
                                     } else  {
                                         console.log('User not found');
-                                        navigate('/start', {state: {newId, inviteCode}});
+                                        navigate('/start', {state: {inviteCode}});
                                     }
                                 } else if (typeof result === 'object'){
                                     console.log("set up data - ", result.coins);
@@ -96,7 +93,7 @@ const LoadingScreen: React.FC = () => {
                 />
             </div>
 
-            <div className="loading-text">{launchedeParams}</div>
+            <div className="loading-text">Loading...</div>
 
         </div>
     );
