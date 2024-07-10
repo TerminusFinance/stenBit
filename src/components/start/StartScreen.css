@@ -16,7 +16,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    height: calc(100vh - 46px);
+    height: 100vh;
     background: linear-gradient(360deg, #161618, #191819, #171719);
     padding: 20px;
     box-sizing: border-box;
