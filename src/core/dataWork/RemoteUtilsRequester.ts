@@ -197,7 +197,7 @@ export const updateLevel = async (boostName: string) : Promise<UserBasic | strin
     try {
         const response = await axios.post<UserBasic>(`${BASE_URL}users/updateBoost`, {
             boostName
-        });
+        }, {headers: {Authorization: `tma ${initDataRaw}`}});
         console.log("response.data - ", response.data);
         if ('message' in response.data) {
             return `${response.data.message}`; // Возвращаем сообщение об ошибке
