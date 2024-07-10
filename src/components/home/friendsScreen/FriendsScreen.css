@@ -8,7 +8,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: calc(100vh - 46px);
+    height: 100vh;
     padding-top: 32px;
     position: relative; /* Добавлено */
 }
@@ -135,5 +135,5 @@
     align-content: center;
     align-items: center;
     position: fixed; /* Добавлено */
-    bottom: 118px /* Примыкаем к навбару с отступом */
+    bottom: 72px /* Примыкаем к навбару с отступом */
 }
