@@ -1,19 +1,20 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import {UserBasic} from "../core/dataWork/RemoteUtilsRequester.ts";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { UserBasic } from "../core/dataWork/RemoteUtilsRequester.ts";
 
-// 1. Определение интерфейсов
-
+// Определение интерфейсов
 
 interface DataContextType {
     dataApp: UserBasic;
     setDataApp: React.Dispatch<React.SetStateAction<UserBasic>>;
+    energy: number;
+    setEnergy: React.Dispatch<React.SetStateAction<number>>;
 }
 
-// 2. Создание контекста
+// Создание контекста
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
-// 3. Создание провайдера
+// Создание провайдера
 
 interface DataProviderProps {
     children: ReactNode;
@@ -35,15 +36,24 @@ const initialUserBasic: UserBasic = {
 
 const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     const [dataApp, setDataApp] = useState<UserBasic>(initialUserBasic);
+    const [energy, setEnergy] = useState<number>(2000); // Изначальное значение энергии
+
+    useEffect(() => {
+        const energyRegenInterval = setInterval(() => {
+            setEnergy(prevEnergy => Math.min(prevEnergy + 1, 2000)); // Восстанавливаем энергию до максимума 2000
+        }, 1000); // Восстанавливаем 1 энергию каждую секунду
+
+        return () => clearInterval(energyRegenInterval);
+    }, []);
 
     return (
-        <DataContext.Provider value={{ dataApp, setDataApp }}>
+        <DataContext.Provider value={{ dataApp, setDataApp, energy, setEnergy }}>
             {children}
         </DataContext.Provider>
     );
 };
 
-// 4. Кастомный хук для использования контекста
+// Кастомный хук для использования контекста
 
 const useData = (): DataContextType => {
     const context = useContext(DataContext);

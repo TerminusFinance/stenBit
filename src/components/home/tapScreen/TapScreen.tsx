@@ -65,7 +65,7 @@ const TapScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
     const [clicks, setClicks] = useState<number>(dataApp.coins !== undefined && dataApp.coins !== null ? dataApp.coins : 0);
     const [animations, setAnimations] = useState<{ x: number, y: number, id: number }[]>([]);
-    const [energy, setEnergy] = useState<number>(2000);
+    const { energy, setEnergy } = useData();
     const navigate = useNavigate();
     const prevClicksRef = useRef<number>(clicks);
 
@@ -123,14 +123,14 @@ const TapScreen: React.FC = () => {
         }
     }, [dataApp]);
 
-    useEffect(() => {
-        const energyRegenInterval = setInterval(() => {
-            setEnergy(prevEnergy => Math.min(prevEnergy + 1, 2000)); // Восстанавливаем энергию до максимума 500
-        }, 1000); // Восстанавливаем 1 энергию каждую секунду
-
-        return () => clearInterval(energyRegenInterval);
-    }, []);
-
+    // useEffect(() => {
+    //     const energyRegenInterval = setInterval(() => {
+    //         setEnergy(prevEnergy => Math.min(prevEnergy + 1, 2000)); // Восстанавливаем энергию до максимума 500
+    //     }, 1000); // Восстанавливаем 1 энергию каждую секунду
+    //
+    //     return () => clearInterval(energyRegenInterval);
+    // }, []);
+    //
 
 
     const currentLevel = getCurrentLevel(clicks);
