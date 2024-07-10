@@ -13,6 +13,10 @@ export const isOpenUrlTask = (taskType: TaskType): taskType is OpenUrlTask => {
     return taskType.type === 'OpenUrl';
 };
 
+export const IsSubscribeToTg = (taskType: TaskType): taskType is SubscribeToTg => {
+    return taskType.type === 'SubscribeToTg';
+};
+
 export const isCheckFriendsTask = (taskType: TaskType): taskType is CheckFriendsTask => {
     return taskType.type === 'CheckFriends';
 };
@@ -35,12 +39,18 @@ export interface CheckNftTask {
     checkCollectionsAddress: string
 }
 
+export interface SubscribeToTg {
+    type: 'SubscribeToTg';
+    url: string;
+    id: string;
+}
+
 export interface CheckFriendsTask {
     type: 'CheckFriends';
     numberOfFriends: number;
 }
 
-export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask;
+export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask | SubscribeToTg;
 
 export interface TaskCardProps {
     id: number; // Уникальный идентификатор задачи

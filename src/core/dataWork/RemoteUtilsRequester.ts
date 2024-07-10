@@ -4,7 +4,7 @@ import {retrieveLaunchParams} from "@tma.js/sdk";
 
 const BASE_URL = "https://wm-mariupol.com/"
 
-// const initDataRaw = "query_id=AAHaKAEtAAAAANooAS0cV4LJ&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1720601057&hash=9b750b68ce058713afc53c824d9224ef9a2990cb8fe4b21878a78461f2e1a3d1"
+// const initDataRaw = "query_id=AAHaKAEtAAAAANooAS3O-0hA&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1720608978&hash=5054ac2560b456b9029ed6820f464ba2ffbd589dd7e8a3ba28e6f4c14ef7ef6d"
 const { initDataRaw } = retrieveLaunchParams();
 
 export interface Invitee {
@@ -197,6 +197,21 @@ export const updateLevel = async (boostName: string) : Promise<UserBasic | strin
     try {
         const response = await axios.post<UserBasic>(`${BASE_URL}users/updateBoost`, {
             boostName
+        }, {headers: {Authorization: `tma ${initDataRaw}`}});
+        console.log("response.data - ", response.data);
+        if ('message' in response.data) {
+            return `${response.data.message}`; // Возвращаем сообщение об ошибке
+        }
+        return response.data;
+    } catch (e) {
+        return "error in update state task"
+    }
+}
+
+export const checkSuccessTask = async (taskId: number): Promise<UserBasic | string> => {
+    try {
+        const response = await axios.post<UserBasic>(`${BASE_URL}task/checkSuccessTask`, {
+            taskId
         }, {headers: {Authorization: `tma ${initDataRaw}`}});
         console.log("response.data - ", response.data);
         if ('message' in response.data) {

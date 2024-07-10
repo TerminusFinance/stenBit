@@ -5,13 +5,15 @@ import ItemTask, {
     OpenUrlTask,
     isSampleTask,
     CheckNftTask,
-    isCheckFriendsTask,
+    isCheckFriendsTask, IsSubscribeToTg,
 } from "./itemTask/ItemTask";
 import {useData} from "../../DataContext.tsx";
-import {updateTaskCompletion, updateUser, UserTask} from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import {
-    sendToCheckUserHaveNftFromCollections
-} from "../../../core/tonWork/checkToNftItem/CheckToNftitem.tsx";
+    checkSuccessTask,
+    updateTaskCompletion,
+    updateUser,
+    UserTask
+} from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
 import {useNavigate} from "react-router-dom";
 import TaskSelector from "./taskSelector/TaskSelector.tsx";
@@ -73,46 +75,68 @@ const TasksScreen: React.FC = () => {
         }));
     };
 
-    const checkNftItem = async () => {
-        const userWallet = dataApp.address;
+    const checkTask = async () => {
         const SselectedTask = selectedTask;
-        const coindOld = dataApp.coins;
-        if (SselectedTask != null && CheckNftTask(SselectedTask.taskType) && coindOld != null) {
-            const collectionAddress = SselectedTask.taskType.checkCollectionsAddress;
-
-            if (userWallet != undefined && userWallet !== "") {
+        if(SselectedTask != undefined) {
+            try {
                 updateTaskState(SselectedTask.taskId, { isLoading: true });
-
-                try {
-                    const checkResult = await sendToCheckUserHaveNftFromCollections(userWallet, collectionAddress);
-                    updateTaskState(SselectedTask.taskId, { checkResult: checkResult.state, errorMessage: null });
-                    if(checkResult.state) {
-                        const resultSendTorequest = await updateTaskCompletion(SselectedTask.taskId)
-
-                        console.log("resultUdpate - ", resultSendTorequest)
-                        if (typeof resultSendTorequest === 'object') {
-                            setDataApp(resultSendTorequest);
-                            handleShowToast("The checking was successful", 'success')
-                            closeBottomSheet()
-                        } else  {
-                            handleShowToast("An error occurred while checking the nft", 'error')
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error checking NFT:', error);
-                    console.error('An error occurred while checking the nft');
-                    handleShowToast("An error occurred while checking the nft", 'error')
-                    updateTaskState(SselectedTask.taskId, { errorMessage: 'Произошла ошибка при проверке NFT' });
-                } finally {
-                    updateTaskState(SselectedTask.taskId, { isLoading: false });
+                const requestToCheck = await checkSuccessTask(SselectedTask.taskId)
+                if (typeof requestToCheck === 'object') {
+                    setDataApp(requestToCheck);
+                    handleShowToast("The checking was successful", 'success')
+                    closeBottomSheet()
+                } else  {
+                    handleShowToast(requestToCheck, 'error')
                 }
-            } else {
-                handleShowToast("You don t have a ton wallet address linked", 'error')
-                console.error('You don\'t have a ton wallet address linked');
-                updateTaskState(SselectedTask.taskId, { errorMessage: 'У вас не привязан адресс TON' });
+            }catch (e) {
+
+            } finally {
+                updateTaskState(SselectedTask.taskId, { isLoading: false });
             }
+
         }
-    };
+    }
+
+    // const checkNftItem = async () => {
+    //     const userWallet = dataApp.address;
+    //     const SselectedTask = selectedTask;
+    //     const coindOld = dataApp.coins;
+    //     if (SselectedTask != null && CheckNftTask(SselectedTask.taskType) && coindOld != null) {
+    //         const collectionAddress = SselectedTask.taskType.checkCollectionsAddress;
+    //
+    //         if (userWallet != undefined && userWallet !== "") {
+    //             updateTaskState(SselectedTask.taskId, { isLoading: true });
+    //
+    //             try {
+    //                 const checkResult = await sendToCheckUserHaveNftFromCollections(userWallet, collectionAddress);
+    //                 updateTaskState(SselectedTask.taskId, { checkResult: checkResult.state, errorMessage: null });
+    //                 if(checkResult.state) {
+    //                     const resultSendTorequest = await updateTaskCompletion(SselectedTask.taskId)
+    //
+    //                     console.log("resultUdpate - ", resultSendTorequest)
+    //                     if (typeof resultSendTorequest === 'object') {
+    //                         setDataApp(resultSendTorequest);
+    //                         handleShowToast("The checking was successful", 'success')
+    //                         closeBottomSheet()
+    //                     } else  {
+    //                         handleShowToast("An error occurred while checking the nft", 'error')
+    //                     }
+    //                 }
+    //             } catch (error) {
+    //                 console.error('Error checking NFT:', error);
+    //                 console.error('An error occurred while checking the nft');
+    //                 handleShowToast("An error occurred while checking the nft", 'error')
+    //                 updateTaskState(SselectedTask.taskId, { errorMessage: 'Произошла ошибка при проверке NFT' });
+    //             } finally {
+    //                 updateTaskState(SselectedTask.taskId, { isLoading: false });
+    //             }
+    //         } else {
+    //             handleShowToast("You don t have a ton wallet address linked", 'error')
+    //             console.error('You don\'t have a ton wallet address linked');
+    //             updateTaskState(SselectedTask.taskId, { errorMessage: 'У вас не привязан адресс TON' });
+    //         }
+    //     }
+    // };
 
     const addedSuccessUrlSender = async () => {
         const userId = dataApp.userId;
@@ -344,6 +368,29 @@ const TasksScreen: React.FC = () => {
                                 </div>
                             )}
 
+                            {IsSubscribeToTg(selectedTask.taskType) && (
+                                <div className="bottom-sheet-content-task">
+                                    <p className="description-task">
+                                        Subscribe to our Telegram channel <br/>
+                                        and receive a bonus.
+                                    </p>
+                                    <div className="reward-container-task">
+                                        <img src={IcCoins} className="ic-reward-container-coins"/>
+                                        <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
+                                    </div>
+
+                                    <div style={{width: '24px', height: '24px'}}/>
+
+                                    <SecondActionBtn txInBtn={selectedTask.actionBtnTx ? selectedTask.actionBtnTx : "Join"}
+                                                     onClick={() => OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)}/>
+                                    <div style={{width: '16px', height: '16px'}}/>
+
+                                    <MainActionBtn
+                                        txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
+                                        onClick={checkTask}/>
+                                </div>
+                            )}
+
                             {isCheckFriendsTask(selectedTask.taskType) && (
                                 <div className="bottom-sheet-content-task">
                                     <p className="tx-ref-link">Referral link</p>
@@ -387,7 +434,7 @@ const TasksScreen: React.FC = () => {
 
                                     <MainActionBtn
                                         txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
-                                        onClick={checkNftItem}/>
+                                        onClick={checkTask}/>
 
                                 </div>
                             )}
