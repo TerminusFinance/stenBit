@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useData} from "../../DataContext.tsx";
 import "./FriendsScreen.css";
 import {ItemFriends} from "./itemFriends/ItemFriends.tsx";
@@ -17,6 +17,13 @@ export const FriendsScreen: React.FC = () => {
     const handleNav = (marsh: string) => {
         navigate(`/${marsh}`);
     };
+
+    useEffect(() => {
+        console.log("dataApp - ", dataApp.coins);
+        if(dataApp.userId == "") {
+            handleNav("loading")
+        }
+    }, [dataApp]);
 
     try {
         postEvent('web_app_setup_back_button', { is_visible: true });

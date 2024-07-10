@@ -4,7 +4,7 @@ import {retrieveLaunchParams} from "@tma.js/sdk";
 
 const BASE_URL = "https://wm-mariupol.com/"
 
-// const initDataRaw = "query_id=AAHaKAEtAAAAANooAS24JwaW&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1720545092&hash=698e053b30b92ea592fe52c24c628e4d460d4d0ce696e0d2aae77f1d8e37ef57"
+// const initDataRaw = "query_id=AAHaKAEtAAAAANooAS0cV4LJ&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1720601057&hash=9b750b68ce058713afc53c824d9224ef9a2990cb8fe4b21878a78461f2e1a3d1"
 const { initDataRaw } = retrieveLaunchParams();
 
 export interface Invitee {
@@ -35,17 +35,17 @@ interface listUserInvitedItem {
 }
 
 export interface UserBasic {
-    userId?: string,
-    userName?: string,
-    coins?: number,
-    codeToInvite?: string,
+    userId: string,
+    userName: string,
+    coins: number,
+    codeToInvite: string,
     address?: string,
-    listUserInvited?: listUserInvitedItem[],
+    listUserInvited: listUserInvitedItem[],
     currentEnergy?: number,
     maxEnergy?: number,
-    boosts?: BoostItem[]
-    completedTasks?: number[] | null;
-    tasks?: UserTask[];
+    boosts: BoostItem[]
+    completedTasks: number[] | null;
+    tasks: UserTask[];
 }
 
 export interface UserTask {

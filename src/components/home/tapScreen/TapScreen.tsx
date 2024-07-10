@@ -78,7 +78,7 @@ const TapScreen: React.FC = () => {
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
         if (energy > 0) {
             const { clientX, clientY } = event;
-            setClicks(prevClicks => prevClicks + 1);
+            setClicks(prevClicks => prevClicks + dataApp.boosts[1].level);
             setEnergy(prevEnergy => prevEnergy - 1);
             const id = Date.now();
             setAnimations(prevAnimations => [...prevAnimations, { x: clientX, y: clientY, id }]);
@@ -118,7 +118,7 @@ const TapScreen: React.FC = () => {
 
     useEffect(() => {
         console.log("dataApp - ", dataApp.coins);
-        if(dataApp.userId == undefined) {
+        if(dataApp.userId == "") {
             handleNav("loading")
         }
     }, [dataApp]);
@@ -170,7 +170,7 @@ const TapScreen: React.FC = () => {
                                 top: animation.y - 240,
                             }}
                         >
-                            +1
+                            +{dataApp.boosts[1].level}
                         </div>
                     ))}
                 </div>

@@ -19,8 +19,22 @@ interface DataProviderProps {
     children: ReactNode;
 }
 
+const initialUserBasic: UserBasic = {
+    userId: "",
+    userName: "",
+    coins: 0,
+    codeToInvite: "",
+    address: "",
+    listUserInvited: [],
+    currentEnergy: 0,
+    maxEnergy: 0,
+    boosts: [],
+    completedTasks: [],
+    tasks: []
+};
+
 const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
-    const [dataApp, setDataApp] = useState<UserBasic>({  });
+    const [dataApp, setDataApp] = useState<UserBasic>(initialUserBasic);
 
     return (
         <DataContext.Provider value={{ dataApp, setDataApp }}>

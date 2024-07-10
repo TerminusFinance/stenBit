@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './LevelScreen.css';
 import Slider from './imageSlider/Slider.tsx';
-import { useLocation } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {useData} from "../../DataContext.tsx";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
 import {postEvent} from "@tma.js/sdk";
@@ -20,6 +20,7 @@ export interface SlidesTypeList {
 }
 
 const LevelScreen: React.FC = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const { dataApp } = useData();
     const { levelTypes, currentLevel } = location.state;
@@ -29,9 +30,17 @@ const LevelScreen: React.FC = () => {
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }
-    const beber = () => {
 
-    }
+    useEffect(() => {
+        console.log("dataApp - ", dataApp.coins);
+        if(dataApp.userId == "") {
+            handleNav("loading")
+        }
+    }, [dataApp]);
+
+    const handleNav = (marsh: string) => {
+        navigate(`/${marsh}`);
+    };
 
     if (levelTypes && currentLevel) {
         const slides: SlidesType[] = levelTypes.map((level: any, index: number) => {
@@ -55,7 +64,15 @@ const LevelScreen: React.FC = () => {
             <div className="level-container">
                 <div></div>
                 <Slider itemList={slides} initialSlide={initialSlide} />
-                <NavigationBar initialSelected={"Earn"} onEarnClick={beber} onInviteClick={beber} onProfileClick={beber} onTasksClick={beber}/>
+
+                <NavigationBar
+                    initialSelected=""
+                    onEarnClick={() => handleNav("Tap")}
+                    onInviteClick={() => handleNav("friends")}
+                    onProfileClick={() => handleNav("profile")}
+                    onTasksClick={() => handleNav("tasks")}
+                />
+
             </div>
         );
     }
