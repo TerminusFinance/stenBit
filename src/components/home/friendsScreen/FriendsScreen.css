@@ -135,6 +135,5 @@
     align-content: center;
     align-items: center;
     position: fixed; /* Добавлено */
-    bottom: 72px; /* Примыкаем к навбару с отступом */
+    bottom: 118px /* Примыкаем к навбару с отступом */
 }
-
