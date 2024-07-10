@@ -55,7 +55,7 @@ const LoadingScreen: React.FC = () => {
                                 if (typeof result ==="string") {
                                     if(!inviteCode) {
                                         console.log('User not found');
-                                        navigate('/start' )
+                                        navigate('/start', {state: {inviteCode: null}})
                                     } else  {
                                         console.log('User not found');
                                         navigate('/start', {state: {inviteCode}});

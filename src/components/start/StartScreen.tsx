@@ -18,12 +18,12 @@ const StartScreen: React.FC = () => {
 
     try {
         postEvent('web_app_setup_main_button', { is_visible: true });
-    } catch (e ) {
+    } catch (e) {
         console.log("error in postEvent - ", e)
     }
 
     const location = useLocation()
-    const {inviteCode} = location.state as { inviteCode: string }
+    const {inviteCode} = location.state as { inviteCode: string | null }
     const {setDataApp} = useData();
 
     const goToAbout = async () => {
