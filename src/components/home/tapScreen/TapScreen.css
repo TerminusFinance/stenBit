@@ -6,10 +6,17 @@
     background: linear-gradient(360deg, #161618, #191819, #171719);
     box-sizing: border-box;
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 56px);
+    padding-bottom: 56px;
     margin: 0;
     overflow: hidden;
     position: relative;
+}
+
+@media screen and (max-width: 600px) {
+    .main-container {
+        padding-bottom: 70px; /* Подстройка для маленьких экранов */
+    }
 }
 
 .tap-raspred-container {
