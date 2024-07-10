@@ -64,7 +64,7 @@ const Slider: React.FC<SlidesTypeList> = ({ itemList, initialSlide }) => {
                         }} onTransitionEnd={handleTransitionEnd}>
                             {itemList.map((slide, index) => (
                                 <div key={index} className="slide">
-                                    <div className="image-container-slider">
+                                    <div className={`image-container-slider-${slide.title}`}>
                                     <img src={slide.image} alt={slide.title} className="slide-image"/>
                                     </div>
                                 </div>

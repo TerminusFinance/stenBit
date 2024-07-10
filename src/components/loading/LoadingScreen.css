@@ -21,13 +21,9 @@
     flex-direction: column;
     text-align: center;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     background: linear-gradient(360deg, #161618, #191819, #171719);
 }
-
-
-
-
 
 .loading-text {
     margin-top: 20px;
