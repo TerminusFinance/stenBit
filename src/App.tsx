@@ -20,7 +20,7 @@ import {BoostScreen} from "./components/home/tapScreen/boostScreen/BoostScreen.t
 const App: React.FC = () => {
 
     return (
-        // <div className="app-container">
+        <div className="app-container">
             <DataProvider>
                 <ToastProvider>
                     <Router>
@@ -51,7 +51,7 @@ const App: React.FC = () => {
                     </Router>
                 </ToastProvider>
             </DataProvider>
-        // </div>
+        </div>
     );
 };
 
