@@ -50,7 +50,7 @@ export interface UserBasic {
 
 export interface BoostUpdateResult {
     user : UserBasic;
-    turboBoostEndTime?: string;
+    boostEndTime?: string;
 }
 
 export interface UserTask {
