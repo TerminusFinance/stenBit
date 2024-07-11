@@ -2,8 +2,8 @@
   /*max-width: 1280px;*/
   /*margin: 0 auto;*/
   /*padding: 2rem;*/
-  height: calc(100vh - 46px);
-  margin-bottom: 46px;
+  height: 100vh;
+  /*margin-bottom: 46px;*/
   text-align: center;
 }
 
