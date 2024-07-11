@@ -63,7 +63,7 @@ export const BoostScreen: React.FC = () => {
         if( boostId != undefined) {
             const resultUpdate = await updateLevel(boostId)
             if (typeof resultUpdate === 'object') {
-                setDataApp(resultUpdate)
+                setDataApp(resultUpdate.user)
                 if(resultUpdate.turboBoostEndTime != undefined) {
                     handleShowToast("boost update level success", "success", resultUpdate.turboBoostEndTime)
                 } else {

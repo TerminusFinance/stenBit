@@ -49,17 +49,7 @@ export interface UserBasic {
 }
 
 export interface BoostUpdateResult {
-    userId: string,
-    userName: string,
-    coins: number,
-    codeToInvite: string,
-    address?: string,
-    listUserInvited: listUserInvitedItem[],
-    currentEnergy?: number,
-    maxEnergy: number,
-    boosts: BoostItem[]
-    completedTasks: number[] | null;
-    tasks: UserTask[];
+    user : UserBasic;
     turboBoostEndTime?: string;
 }
 
