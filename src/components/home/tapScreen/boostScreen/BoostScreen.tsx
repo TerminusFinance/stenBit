@@ -35,8 +35,8 @@ export const BoostScreen: React.FC = () => {
 
     removeListener()
 
-    const handleShowToast = (message: string, type: 'success' | 'error' | 'info') => {
-        showToast(message, type);
+    const handleShowToast = (message: string, type: 'success' | 'error' | 'info', endTime?: string) => {
+        showToast(message, type, endTime);
     };
 
     const getBoostImage = (boostName: string) => {
@@ -64,8 +64,11 @@ export const BoostScreen: React.FC = () => {
             const resultUpdate = await updateLevel(boostId)
             if (typeof resultUpdate === 'object') {
                 setDataApp(resultUpdate)
-
-                handleShowToast("boost update level success", "success")
+                if(resultUpdate.turboBoostEndTime != undefined) {
+                    handleShowToast("boost update level success", "success", resultUpdate.turboBoostEndTime)
+                } else {
+                    handleShowToast("boost update level success", "success")
+                }
             } else  {
                 handleShowToast("boost update level error", "error")
             }

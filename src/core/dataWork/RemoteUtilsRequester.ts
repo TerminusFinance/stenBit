@@ -48,6 +48,21 @@ export interface UserBasic {
     tasks: UserTask[];
 }
 
+export interface BoostUpdateResult {
+    userId: string,
+    userName: string,
+    coins: number,
+    codeToInvite: string,
+    address?: string,
+    listUserInvited: listUserInvitedItem[],
+    currentEnergy?: number,
+    maxEnergy: number,
+    boosts: BoostItem[]
+    completedTasks: number[] | null;
+    tasks: UserTask[];
+    turboBoostEndTime?: string;
+}
+
 export interface UserTask {
     taskId: number;
     text: string;
@@ -195,9 +210,9 @@ export const updateTaskCompletion = async (taskId: number): Promise<UserBasic | 
 }
 
 
-export const updateLevel = async (boostName: string) : Promise<UserBasic | string> => {
+export const updateLevel = async (boostName: string) : Promise<BoostUpdateResult | string> => {
     try {
-        const response = await axios.post<UserBasic>(`${BASE_URL}users/updateBoost`, {
+        const response = await axios.post<BoostUpdateResult>(`${BASE_URL}users/updateBoost`, {
             boostName
         }, {headers: {Authorization: `tma ${initDataRaw}`}});
         console.log("response.data - ", response.data);
