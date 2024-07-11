@@ -38,6 +38,11 @@ const DataProvider: React.FC<DataProviderProps> = ({children}) => {
     const [dataApp, setDataApp] = useState<UserBasic>(initialUserBasic);
     const [energy, setEnergy] = useState<number>(dataApp.maxEnergy); // Изначальное значение энергии
 
+
+    useEffect(() => {
+        setEnergy(dataApp.maxEnergy); // Обновляем энергию при изменении maxEnergy
+    }, [dataApp.maxEnergy]);
+
     useEffect(() => {
         const energyRegenInterval = setInterval(() => {
             setEnergy(prevEnergy => Math.min(prevEnergy + 1, dataApp.maxEnergy)); // Восстанавливаем энергию до максимума 2000
