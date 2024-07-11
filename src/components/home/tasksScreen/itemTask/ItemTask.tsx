@@ -3,7 +3,7 @@ import './ItemTask.css';
 import CoinsIco from '../../../../assets/ic_dollar.svg';
 import IcCheck from '../../../../assets/ic_check.svg';
 import icRightArrow from "../../../../assets/ic_arrow_right.svg";
-
+import IcLoading from "../../../../assets/ic_loading.svg";
 
 export const isSampleTask = (taskType: TaskType): taskType is SampleTask => {
     return taskType.type === 'Sample';
@@ -25,6 +25,10 @@ export const CheckNftTask = (taskType: TaskType): taskType is CheckNftTask => {
     return taskType.type === 'CheckNft';
 };
 
+export const IsStockReg = (taskType: TaskType): taskType is StockRegTask => {
+    return taskType.type === 'StockReg';
+};
+
 export interface SampleTask {
     type: 'Sample';
 }
@@ -39,6 +43,11 @@ export interface CheckNftTask {
     checkCollectionsAddress: string
 }
 
+export interface StockRegTask {
+    type: 'StockReg';
+    url: string;
+}
+
 export interface SubscribeToTg {
     type: 'SubscribeToTg';
     url: string;
@@ -50,7 +59,7 @@ export interface CheckFriendsTask {
     numberOfFriends: number;
 }
 
-export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask | SubscribeToTg;
+export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask | SubscribeToTg | StockRegTask;
 
 export interface TaskCardProps {
     id: number; // Уникальный идентификатор задачи
@@ -60,13 +69,14 @@ export interface TaskCardProps {
     checkIcon: string;
     onClick?: () => void;
     taskType: TaskType;
+    isLoading: boolean;
 }
 
 
 
-const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, onClick }) => {
+const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, onClick, isLoading }) => {
     return (
-        <div className={`tasks-container-${completed}`} onClick={onClick}>
+        <div className={`tasks-container-${completed}`}  onClick={!isLoading ? onClick : undefined}>
             <img src={checkIcon} className='ic-logo' />
             <div className="progress-text">
                 <div className="tx-container">
@@ -77,11 +87,20 @@ const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, 
                     </div>
                 </div>
             </div>
-            {completed ? (
-                <img src={IcCheck} className="action-status-acc" />
-            ) : (
-                <img src={icRightArrow} className="action-status-acc" />
-            )}
+
+            {isLoading ? (
+                <img src={IcLoading} className="action-status-acc"/>
+            ): (
+                <div>
+                    {completed ? (
+                        <img src={IcCheck} className="action-status-acc" />
+                    ) : (
+                        <img src={icRightArrow} className="action-status-acc" />
+                    )}
+                </div>
+            )
+            }
+
         </div>
     );
 };

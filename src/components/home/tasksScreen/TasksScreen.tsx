@@ -5,7 +5,7 @@ import ItemTask, {
     OpenUrlTask,
     isSampleTask,
     CheckNftTask,
-    isCheckFriendsTask, IsSubscribeToTg,
+    isCheckFriendsTask, IsSubscribeToTg, IsStockReg, StockRegTask,
 } from "./itemTask/ItemTask";
 import {useData} from "../../DataContext.tsx";
 import {
@@ -242,6 +242,7 @@ const TasksScreen: React.FC = () => {
                                                         checkIcon={task.checkIcon}
                                                         taskType={task.taskType}
                                                         onClick={() => openBottomSheet(task)}
+                                                        isLoading={false}
                                                     />
                                                 </div>
                                             )}
@@ -263,6 +264,7 @@ const TasksScreen: React.FC = () => {
                                                         checkIcon={task.checkIcon}
                                                         taskType={task.taskType}
                                                         onClick={() => openBottomSheet(task)}
+                                                        isLoading={task.etaps === 1 || task.etaps === 3}
                                                     />
                                                 </div>
                                             )}
@@ -289,6 +291,7 @@ const TasksScreen: React.FC = () => {
                                                         checkIcon={task.checkIcon}
                                                         taskType={task.taskType}
                                                         onClick={() => openBottomSheet(task)}
+                                                        isLoading={false}
                                                     />
                                                 </div>
                                             )}
@@ -314,6 +317,7 @@ const TasksScreen: React.FC = () => {
                                                         checkIcon={task.checkIcon}
                                                         taskType={task.taskType}
                                                         onClick={() => openBottomSheet(task)}
+                                                        isLoading={false}
                                                     />
                                                 </div>
                                             )}
@@ -412,6 +416,7 @@ const TasksScreen: React.FC = () => {
                                 </div>
                             )}
 
+
                             {isSampleTask(selectedTask.taskType) && (
                                 <button className="button-action-sheet" onClick={closeBottomSheet}>
                                     <p className="tx-action-sheet">
@@ -430,6 +435,25 @@ const TasksScreen: React.FC = () => {
                                     <div style={{width: '24px', height: '24px'}}/>
 
                                     <SecondActionBtn txInBtn={"Buy NFT"} onClick={() => OpenUrl(`https://testnet.getgems.io/collection/${(selectedTask.taskType as CheckNftTask).checkCollectionsAddress}`)}/>
+                                    <div style={{width: '16px', height: '16px'}}/>
+
+                                    <MainActionBtn
+                                        txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
+                                        onClick={checkTask}/>
+
+                                </div>
+                            )}
+
+                            {IsStockReg(selectedTask.taskType) && (
+                                <div className="bottom-sheet-content-task">
+                                    <p className="description-task">Create an account, purchase an NFT,<br/>and earn a bonus.</p>
+                                    <div className="reward-container-task">
+                                        <img src={IcCoins} className="ic-reward-container-coins"/>
+                                        <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
+                                    </div>
+                                    <div style={{width: '24px', height: '24px'}}/>
+
+                                    <SecondActionBtn txInBtn={"Registration"} onClick={() => OpenUrl(`${(selectedTask.taskType as StockRegTask).url}`)}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 
                                     <MainActionBtn

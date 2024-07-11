@@ -59,6 +59,8 @@ export interface UserTask {
     lastCompletedDate?: string | null;
     actionBtnTx?: string | null;
     txDescription?: string | null;
+    etaps?: number | null;
+    dataSendCheck?: string| null
 }
 export const createUser = async (coins: number): Promise<UserBasic> => {
     try {
