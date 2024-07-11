@@ -20,9 +20,9 @@ export const ProgressBarLeagues: React.FC<ProgressBarLeaguesProps> = ({progress,
                 <div className="progress-bar-league">
                     <div className="progress-label">
                         <div className="container-energy">
-                            <img src={FlashIc} className="ic-flash-leagues"/>
-                            <p className="tx-energy-current-leagues">{energy.current}</p>
-                            <p className="tx-energy-max-leagues">/{energy.max}</p>
+                            {/*<img src={FlashIc} className="ic-flash-leagues"/>*/}
+                            {/*<p className="tx-energy-current-leagues">{energy.current}</p>*/}
+                            {/*<p className="tx-energy-max-leagues">/{energy.max}</p>*/}
                         </div>
 
                         <p className="tx-progress-leagues">{current}/{max}</p>
