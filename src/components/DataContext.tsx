@@ -44,7 +44,7 @@ const DataProvider: React.FC<DataProviderProps> = ({children}) => {
         }, 1000); // Восстанавливаем 1 энергию каждую секунду
 
         return () => clearInterval(energyRegenInterval);
-    }, []);
+    }, [dataApp.maxEnergy]);
 
     return (
         <DataContext.Provider value={{dataApp, setDataApp, energy, setEnergy}}>

@@ -176,7 +176,7 @@ const TapScreen: React.FC = () => {
                 </div>
 
                 <div style={{ width: '100vw', padding: '0 10px', zIndex: 2, marginBottom: '16px', marginTop: '8px' }}>
-                    <EnergyBadge current={energy} max={2000} handlerNavBoost={() =>handleNav("boost")} />
+                    <EnergyBadge current={energy} max={dataApp.maxEnergy} handlerNavBoost={() =>handleNav("boost")} />
                     <ProgressBarLevel
                         title={currentLevel.title}
                         level={`Level: ${currentLevel.id}/${levelTypes.length}`}
