@@ -26,7 +26,15 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
         const toast = { id: Date.now(), message, type, endTime };
         setToasts((prevToasts) => [...prevToasts, toast]);
 
-        const duration = endTime ? new Date(endTime).getTime() - Date.now() : 3000;
+        let duration = 3000; // Default duration
+
+        if (endTime) {
+            const endTimestamp = new Date(endTime).getTime();
+            duration = endTimestamp - Date.now();
+            if (duration <= 0) {
+                duration = 3000; // Fallback to default if the endTime is in the past
+            }
+        }
 
         setTimeout(() => {
             removeToast(toast.id);
@@ -84,3 +92,4 @@ const Toast: React.FC<ToastProps> = ({ message, type, endTime }) => {
         </div>
     );
 };
+
