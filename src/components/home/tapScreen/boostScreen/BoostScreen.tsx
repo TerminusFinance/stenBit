@@ -59,18 +59,23 @@ export const BoostScreen: React.FC = () => {
     };
 
     const updateLevelBoost = async () => {
-        const boostId = selectedBottomSheetItem?.boostName
+        const boostId = selectedBottomSheetItem
         if( boostId != undefined) {
-            const resultUpdate = await updateLevel(boostId)
-            if (typeof resultUpdate === 'object') {
-                setDataApp(resultUpdate.user)
-                if(resultUpdate.boostEndTime != undefined) {
-                    handleShowToast("turbo boost is active", "success", resultUpdate.boostEndTime)
-                } else {
-                    handleShowToast("boost update level success", "success")
+            if(boostId.price < dataApp.coins) {
+
+                const resultUpdate = await updateLevel(boostId.boostName)
+                if (typeof resultUpdate === 'object') {
+                    setDataApp(resultUpdate.user)
+                    if(resultUpdate.boostEndTime != undefined) {
+                        handleShowToast("turbo boost is active", "success", resultUpdate.boostEndTime)
+                    } else {
+                        handleShowToast("boost update level success", "success")
+                    }
+                } else  {
+                    handleShowToast("boost update level error", "error")
                 }
             } else  {
-                handleShowToast("boost update level error", "error")
+                handleShowToast("You don't have enough coins", "error")
             }
         }
     }
