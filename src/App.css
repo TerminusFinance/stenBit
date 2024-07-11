@@ -1,17 +1,19 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  /*max-width: 1280px;*/
+  /*margin: 0 auto;*/
+  /*padding: 2rem;*/
   height: calc(100vh - 46px);
+  margin-bottom: 46px;
   text-align: center;
 }
 
 .app-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  height: calc(100vh - 46px);
-  text-align: center;
+  /*max-width: 1280px;*/
+  /*margin: 0 auto;*/
+  /*padding: 2rem;*/
+  /*height: calc(100vh - 46px);*/
+  /*margin-bottom: 46px;*/
+  /*text-align: center;*/
 }
 
 .logo {

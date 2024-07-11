@@ -30,6 +30,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
 
         if (endTime) {
             const endTimestamp = new Date(endTime).getTime();
+            console.log("endTimestamp - " , (endTimestamp - Date.now()))
             duration = endTimestamp - Date.now();
             if (duration <= 0) {
                 duration = 3000; // Fallback to default if the endTime is in the past
