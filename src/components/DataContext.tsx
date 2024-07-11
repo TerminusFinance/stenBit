@@ -28,7 +28,7 @@ const initialUserBasic: UserBasic = {
     address: "",
     listUserInvited: [],
     currentEnergy: 0,
-    maxEnergy: 0,
+    maxEnergy: 1000,
     boosts: [],
     completedTasks: [],
     tasks: []
@@ -36,11 +36,11 @@ const initialUserBasic: UserBasic = {
 
 const DataProvider: React.FC<DataProviderProps> = ({children}) => {
     const [dataApp, setDataApp] = useState<UserBasic>(initialUserBasic);
-    const [energy, setEnergy] = useState<number>(dataApp.maxEnergy ? dataApp.maxEnergy : 2005); // Изначальное значение энергии
+    const [energy, setEnergy] = useState<number>(dataApp.maxEnergy); // Изначальное значение энергии
 
     useEffect(() => {
         const energyRegenInterval = setInterval(() => {
-            setEnergy(prevEnergy => Math.min(prevEnergy + 1, dataApp.maxEnergy ? dataApp.maxEnergy : 2005)); // Восстанавливаем энергию до максимума 2000
+            setEnergy(prevEnergy => Math.min(prevEnergy + 1, dataApp.maxEnergy)); // Восстанавливаем энергию до максимума 2000
         }, 1000); // Восстанавливаем 1 энергию каждую секунду
 
         return () => clearInterval(energyRegenInterval);

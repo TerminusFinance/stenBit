@@ -42,7 +42,7 @@ export interface UserBasic {
     address?: string,
     listUserInvited: listUserInvitedItem[],
     currentEnergy?: number,
-    maxEnergy?: number,
+    maxEnergy: number,
     boosts: BoostItem[]
     completedTasks: number[] | null;
     tasks: UserTask[];
