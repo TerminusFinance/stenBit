@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { UserBasic } from "../core/dataWork/RemoteUtilsRequester.ts";
+import React, {createContext, useContext, useState, ReactNode, useEffect} from 'react';
+import {UserBasic} from "../core/dataWork/RemoteUtilsRequester.ts";
 
 // Определение интерфейсов
 
@@ -34,20 +34,20 @@ const initialUserBasic: UserBasic = {
     tasks: []
 };
 
-const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
+const DataProvider: React.FC<DataProviderProps> = ({children}) => {
     const [dataApp, setDataApp] = useState<UserBasic>(initialUserBasic);
-    const [energy, setEnergy] = useState<number>(2000); // Изначальное значение энергии
+    const [energy, setEnergy] = useState<number>(dataApp.maxEnergy ? dataApp.maxEnergy : 2005); // Изначальное значение энергии
 
     useEffect(() => {
         const energyRegenInterval = setInterval(() => {
-            setEnergy(prevEnergy => Math.min(prevEnergy + 1, 2000)); // Восстанавливаем энергию до максимума 2000
+            setEnergy(prevEnergy => Math.min(prevEnergy + 1, dataApp.maxEnergy ? dataApp.maxEnergy : 2005)); // Восстанавливаем энергию до максимума 2000
         }, 1000); // Восстанавливаем 1 энергию каждую секунду
 
         return () => clearInterval(energyRegenInterval);
     }, []);
 
     return (
-        <DataContext.Provider value={{ dataApp, setDataApp, energy, setEnergy }}>
+        <DataContext.Provider value={{dataApp, setDataApp, energy, setEnergy}}>
             {children}
         </DataContext.Provider>
     );
@@ -63,4 +63,4 @@ const useData = (): DataContextType => {
     return context;
 };
 
-export { DataProvider, useData };
+export {DataProvider, useData};
