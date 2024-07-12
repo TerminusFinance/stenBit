@@ -40,8 +40,10 @@ const DataProvider: React.FC<DataProviderProps> = ({children}) => {
 
 
     useEffect(() => {
-        setEnergy(dataApp.maxEnergy); // Обновляем энергию при изменении maxEnergy
-    }, [dataApp.maxEnergy]);
+        if(dataApp.currentEnergy != undefined) {
+            setEnergy(dataApp.currentEnergy); // Обновляем энергию при изменении maxEnergy
+        }
+    }, [dataApp.currentEnergy]);
 
     useEffect(() => {
         const energyRegenInterval = setInterval(() => {

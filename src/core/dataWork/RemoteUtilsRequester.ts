@@ -125,6 +125,18 @@ export const updateUser = async (updates: Partial<UpdateUserRequest>): Promise<U
     }
 };
 
+export const addCoinsToClickData = async (coins: number): Promise<UserBasic> => {
+    try {
+        const response = await axios.put<UserBasic>(`${BASE_URL}users/addCoins`,
+            coins, {headers: {Authorization: `tma ${initDataRaw}`}}
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user:', error);
+        throw error;
+    }
+};
+
 
 
 export const processInvitationFromInviteCode = async (inviteCode: string): Promise<UserBasic | string> => {

@@ -3,7 +3,7 @@ import './TapScreen.css';
 import coin from '../../../assets/ic_coins.svg';
 import { useNavigate } from "react-router-dom";
 import { useData } from "../../DataContext.tsx";
-import { updateUser } from "../../../core/dataWork/RemoteUtilsRequester.ts";
+import {addCoinsToClickData} from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import bronzeLevel from "../../../assets/diamont/diamond-level-bronze.svg";
 import silverLevel from "../../../assets/diamont/diamond-level-silver.svg";
 import goldLevel from "../../../assets/diamont/diamond-level-gold.svg";
@@ -98,7 +98,7 @@ const TapScreen: React.FC = () => {
 
     const sendClickData = async (clickCount: number) => {
         if (dataApp.userId !== undefined) {
-            const result = updateUser( { coins: clickCount });
+            const result = addCoinsToClickData( clickCount);
             console.log("update result - ", await result);
             setDataApp(await result);
         }
