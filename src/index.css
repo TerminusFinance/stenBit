@@ -2,7 +2,7 @@
   --app-height: 100dvh;
 }
 
-@media (max-width: 768px) {
+@media  {
   :root {
     --app-height: 100svh;
   }
