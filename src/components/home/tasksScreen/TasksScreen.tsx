@@ -25,7 +25,8 @@ import {SecondActionBtn} from "../../buttons/secondActionBtn/SecondActionBtn.tsx
 import {useToast} from "../../viewComponents/toast/ToastContext.tsx";
 import IcCoins from "../../../assets/ic_dollar.svg";
 import {handleCopy, OpenUrl} from "../../viewComponents/Utils.tsx";
-import {postEvent} from "@tma.js/sdk";
+// import {postEvent} from "@tma.js/sdk";
+import {useBackButton} from "@tma.js/sdk-react";
 
 const TasksScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
@@ -33,7 +34,8 @@ const TasksScreen: React.FC = () => {
     const { showToast } = useToast();
 
     try {
-        postEvent('web_app_setup_back_button', { is_visible: true });
+        // postEvent('web_app_setup_back_button', { is_visible: true });
+        useBackButton(true)
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }
@@ -172,7 +174,11 @@ const TasksScreen: React.FC = () => {
 
     const sendToTg = () => {
 
-        const shareMessage = "Invited friends";
+        const shareMessage = "https://t.me/StenBitTestBot?start=invite123\n" +
+            "\n" +
+            "Play with me and get the opportunity to become a token holder through airdrop!\n" +
+            "💸 +2k coins as your first gift\n" +
+            "🔥 +10k coins if you have Telegram Premium";
         const telegramShareUrl = `https://t.me/share/url?url=&text=${encodeURIComponent(shareMessage)}`;
 
         OpenUrl(telegramShareUrl)
