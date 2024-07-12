@@ -79,7 +79,7 @@ const TapScreen: React.FC = () => {
         if (energy > 0) {
             const { clientX, clientY } = event;
             setClicks(prevClicks => prevClicks + dataApp.boosts[1].level);
-            setEnergy(prevEnergy => prevEnergy - 1);
+            setEnergy(prevEnergy => prevEnergy - dataApp.boosts[1].level);
             const id = Date.now();
             setAnimations(prevAnimations => [...prevAnimations, { x: clientX, y: clientY, id }]);
             setTimeout(() => {
