@@ -102,7 +102,7 @@ export const FriendsScreen: React.FC = () => {
 
 export const InviteCard: React.FC<{ title: string; reward: string, imgSrc: string }> = ({title, reward, imgSrc}) => {
     return (
-        <div className="card">
+        <div className="card-invite">
             <div className="card-header">{title}</div>
             <div className="card-body">
                 <img src={imgSrc} alt="Coin"/>
