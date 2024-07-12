@@ -5,6 +5,7 @@ import {getLevelLeague, getUserById} from "../../core/dataWork/RemoteUtilsReques
 import {useData} from "../DataContext.tsx";
 import {isDesktop, isMobile, isTablet} from 'react-device-detect';
 import coin from "../../assets/ic_coins.svg";
+import {useTelegramBackButton} from "../viewComponents/Utils.tsx";
 
 interface UserData {
     objectId?: string;
@@ -31,6 +32,12 @@ const LoadingScreen: React.FC = () => {
         if (isDesktop) return 'Desktop';
         return 'Unknown';
     };
+
+    try {
+        useTelegramBackButton(false)
+    } catch (e ) {
+        console.log("error in postEvent - ", e)
+    }
 
 
     useEffect(() => {

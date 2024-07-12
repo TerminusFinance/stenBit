@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import './TasksScreen.css';
 import ItemTask, {
     isOpenUrlTask,
@@ -24,34 +24,7 @@ import IcSend from "../../../assets/ic_send.svg";
 import {SecondActionBtn} from "../../buttons/secondActionBtn/SecondActionBtn.tsx";
 import {useToast} from "../../viewComponents/toast/ToastContext.tsx";
 import IcCoins from "../../../assets/ic_dollar.svg";
-import {handleCopy, OpenUrl} from "../../viewComponents/Utils.tsx";
-import {on, postEvent} from "@tma.js/sdk";
-
-
-const setupBackButton = () => {
-    try {
-        postEvent('web_app_setup_back_button', { is_visible: true });
-    } catch (e) {
-        console.log("error in postEvent - ", e);
-    }
-};
-
-const useTelegramBackButton = () => {
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        setupBackButton();
-
-        const removeListener = on('back_button_pressed', () => {
-            console.log('Back button pressed');
-            navigate(-1);
-        });
-
-        return () => {
-            removeListener();
-        };
-    }, [navigate]);
-};
+import {handleCopy, OpenUrl, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 
 const TasksScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
@@ -59,9 +32,7 @@ const TasksScreen: React.FC = () => {
     const { showToast } = useToast();
 
     try {
-        useTelegramBackButton()
-        // postEvent('web_app_setup_back_button', { is_visible: true });
-
+        useTelegramBackButton(true)
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }

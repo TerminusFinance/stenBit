@@ -1,3 +1,6 @@
+import {on, postEvent} from "@tma.js/sdk";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
 
 
 export const handleCopy = (text: string) => {
@@ -31,5 +34,31 @@ export const  formatNumberToK = (num: number): string => {
     } else {
         return num.toString();
     }
+};
+
+
+const setupBackButton = (state: boolean) => {
+    try {
+        postEvent('web_app_setup_back_button', { is_visible: state });
+    } catch (e) {
+        console.log("error in postEvent - ", e);
+    }
+};
+
+export const useTelegramBackButton = (state: boolean) => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setupBackButton(state);
+
+        const removeListener = on('back_button_pressed', () => {
+            console.log('Back button pressed');
+            navigate(-1);
+        });
+
+        return () => {
+            removeListener();
+        };
+    }, [navigate]);
 };
 

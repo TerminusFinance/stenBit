@@ -11,7 +11,7 @@ import {InviteCard} from "../friendsScreen/FriendsScreen.tsx";
 import {getCurrentLevel} from "../tapScreen/TapScreen.tsx";
 import {SettingsItem} from "./settingsItem/SettingsItem.tsx";
 import IcWallet from "../../../assets/ic_wallet.svg";
-import {postEvent} from "@tma.js/sdk";
+import {useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 
 const ProfileScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
@@ -20,7 +20,7 @@ const ProfileScreen: React.FC = () => {
     const [tonConnectUI] = useTonConnectUI();
 
     try {
-        postEvent('web_app_setup_back_button', { is_visible: true });
+        useTelegramBackButton(true)
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }

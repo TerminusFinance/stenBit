@@ -8,17 +8,16 @@ import ic_x from '../../assets/ic_x.svg';
 import {useLocation, useNavigate} from "react-router-dom";
 import {createUser, processInvitationFromInviteCode} from "../../core/dataWork/RemoteUtilsRequester.ts";
 import {useData} from "../DataContext.tsx";
-import {postEvent} from "@tma.js/sdk";
 import {MainActionBtn} from "../buttons/mainActionBtn/MainActionBtn.tsx";
-import {OpenUrl} from "../viewComponents/Utils.tsx";
+import {OpenUrl, useTelegramBackButton} from "../viewComponents/Utils.tsx";
 
 const StartScreen: React.FC = () => {
 
     const navigate = useNavigate();
 
     try {
-        postEvent('web_app_setup_main_button', { is_visible: true });
-    } catch (e) {
+        useTelegramBackButton(false)
+    } catch (e ) {
         console.log("error in postEvent - ", e)
     }
 

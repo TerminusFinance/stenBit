@@ -8,7 +8,7 @@ import coinIco from "../../../assets/ic_dollar.svg";
 import icAddUser from "../../../assets/ic-add-user.svg";
 import {ModalInvite} from "./modalInvite/ModalInvite.tsx";
 import {MainActionBtn} from "../../buttons/mainActionBtn/MainActionBtn.tsx";
-import {postEvent} from "@tma.js/sdk";
+import {useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 
 export const FriendsScreen: React.FC = () => {
     const {dataApp} = useData();
@@ -26,7 +26,7 @@ export const FriendsScreen: React.FC = () => {
     }, [dataApp]);
 
     try {
-        postEvent('web_app_setup_back_button', { is_visible: true });
+        useTelegramBackButton(true)
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }

@@ -13,8 +13,7 @@ import EnergyBadge from "../progressBar/energyBadge/EnergyBadge.tsx";
 import { CoinsLevelUpp } from "../progressBar/coinsLevelUpp/CoinsLevelUpp.tsx";
 import IcDollar from "../../../assets/ic_dollar.svg";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
-import {calculateThousandsDifference, formatNumber} from "../../viewComponents/Utils.tsx";
-import {postEvent} from "@tma.js/sdk";
+import {calculateThousandsDifference, formatNumber, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 
 export interface LevelType {
     id: number;
@@ -70,7 +69,7 @@ const TapScreen: React.FC = () => {
     const prevClicksRef = useRef<number>(clicks);
 
     try {
-        postEvent('web_app_setup_back_button', { is_visible: false});
+        useTelegramBackButton(false)
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }

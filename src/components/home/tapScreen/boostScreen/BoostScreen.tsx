@@ -13,8 +13,8 @@ import {ModalBoostAbout} from "./modalBoostAbout/ModalBoostAbout.tsx";
 import {ModalBoostItem} from "./modalBoostItem/ModalBoostItem.tsx";
 import {BoostItem as boostestItems, updateLevel} from "../../../../core/dataWork/RemoteUtilsRequester.ts";
 import {useToast} from "../../../viewComponents/toast/ToastContext.tsx";
-import {formatNumberToK} from "../../../viewComponents/Utils.tsx";
-import {on, postEvent} from "@tma.js/sdk";
+import {formatNumberToK, useTelegramBackButton} from "../../../viewComponents/Utils.tsx";
+
 
 export const BoostScreen: React.FC = () => {
     const navigate = useNavigate();
@@ -23,17 +23,11 @@ export const BoostScreen: React.FC = () => {
     const { showToast } = useToast();
 
     try {
-        postEvent('web_app_setup_back_button', { is_visible: true });
+        useTelegramBackButton(true)
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }
 
-    const removeListener = on('back_button_pressed', payload => {
-        navigate("/tap")
-        payload
-    });
-
-    removeListener()
 
     const handleShowToast = (message: string, type: 'success' | 'error' | 'info', endTime?: string) => {
         showToast(message, type, endTime);

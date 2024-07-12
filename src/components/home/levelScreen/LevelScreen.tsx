@@ -4,7 +4,7 @@ import Slider from './imageSlider/Slider.tsx';
 import {useLocation, useNavigate} from 'react-router-dom';
 import {useData} from "../../DataContext.tsx";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
-import {postEvent} from "@tma.js/sdk";
+import {useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 
 export interface SlidesType {
     title: string;
@@ -26,7 +26,7 @@ const LevelScreen: React.FC = () => {
     const { levelTypes, currentLevel } = location.state;
 
     try {
-        postEvent('web_app_setup_back_button', { is_visible: true });
+        useTelegramBackButton(true)
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }
