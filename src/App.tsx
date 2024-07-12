@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import About from './components/about/About';
@@ -19,17 +19,7 @@ import { BoostScreen } from "./components/home/tapScreen/boostScreen/BoostScreen
 import "./App.css"
 
 const App: React.FC = () => {
-    const setAppHeight = () => {
-        document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
-    };
 
-    useEffect(() => {
-        setAppHeight();
-        window.addEventListener('resize', setAppHeight);
-        return () => {
-            window.removeEventListener('resize', setAppHeight);
-        };
-    }, []);
 
     return (
         <div className="app-container">

@@ -10,9 +10,10 @@ interface ModalInviteProps {
     isVisible: boolean;
     onClose: () => void;
     userCodeInvite: string;
+    sendToTg: () => void;
 }
 
-export const ModalInvite: React.FC<ModalInviteProps> = ({ isVisible, onClose, userCodeInvite }) => {
+export const ModalInvite: React.FC<ModalInviteProps> = ({ isVisible, onClose, userCodeInvite, sendToTg }) => {
     const overlayRef = useRef<HTMLDivElement>(null);
     const sheetRef = useRef<HTMLDivElement>(null);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -21,9 +22,7 @@ export const ModalInvite: React.FC<ModalInviteProps> = ({ isVisible, onClose, us
         navigator.clipboard.writeText(text);
     };
 
-    const sendToTg = () => {
-        // Implement Telegram send functionality
-    };
+
 
     useEffect(() => {
         if (isVisible) {

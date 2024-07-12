@@ -58,6 +58,7 @@ const ProfileScreen: React.FC = () => {
         }
     }, [wallet]);
 
+
     return (
         <div className="profile-container">
             <div className="friends-raspred-container">

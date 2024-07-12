@@ -11,7 +11,6 @@ import {useData} from "../../DataContext.tsx";
 import {
     checkSuccessTask,
     updateTaskCompletion,
-    updateUser,
     UserTask
 } from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
@@ -96,66 +95,6 @@ const TasksScreen: React.FC = () => {
         }
     }
 
-    // const checkNftItem = async () => {
-    //     const userWallet = dataApp.address;
-    //     const SselectedTask = selectedTask;
-    //     const coindOld = dataApp.coins;
-    //     if (SselectedTask != null && CheckNftTask(SselectedTask.taskType) && coindOld != null) {
-    //         const collectionAddress = SselectedTask.taskType.checkCollectionsAddress;
-    //
-    //         if (userWallet != undefined && userWallet !== "") {
-    //             updateTaskState(SselectedTask.taskId, { isLoading: true });
-    //
-    //             try {
-    //                 const checkResult = await sendToCheckUserHaveNftFromCollections(userWallet, collectionAddress);
-    //                 updateTaskState(SselectedTask.taskId, { checkResult: checkResult.state, errorMessage: null });
-    //                 if(checkResult.state) {
-    //                     const resultSendTorequest = await updateTaskCompletion(SselectedTask.taskId)
-    //
-    //                     console.log("resultUdpate - ", resultSendTorequest)
-    //                     if (typeof resultSendTorequest === 'object') {
-    //                         setDataApp(resultSendTorequest);
-    //                         handleShowToast("The checking was successful", 'success')
-    //                         closeBottomSheet()
-    //                     } else  {
-    //                         handleShowToast("An error occurred while checking the nft", 'error')
-    //                     }
-    //                 }
-    //             } catch (error) {
-    //                 console.error('Error checking NFT:', error);
-    //                 console.error('An error occurred while checking the nft');
-    //                 handleShowToast("An error occurred while checking the nft", 'error')
-    //                 updateTaskState(SselectedTask.taskId, { errorMessage: 'Произошла ошибка при проверке NFT' });
-    //             } finally {
-    //                 updateTaskState(SselectedTask.taskId, { isLoading: false });
-    //             }
-    //         } else {
-    //             handleShowToast("You don t have a ton wallet address linked", 'error')
-    //             console.error('You don\'t have a ton wallet address linked');
-    //             updateTaskState(SselectedTask.taskId, { errorMessage: 'У вас не привязан адресс TON' });
-    //         }
-    //     }
-    // };
-
-    const addedSuccessUrlSender = async () => {
-        const userId = dataApp.userId;
-        const coindOld = dataApp.coins;
-        const completedTaskOld = dataApp.completedTasks || [];
-
-        if (selectedTask != null && userId != undefined && coindOld != undefined) {
-            if (isOpenUrlTask(selectedTask.taskType)) {
-                window.open((selectedTask.taskType as OpenUrlTask).url, '_blank');
-
-                if (!completedTaskOld.includes(selectedTask.taskId)) {
-                    const resultUpdate = await updateUser( {
-                        coins: coindOld + selectedTask.coins,
-                    });
-                    setDataApp(resultUpdate);
-                    closeBottomSheet()
-                }
-            }
-        }
-    };
     const handleNav = (marsh: string) => {
         navigate(`/${marsh}`);
     };
@@ -171,7 +110,8 @@ const TasksScreen: React.FC = () => {
 
     const sendToTg = () => {
 
-        const shareMessage = "https://t.me/StenBitTestBot?start=invite123\n" +
+        const shareMessage = `https://t.me/StenBitTestBot?start=${dataApp.codeToInvite}
+` +
             "\n" +
             "Play with me and get the opportunity to become a token holder through airdrop!\n" +
             "💸 +2k coins as your first gift\n" +
@@ -371,7 +311,7 @@ const TasksScreen: React.FC = () => {
 
                                     <MainActionBtn
                                         txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
-                                        onClick={addedSuccessUrlSender}/>
+                                        onClick={checkTask}/>
                                 </div>
                             )}
 

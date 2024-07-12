@@ -8,7 +8,7 @@ import coinIco from "../../../assets/ic_dollar.svg";
 import icAddUser from "../../../assets/ic-add-user.svg";
 import {ModalInvite} from "./modalInvite/ModalInvite.tsx";
 import {MainActionBtn} from "../../buttons/mainActionBtn/MainActionBtn.tsx";
-import {useTelegramBackButton} from "../../viewComponents/Utils.tsx";
+import {OpenUrl, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 
 export const FriendsScreen: React.FC = () => {
     const {dataApp} = useData();
@@ -37,6 +37,19 @@ export const FriendsScreen: React.FC = () => {
 
     const closeBottomSheet = () => {
         setBottomSheetVisible(false);
+    };
+
+    const sendToTg = () => {
+
+        const shareMessage = `https://t.me/StenBitTestBot?start=${dataApp.codeToInvite}
+` +
+            "\n" +
+            "Play with me and get the opportunity to become a token holder through airdrop!\n" +
+            "💸 +2k coins as your first gift\n" +
+            "🔥 +10k coins if you have Telegram Premium";
+        const telegramShareUrl = `https://t.me/share/url?url=&text=${encodeURIComponent(shareMessage)}`;
+
+        OpenUrl(telegramShareUrl)
     };
 
     return (
@@ -82,7 +95,7 @@ export const FriendsScreen: React.FC = () => {
             />
 
             <ModalInvite isVisible={isBottomSheetVisible} onClose={closeBottomSheet}
-                         userCodeInvite={`${dataApp.codeToInvite}`}/>
+                         userCodeInvite={`${dataApp.codeToInvite}`} sendToTg={sendToTg}/>
         </div>
     );
 };
