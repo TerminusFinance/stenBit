@@ -8,19 +8,21 @@ import { SDKProvider } from "@tma.js/sdk-react";
 const manifestUrl = 'https://gist.githubusercontent.com/siandreev/75f1a2ccf2f3b4e2771f6089aeb06d7f/raw/d4986344010ec7a2d1cc8a2a9baa57de37aaccb8/gistfile1.txt';
 
 const AppContainer: React.FC = () => {
-    const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+    const [appHeight, setAppHeight] = useState(window.innerHeight);
 
     useEffect(() => {
-        const handleResize = () => setWindowHeight(window.innerHeight);
+        const updateHeight = () => setAppHeight(window.innerHeight);
 
-        window.addEventListener('resize', handleResize);
+        updateHeight();  // Set initial height
+        window.addEventListener('resize', updateHeight);
+
         return () => {
-            window.removeEventListener('resize', handleResize);
+            window.removeEventListener('resize', updateHeight);
         };
     }, []);
 
     return (
-        <div style={{ height: windowHeight, width: '100%' }}>
+        <div style={{ height: appHeight }}>
             <SDKProvider acceptCustomStyles debug>
                 <TonConnectUIProvider manifestUrl={manifestUrl}>
                     <React.StrictMode>
