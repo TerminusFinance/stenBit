@@ -261,7 +261,7 @@ const TasksScreen: React.FC = () => {
                                                     <ItemTask
                                                         key={index}
                                                         id={task.taskId}
-                                                        text={task.text}
+                                                        text={task.text + task.etaps}
                                                         coins={task.coins}
                                                         completed={task.completed}
                                                         checkIcon={task.checkIcon}
