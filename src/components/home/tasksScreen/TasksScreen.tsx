@@ -171,11 +171,11 @@ const TasksScreen: React.FC = () => {
     };
 
     const sendToTg = () => {
-        // Implement Telegram send functionality
-        const message = 'Текст вашего сообщения'; // замените на текст вашего сообщения
-        const telegramURL = `https://t.me/share/url?url=&text=${encodeURIComponent(message)}`;
 
-        window.open(telegramURL, '_blank');
+        const shareMessage = "Invited friends";
+        const telegramShareUrl = `https://t.me/share/url?url=&text=${encodeURIComponent(shareMessage)}`;
+
+        OpenUrl(telegramShareUrl)
     };
 
 
