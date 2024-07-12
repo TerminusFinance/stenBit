@@ -1,15 +1,14 @@
 :root {
-  --vh: 1vh;
+  --app-height: 100vh;
 }
 
 .app-container {
-  height: calc(var(--vh, 1vh) * 100);
+  height: var(--app-height);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-
 
 .logo {
   height: 6em;

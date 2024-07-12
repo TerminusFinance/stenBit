@@ -20,8 +20,7 @@ import "./App.css"
 
 const App: React.FC = () => {
     const setAppHeight = () => {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
     };
 
     useEffect(() => {
