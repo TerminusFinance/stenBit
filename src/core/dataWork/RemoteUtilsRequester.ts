@@ -4,7 +4,7 @@ import {retrieveLaunchParams} from "@tma.js/sdk";
 
 const BASE_URL = "https://wm-mariupol.com/"
 
-    // const initDataRaw = "query_id=AAHaKAEtAAAAANooAS2U5Y75&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1720727293&hash=4646602c3d8d6c15ef92806852a052655d6f713222872cd1ee98d2ea3e367513"
+    // const initDataRaw = "query_id=AAHaKAEtAAAAANooAS0csdY9&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1720800613&hash=e54f4e10e67639b0bd467ecbf330452922a7689c24435a28adf970b8da248782"
 const { initDataRaw } = retrieveLaunchParams();
 
 export interface Invitee {
@@ -127,7 +127,7 @@ export const updateUser = async (updates: Partial<UpdateUserRequest>): Promise<U
 
 export const addCoinsToClickData = async (coins: number): Promise<UserBasic> => {
     try {
-        const response = await axios.put<UserBasic>(`${BASE_URL}users/addCoins`,
+        const response = await axios.post<UserBasic>(`${BASE_URL}users/addCoins`,
             {coins}, {headers: {Authorization: `tma ${initDataRaw}`}}
         );
         return response.data;

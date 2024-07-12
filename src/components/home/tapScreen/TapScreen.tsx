@@ -68,6 +68,7 @@ const TapScreen: React.FC = () => {
     const navigate = useNavigate();
     const prevClicksRef = useRef<number>(clicks);
 
+
     try {
         useTelegramBackButton(false)
     } catch (e ) {
@@ -75,7 +76,7 @@ const TapScreen: React.FC = () => {
     }
 
     const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
-        if (energy > 0) {
+        if (energy >= dataApp.boosts[1].level) {
             const { clientX, clientY } = event;
             setClicks(prevClicks => prevClicks + dataApp.boosts[1].level);
             setEnergy(prevEnergy => prevEnergy - dataApp.boosts[1].level);
@@ -107,7 +108,7 @@ const TapScreen: React.FC = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             if (prevClicksRef.current !== clicks) {
-                sendClickData(clicks);
+                sendClickData(clicks - dataApp.coins);
                 prevClicksRef.current = clicks;
             }
         }, 200);
