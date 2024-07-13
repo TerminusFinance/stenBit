@@ -10,8 +10,6 @@ const manifestUrl = 'https://gist.githubusercontent.com/siandreev/75f1a2ccf2f3b4
 
 const AppContainer: React.FC = () => {
 
-
-
     try {
         postEvent('web_app_expand');
     }catch (e) {
@@ -19,7 +17,6 @@ const AppContainer: React.FC = () => {
     }
 
     return (
-        <div style={{  height: `100vh` }}>
             <SDKProvider acceptCustomStyles debug>
                 <TonConnectUIProvider manifestUrl={manifestUrl}>
                     <React.StrictMode>
@@ -27,7 +24,6 @@ const AppContainer: React.FC = () => {
                     </React.StrictMode>
                 </TonConnectUIProvider>
             </SDKProvider>
-        </div>
     );
 };
 
