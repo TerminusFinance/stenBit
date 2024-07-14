@@ -34,7 +34,11 @@ export const BoostItem: React.FC<BoostItemParams> = ({ checkIcon, name, price, l
                         }
                     </div>
                 </div>
-                <img src={icRightArrow} className="action-status-acc"/>
+                {clickable == true ? (
+                    <img src={icRightArrow} className="action-status-acc"/>
+                ) : (
+                    <div/>
+                )}
             </div>
         </div>
     );
