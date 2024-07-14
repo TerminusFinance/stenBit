@@ -295,8 +295,7 @@ const TasksScreen: React.FC = () => {
                             {isOpenUrlTask(selectedTask.taskType) && (
                                 <div className="bottom-sheet-content-task">
                                     <p className="description-task">
-                                        Subscribe to our Telegram channel <br/>
-                                        and receive a bonus.
+                                        {selectedTask.txDescription}
                                     </p>
                                     <div className="reward-container-task">
                                         <img src={IcCoins} className="ic-reward-container-coins"/>
@@ -369,7 +368,7 @@ const TasksScreen: React.FC = () => {
 
                             {CheckNftTask(selectedTask.taskType) && (
                                 <div className="bottom-sheet-content-task">
-                                    <p className="description-task">Create an account, purchase an NFT,<br/>and earn a bonus.</p>
+                                    <p className="description-task">{selectedTask.txDescription}</p>
                                     <div className="reward-container-task">
                                         <img src={IcCoins} className="ic-reward-container-coins"/>
                                         <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>

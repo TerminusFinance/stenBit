@@ -48,6 +48,37 @@ export const BoostScreen: React.FC = () => {
         }
     };
 
+
+    const getBoostDescription = (boostName: string): string => {
+        switch (boostName) {
+            case "tapBoot":
+                return "Increase the amount of time that tapBoot will run after you exit the app, and bring you recurring revenue.";
+            case "energy limit":
+                return "increase the limit of energy you spend with each tap";
+            case "turbo":
+                return "";
+            case "multitap":
+                return "Increase the number of coins you can earn with each tap by taking advantage of this opportunity.";
+            default:
+                return "";
+        }
+    };
+
+    const getBoostAbout = (boostName: string, level: number): string => {
+        switch (boostName) {
+            case "tapBoot":
+                return `+5 min to work tab boot for level ${level}`;
+            case "energy limit":
+                return `+500 energy to limit for level ${level}`;
+            case "turbo":
+                return "";
+            case "multitap":
+                return `+1 coin for tap for level ${level}`;
+            default:
+                return "";
+        }
+    };
+
     const handleNav = (marsh: string) => {
         navigate(`/${marsh}`);
     };
@@ -137,7 +168,7 @@ export const BoostScreen: React.FC = () => {
             <ModalBoostAbout title={"How a boost works"} isVisible={isBottomSheetVisibleAbout}
                              onClose={closeBottomSheet}/>
             {selectedBottomSheetItem != null && (
-                <ModalBoostItem title={selectedBottomSheetItem?.boostName} description={"Increase the number of coins you can earn with each tap by taking advantage of this opportunity."} about={selectedBottomSheetItem?.boostName} lvl={selectedBottomSheetItem?.level} price={selectedBottomSheetItem?.price} image={getBoostImage(selectedBottomSheetItem.boostName)}
+                <ModalBoostItem title={selectedBottomSheetItem?.boostName} description={getBoostDescription(selectedBottomSheetItem.boostName)} about={getBoostAbout(selectedBottomSheetItem.boostName, selectedBottomSheetItem.level)} lvl={selectedBottomSheetItem?.level} price={selectedBottomSheetItem?.price} image={getBoostImage(selectedBottomSheetItem.boostName)}
                                 isVisible={isBottomSheetVisible} onClose={closeBottomSheet} onBtnClick={updateLevelBoost}/>
             )}
         </div>
