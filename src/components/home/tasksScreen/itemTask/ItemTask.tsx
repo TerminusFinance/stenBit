@@ -72,8 +72,6 @@ export interface TaskCardProps {
     isLoading: boolean;
 }
 
-
-
 const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, onClick, isLoading }) => {
     return (
         <div className={`tasks-container-${completed}`}  onClick={!isLoading ? onClick : undefined}>

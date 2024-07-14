@@ -201,7 +201,7 @@ const TasksScreen: React.FC = () => {
                                                     <ItemTask
                                                         key={index}
                                                         id={task.taskId}
-                                                        text={task.text + task.etaps}
+                                                        text={task.text}
                                                         coins={task.coins}
                                                         completed={task.completed}
                                                         checkIcon={task.checkIcon}
@@ -389,7 +389,7 @@ const TasksScreen: React.FC = () => {
 
                             {IsStockReg(selectedTask.taskType) && (
                                 <div className="bottom-sheet-content-task">
-                                    <p className="description-task">Create an account, purchase an NFT,<br/>and earn a bonus.</p>
+                                    <p className="description-task">{selectedTask.txDescription}</p>
                                     <div className="reward-container-task">
                                         <img src={IcCoins} className="ic-reward-container-coins"/>
                                         <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
