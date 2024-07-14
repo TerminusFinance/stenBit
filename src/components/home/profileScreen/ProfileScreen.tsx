@@ -11,7 +11,7 @@ import {InviteCard} from "../friendsScreen/FriendsScreen.tsx";
 import {getCurrentLevel} from "../tapScreen/TapScreen.tsx";
 import {SettingsItem} from "./settingsItem/SettingsItem.tsx";
 import IcWallet from "../../../assets/ic_wallet.svg";
-import {useTelegramBackButton} from "../../viewComponents/Utils.tsx";
+import {formatNumberToK, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 
 const ProfileScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
@@ -71,7 +71,7 @@ const ProfileScreen: React.FC = () => {
 
 
                 <div className="card-row-profile">
-                    <InviteCard title="Balance" reward={`${dataApp.coins?.toString()}`} imgSrc={coinIco}/>
+                    <InviteCard title="Balance" reward={`${formatNumberToK(dataApp.coins)}`} imgSrc={coinIco}/>
                     <InviteCard title="Invite friends with premium" reward={currentLevel.title} imgSrc={currentLevel.image}/>
                 </div>
 
