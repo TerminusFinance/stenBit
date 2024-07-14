@@ -318,8 +318,7 @@ const TasksScreen: React.FC = () => {
                             {IsSubscribeToTg(selectedTask.taskType) && (
                                 <div className="bottom-sheet-content-task">
                                     <p className="description-task">
-                                        Subscribe to our Telegram channel <br/>
-                                        and receive a bonus.
+                                        {selectedTask.txDescription}
                                     </p>
                                     <div className="reward-container-task">
                                         <img src={IcCoins} className="ic-reward-container-coins"/>
