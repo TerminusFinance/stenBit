@@ -1,11 +1,11 @@
 import axios, {} from 'axios';
 import {TaskType} from "../../components/home/tasksScreen/itemTask/ItemTask.tsx";
-// import {retrieveLaunchParams} from "@tma.js/sdk";
+import {retrieveLaunchParams} from "@tma.js/sdk";
 
 const BASE_URL = "https://wm-mariupol.com/"
 
-    const initDataRaw = "query_id=AAHaKAEtAAAAANooAS10CfTx&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1720958826&hash=5aa80ac10c77574dac49dc1b244d7de05ad08aabf06523c0184aa44450bdb2ed"
-// const { initDataRaw } = retrieveLaunchParams();
+    // const initDataRaw = "query_id=AAHaKAEtAAAAANooAS10CfTx&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1720958826&hash=5aa80ac10c77574dac49dc1b244d7de05ad08aabf06523c0184aa44450bdb2ed"
+const { initDataRaw } = retrieveLaunchParams();
 
 export interface Invitee {
     userName: string;
