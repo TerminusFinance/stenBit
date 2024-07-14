@@ -8,13 +8,14 @@ interface BoostItemParams {
     name: string;
     price: string;
     lvl: number;
+    clickable: boolean;
     onClick: () => void;
 }
 
-export const BoostItem: React.FC<BoostItemParams> = ({ checkIcon, name, price, lvl, onClick }) => {
+export const BoostItem: React.FC<BoostItemParams> = ({ checkIcon, name, price, lvl, onClick, clickable }) => {
     return (
-        <div className="boost-item-outer-container">
-            <div className="boost-item-container" onClick={onClick}>
+        <div className={`boost-item-outer-container`}>
+            <div className={`boost-item-container-${clickable}`} onClick={onClick}>
                 <img src={checkIcon} className='ic-logo' />
                 <div className="progress-text">
                     <div className="boost-tx-container">

@@ -152,6 +152,7 @@ export const BoostScreen: React.FC = () => {
                             lvl={boost.level}
                             checkIcon={getBoostImage(boost.boostName)}
                             onClick={() => openBottomSheetBoostItem(boost)}
+                            clickable={boost.boostName != "turbo"}
                         />
                     </div>
                 ))}

@@ -1,4 +1,4 @@
-.boost-item-container {
+.boost-item-container-true {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -13,6 +13,22 @@
     box-sizing: border-box;
     background-color: #1B1B1E;
 }
+
+.boost-item-container-false {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    margin: 0; /* Remove margins from BoostItem */
+    border-radius: 16px;
+    text-align: center;
+    color: white;
+    font-family: 'MyCustomFontMedium', sans-serif;
+    box-sizing: border-box;
+}
+
 
 /*.current-name-boost {*/
 /**/
