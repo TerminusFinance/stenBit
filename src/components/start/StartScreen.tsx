@@ -27,7 +27,7 @@ const StartScreen: React.FC = () => {
 
     const goToAbout = async () => {
         try {
-            if (!inviteCode) {
+            if (inviteCode == null) {
                 const result = await createUser(0);
                 console.log("result", result);
                 setDataApp(result)
