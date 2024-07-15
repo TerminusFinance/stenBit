@@ -7,14 +7,15 @@
 }
 
 .root {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
+  position: absolute;
 }
 
 html, body, #root {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
+  position: absolute;
   overflow: hidden;
   background-color: black;
-  position: relative;
 }
