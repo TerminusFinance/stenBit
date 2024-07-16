@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import './TasksScreen.css';
 import ItemTask, {
     isOpenUrlTask,
@@ -99,7 +99,12 @@ const TasksScreen: React.FC = () => {
         navigate(`/${marsh}`);
     };
 
-
+    useEffect(() => {
+        console.log("dataApp - ", dataApp.coins);
+        if(dataApp.userId == "") {
+            handleNav("/loading")
+        }
+    }, [dataApp]);
 
     const [tabSelected, setTabSelected] = useState<string>("All Tasks");
 

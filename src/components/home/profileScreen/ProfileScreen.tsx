@@ -58,6 +58,13 @@ const ProfileScreen: React.FC = () => {
         }
     }, [wallet]);
 
+    useEffect(() => {
+        console.log("dataApp - ", dataApp.coins);
+        if(dataApp.userId == "") {
+            handleNav("/loading")
+        }
+    }, [dataApp]);
+
 
     return (
         <div className="profile-container">

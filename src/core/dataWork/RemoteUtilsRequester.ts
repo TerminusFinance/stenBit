@@ -4,7 +4,7 @@ import {retrieveLaunchParams} from "@tma.js/sdk";
 
 const BASE_URL = "https://wm-mariupol.com/"
 
-    // const initDataRaw = "query_id=AAHAI7FnAgAAAMAjsWfgSLY5&user=%7B%22id%22%3A6034629568%2C%22first_name%22%3A%22%D0%A0%D0%BE%D0%BC%D0%B0%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaandroid%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721033417&hash=88c8d0194b4cb792d2e0d864f918814fdd8370c5968b6af6c5a5baf4c15c2e10"
+    // const initDataRaw = "query_id=AAHaKAEtAAAAANooAS1s2T84&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721125688&hash=e7d043111d8d4650d3ff80c2ad0c650ce9d0a639fa14451549280f7e5e8ec1c7"
 const { initDataRaw } = retrieveLaunchParams();
 
 export interface Invitee {

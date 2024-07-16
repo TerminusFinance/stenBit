@@ -21,7 +21,7 @@ export const FriendsScreen: React.FC = () => {
     useEffect(() => {
         console.log("dataApp - ", dataApp.coins);
         if(dataApp.userId == "") {
-            handleNav("loading")
+            handleNav("/loading")
         }
     }, [dataApp]);
 

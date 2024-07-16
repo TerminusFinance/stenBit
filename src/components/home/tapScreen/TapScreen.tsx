@@ -116,12 +116,12 @@ const TapScreen: React.FC = () => {
         return () => clearInterval(interval);
     }, [clicks]);
 
-    useEffect(() => {
-        console.log("dataApp - ", dataApp.coins);
-        if(dataApp.userId == "") {
-            handleNav("loading")
-        }
-    }, [dataApp]);
+    // useEffect(() => {
+    //     console.log("dataApp - ", dataApp.coins);
+    //     if(dataApp.userId == "") {
+    //         handleNav("loading")
+    //     }
+    // }, [dataApp]);
 
     // useEffect(() => {
     //     const energyRegenInterval = setInterval(() => {

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./BoostScreen.css";
 import NavigationBar from "../../../navigationBar/NavigationBar.tsx";
 import {useNavigate} from "react-router-dom";
@@ -78,6 +78,13 @@ export const BoostScreen: React.FC = () => {
                 return "";
         }
     };
+
+    useEffect(() => {
+        console.log("dataApp - ", dataApp.coins);
+        if(dataApp.userId == "") {
+            handleNav("loading")
+        }
+    }, [dataApp]);
 
     const handleNav = (marsh: string) => {
         navigate(`/${marsh}`);
