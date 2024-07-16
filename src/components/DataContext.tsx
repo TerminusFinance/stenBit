@@ -35,23 +35,30 @@ const initialUserBasic: UserBasic = {
 };
 
 const DataProvider: React.FC<DataProviderProps> = ({children}) => {
-    const [dataApp, setDataApp] = useState<UserBasic>(initialUserBasic);
-    const [energy, setEnergy] = useState<number>(dataApp.maxEnergy); // Изначальное значение энергии
+    const [dataApp, setDataApp] = useState<UserBasic>(() => {
+        const storedData = localStorage.getItem('dataApp');
+        return storedData ? JSON.parse(storedData) : initialUserBasic;
+    });
 
+    const [energy, setEnergy] = useState<number>(dataApp.maxEnergy);
 
     useEffect(() => {
-        if(dataApp.currentEnergy != undefined) {
-            setEnergy(dataApp.currentEnergy); // Обновляем энергию при изменении maxEnergy
+        if (dataApp.currentEnergy !== undefined) {
+            setEnergy(dataApp.currentEnergy);
         }
     }, [dataApp.currentEnergy]);
 
     useEffect(() => {
         const energyRegenInterval = setInterval(() => {
-            setEnergy(prevEnergy => Math.min(prevEnergy + 1, dataApp.maxEnergy)); // Восстанавливаем энергию до максимума 2000
-        }, 1000); // Восстанавливаем 1 энергию каждую секунду
+            setEnergy(prevEnergy => Math.min(prevEnergy + 1, dataApp.maxEnergy));
+        }, 1000);
 
         return () => clearInterval(energyRegenInterval);
     }, [dataApp.maxEnergy]);
+
+    useEffect(() => {
+        localStorage.setItem('dataApp', JSON.stringify(dataApp));
+    }, [dataApp]);
 
     return (
         <DataContext.Provider value={{dataApp, setDataApp, energy, setEnergy}}>
