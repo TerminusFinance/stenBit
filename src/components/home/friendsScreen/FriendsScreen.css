@@ -130,9 +130,9 @@
 
 .btn-action-container {
     width: calc(100% - 32px);
-    margin-bottom: 78px;
+    margin-bottom: 80px;
     align-content: center;
     align-items: center;
     position: fixed;
-    bottom: 72px
+    bottom: 80px
 }
