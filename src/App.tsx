@@ -24,6 +24,7 @@ const App: React.FC = () => {
         <div className="app-container">
             <DataProvider>
                 <ToastProvider>
+                    <div/>
                     <Router>
                         <Routes>
                             <Route path="/" element={<LoadingScreen />} />
