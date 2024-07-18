@@ -2,9 +2,9 @@ import axios, {} from 'axios';
 import {TaskType} from "../../components/home/tasksScreen/itemTask/ItemTask.tsx";
 import {retrieveLaunchParams} from "@tma.js/sdk";
 
-const BASE_URL = "https://wm-mariupol.com/"
+const BASE_URL = "/api/"
 
-    // const initDataRaw = "query_id=AAHaKAEtAAAAANooAS1s2T84&user=%7B%22id%22%3A755050714%2C%22first_name%22%3A%22Roma%22%2C%22last_name%22%3A%22%22%2C%22username%22%3A%22romaiuferev%22%2C%22language_code%22%3A%22ru%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721125688&hash=e7d043111d8d4650d3ff80c2ad0c650ce9d0a639fa14451549280f7e5e8ec1c7"
+    // const initDataRaw = "query_id=AAHpI4RkAAAAAOkjhGQZtt7I&user=%7B%22id%22%3A1686381545%2C%22first_name%22%3A%22Dmitrii%22%2C%22last_name%22%3A%22Kopeikin%22%2C%22username%22%3A%22kopeikindp%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721155597&hash=4e247f41d9e1dc4a2d09d64a87ec73d6cdaa7ec3a26ca663d8785b71f88b1efe"
 const { initDataRaw } = retrieveLaunchParams();
 
 export interface Invitee {
@@ -46,6 +46,7 @@ export interface UserBasic {
     boosts: BoostItem[]
     completedTasks: number[] | null;
     tasks: UserTask[];
+    imageAvatar? : string | null;
 }
 
 export interface BoostUpdateResult {

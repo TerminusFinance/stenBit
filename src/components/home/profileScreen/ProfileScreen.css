@@ -20,6 +20,8 @@
     margin-top: 32px;
     background: white;
     z-index: 2;
+    align-content: center;
+    align-items: center;
 }
 
 .card-row-profile {

@@ -6,6 +6,7 @@ import {useData} from "../DataContext.tsx";
 import {isDesktop, isMobile, isTablet} from 'react-device-detect';
 import coin from "../../assets/ic_coins.svg";
 import {useTelegramBackButton} from "../viewComponents/Utils.tsx";
+import {retrieveLaunchParams} from "@tma.js/sdk";
 
 interface UserData {
     objectId?: string;
@@ -45,21 +46,36 @@ const LoadingScreen: React.FC = () => {
             try {
                 const deviceTypeResult = deviceType();
                 console.log("deviceType - ", deviceTypeResult);
-                if (deviceTypeResult !== 'Mobile') {
+                if (deviceTypeResult !== 'Mobile' && deviceTypeResult !== 'Desktop') {
                     navigate('/redirects');
                     return;
                 }
                     try {
-                        // const launchParams = retrieveLaunchParams();
-                        // const params = launchParams.initData
+                        const { initData } = retrieveLaunchParams();
+                        const InitDataStaertParam = initData?.startParam
                         if(params != undefined) {
-                            // const user = params.user
-                            // if(user != undefined) {
-                            //     const newId = user.id
+                            console.log("InitDataStaertParam вот -  ", InitDataStaertParam)
+                            if(InitDataStaertParam != undefined) {
+                                console.log("Зашел в InitDataStaertParam")
+                                const InviteCodeParams = inviteCode != null ? inviteCode : InitDataStaertParam
                                 const result = await getUserById();
                                 const legueReuslt = await getLevelLeague()
                                 console.log("legueReuslt - ", legueReuslt)
                                 if (typeof result ==="string") {
+                                    console.log("передал в  InitDataStaertParam параметр - ", InitDataStaertParam)
+                                    navigate('/start', {state: {inviteCode: InviteCodeParams}});
+
+                                } else if (typeof result === 'object'){
+                                    setData(result);
+                                    setDataApp(result);
+                                    navigate('/tap');
+                                }
+                            } else  {
+                                const result = await getUserById();
+                                const legueReuslt = await getLevelLeague()
+                                console.log("legueReuslt - ", legueReuslt)
+                                if (typeof result ==="string") {
+
                                     if(!inviteCode) {
                                         console.log('User not found');
                                         navigate('/start', {state: {inviteCode: null}})
@@ -73,7 +89,25 @@ const LoadingScreen: React.FC = () => {
                                     setDataApp(result);
                                     navigate('/tap');
                                 }
+                            }
 
+                        } else {
+                            if(InitDataStaertParam != undefined) {
+                                const InviteCodeParams = inviteCode != null ? inviteCode : InitDataStaertParam
+                                const result = await getUserById();
+                                const legueReuslt = await getLevelLeague()
+                                console.log("legueReuslt - ", legueReuslt)
+                                if (typeof result ==="string") {
+                                    console.log('User not found');
+                                    navigate('/start', {state: {InviteCodeParams}});
+
+                                } else if (typeof result === 'object'){
+                                    console.log("set up data - ", result.coins);
+                                    setData(result);
+                                    setDataApp(result);
+                                    navigate('/tap');
+                                }
+                            }
                         }
                     } catch (e) {
                         navigate('/not-found', {});

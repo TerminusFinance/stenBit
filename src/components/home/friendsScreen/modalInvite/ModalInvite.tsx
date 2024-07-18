@@ -5,6 +5,7 @@ import IcInvite from "../../../../assets/modal/ic_invite.svg";
 import IcCopy from "../../../../assets/ic_copy.svg";
 import { MainActionBtn } from "../../../buttons/mainActionBtn/MainActionBtn.tsx";
 import IcSend from "../../../../assets/ic_send.svg";
+import {useToast} from "../../../viewComponents/toast/ToastContext.tsx";
 
 interface ModalInviteProps {
     isVisible: boolean;
@@ -22,7 +23,10 @@ export const ModalInvite: React.FC<ModalInviteProps> = ({ isVisible, onClose, us
         navigator.clipboard.writeText(text);
     };
 
-
+    const {showToast} = useToast();
+    const handleShowToast = (message: string, type: 'success' | 'error' | 'info') => {
+        showToast(message, type);
+    };
 
     useEffect(() => {
         if (isVisible) {
@@ -66,9 +70,13 @@ export const ModalInvite: React.FC<ModalInviteProps> = ({ isVisible, onClose, us
                     <p className="tx-ref-link">Referral link</p>
                     <div className="copy-container">
                         <div className="text-container">
-                            <span className="text-content">https://t.me/StenBitTestBot?start={userCodeInvite}</span>
+                            <span className="text-content">t.me/TerminusCoinbot/Farm?startapp={userCodeInvite}</span>
                         </div>
-                        <button className="copy-button" onClick={() => handleCopy(`https://t.me/StenBitTestBot?start=${userCodeInvite}`)}>
+                        <button className="copy-button" onClick={() => {
+                            handleCopy(`t.me/TerminusCoinbot/Farm?startapp=${userCodeInvite}`)
+                            handleShowToast("Link copied", 'success')
+                        }
+                        }>
                             <img src={IcCopy} alt="Copy" />
                         </button>
                     </div>

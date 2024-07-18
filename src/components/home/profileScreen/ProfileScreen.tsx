@@ -41,9 +41,6 @@ const ProfileScreen: React.FC = () => {
         console.log("address",dataApp.address)
         if(dataApp.address == undefined || dataApp.address === "") {
             tonConnectUI.modal.open()
-        } else  {
-            console.log("disconect")
-            tonConnectUI.disconnect()
         }
     }
 
@@ -51,11 +48,8 @@ const ProfileScreen: React.FC = () => {
         const addressWallet = wallet?.account?.address ? Address.parse(wallet?.account?.address as string) : undefined;
         if ((dataApp.address === undefined || dataApp.address === "") && addressWallet !== undefined) {
             updateAddressUsers(addressWallet.toString());
-        } else if (addressWallet == null) {
-            if(dataApp.address != "") {
-                updateAddressUsers("");
-            }
         }
+
     }, [wallet]);
 
     useEffect(() => {
@@ -71,7 +65,16 @@ const ProfileScreen: React.FC = () => {
             <div className="friends-raspred-container">
 
                 <div className="profile-information-container">
-                    <div className="image-profile"/>
+                    {dataApp.imageAvatar ?
+                        (
+                            <img className="image-profile" src={dataApp.imageAvatar}/>
+                        ) :
+                        (
+                            <div className="image-profile">
+                                <p style={{fontSize :'24px', color: 'black'}}>{dataApp.userName[0]}</p>
+                            </div>
+                        )
+                    }
                     <p className="tx-name-profile">{dataApp.userName}</p>
                     <div className="line-profile-information"/>
                 </div>

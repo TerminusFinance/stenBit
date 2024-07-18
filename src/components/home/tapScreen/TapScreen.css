@@ -66,11 +66,13 @@
 .tap-coin {
     width: 200px;
     height: 200px;
-    transition: transform 0.3s;
+    transition: transform 0.1s;
     position: relative;
     user-select: none;
     z-index: 3;
 }
+
+
 
 .type-status {
     display: flex;

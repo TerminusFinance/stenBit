@@ -8,7 +8,7 @@ import coinIco from "../../../assets/ic_dollar.svg";
 import icAddUser from "../../../assets/ic-add-user.svg";
 import {ModalInvite} from "./modalInvite/ModalInvite.tsx";
 import {MainActionBtn} from "../../buttons/mainActionBtn/MainActionBtn.tsx";
-import {OpenUrl, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
+import {formatNumberToK, OpenUrl, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 
 export const FriendsScreen: React.FC = () => {
     const {dataApp} = useData();
@@ -41,7 +41,7 @@ export const FriendsScreen: React.FC = () => {
 
     const sendToTg = () => {
 
-        const shareMessage = `https://t.me/StenBitTestBot?start=${dataApp.codeToInvite}
+        const shareMessage = `t.me/TerminusCoinbot/Farm?startapp=${dataApp.codeToInvite}
 ` +
             "\n" +
             "Play with me and get the opportunity to become a token holder through airdrop!\n" +
@@ -51,6 +51,15 @@ export const FriendsScreen: React.FC = () => {
 
         OpenUrl(telegramShareUrl)
     };
+
+
+    const serachItemIntviteSum =(): number => {
+        let resultCoins = 0
+        dataApp.listUserInvited.map((invited) => {
+            resultCoins = resultCoins + invited.coinsReferral
+        })
+        return resultCoins
+    }
 
     return (
         <div className="friends-root-container">
@@ -67,13 +76,13 @@ export const FriendsScreen: React.FC = () => {
                         <InviteCard title="Invite friends" reward={"+2000"} imgSrc={coinIco}/>
                         <InviteCard title="Invite friends with premium" reward={"+10000"} imgSrc={coinIco}/>
                     </div>
-                    <ReferralCard referrals={dataApp.listUserInvited?.length ? dataApp.listUserInvited.length: 0} earnings={0}/>
+                    <ReferralCard referrals={dataApp.listUserInvited?.length ? dataApp.listUserInvited.length: 0} earnings={serachItemIntviteSum()}/>
                 </div>
                 {dataApp.listUserInvited ? (
                     <div>
-                        {dataApp.listUserInvited.map((invite) => (
+                        {dataApp.listUserInvited.map((invite, pos) => (
                             <ItemFriends userName={invite.userName}
-                                         coinsReferral={invite.coinsReferral}/>
+                                         coinsReferral={invite.coinsReferral} position={pos + 1} />
                         ))}
                     </div>
                 ) : (
@@ -121,7 +130,7 @@ const ReferralCard: React.FC<{ referrals: number; earnings: number }> = ({referr
             </div>
             <div className="card-highlight-footer">
                 <span className="refferring-title">Your earnings for referring:</span>
-                <span className="referrals-value">+{earnings.toLocaleString()}</span>
+                <span className="referrals-value">+{formatNumberToK(earnings)}</span>
             </div>
         </div>
     );

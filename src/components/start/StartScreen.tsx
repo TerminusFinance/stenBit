@@ -33,6 +33,7 @@ const StartScreen: React.FC = () => {
                 setDataApp(result)
                 navigate('/tap');
             } else {
+                console.log("StartSCREEN - InviteCode - ", inviteCode)
                 const result = await processInvitationFromInviteCode(inviteCode);
                 if(typeof result === 'object') {
                     console.log("result", result);

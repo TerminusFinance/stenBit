@@ -10,9 +10,10 @@ interface BoostItemParams {
     lvl: number;
     clickable: boolean;
     onClick: () => void;
+    textAlertMessage: string;
 }
 
-export const BoostItem: React.FC<BoostItemParams> = ({ checkIcon, name, price, lvl, onClick, clickable }) => {
+export const BoostItem: React.FC<BoostItemParams> = ({ checkIcon, name, price, lvl, onClick, clickable, textAlertMessage }) => {
     return (
         <div className={`boost-item-outer-container`}>
             <div className={`boost-item-container-${clickable}`} onClick={() => clickable == true ? onClick() : {}}>
@@ -28,7 +29,7 @@ export const BoostItem: React.FC<BoostItemParams> = ({ checkIcon, name, price, l
                             </div>
                         ) : (
                             <div className='coins-container-boost-item'>
-                                <span className="driver-lvl-boost">Coming soon</span>
+                                <span className="driver-lvl-boost">{textAlertMessage}</span>
                             </div>
                         )
                         }

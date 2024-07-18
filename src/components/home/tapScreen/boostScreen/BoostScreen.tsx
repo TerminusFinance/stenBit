@@ -159,8 +159,10 @@ export const BoostScreen: React.FC = () => {
                             lvl={boost.level}
                             checkIcon={getBoostImage(boost.boostName)}
                             onClick={() => openBottomSheetBoostItem(boost)}
-                            clickable={boost.boostName != "turbo"}
+                            clickable={!(boost.boostName === "turbo" || boost.level === 50)}
+                            textAlertMessage={boost.boostName === "turbo" ? "Coming soon" : "Maximum level"}
                         />
+
                     </div>
                 ))}
             </div>

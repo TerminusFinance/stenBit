@@ -26,13 +26,13 @@ import IcCoins from "../../../assets/ic_dollar.svg";
 import {handleCopy, OpenUrl, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 
 const TasksScreen: React.FC = () => {
-    const { dataApp, setDataApp } = useData();
+    const {dataApp, setDataApp} = useData();
 
-    const { showToast } = useToast();
+    const {showToast} = useToast();
 
     try {
         useTelegramBackButton(true)
-    } catch (e ) {
+    } catch (e) {
         console.log("error in postEvent - ", e)
     }
 
@@ -75,21 +75,35 @@ const TasksScreen: React.FC = () => {
 
     const checkTask = async () => {
         const SselectedTask = selectedTask;
-        if(SselectedTask != undefined) {
+        if (SselectedTask != undefined) {
             try {
-                updateTaskState(SselectedTask.taskId, { isLoading: true });
+                updateTaskState(SselectedTask.taskId, {isLoading: true});
                 const requestToCheck = await checkSuccessTask(SselectedTask.taskId)
                 if (typeof requestToCheck === 'object') {
                     setDataApp(requestToCheck);
-                    handleShowToast("The checking was successful", 'success')
+                    if(IsStockReg(SselectedTask.taskType)) {
+                        if(SselectedTask.etaps == 0 || SselectedTask.etaps == 2) {
+                            handleShowToast("Your task has been sent for verification", 'info')
+                        }else {
+                            handleShowToast("The checking was successful", 'success')
+                        }
+                    } else if(isOpenUrlTask(SselectedTask.taskType)) {
+                        if(SselectedTask.etaps == 0 || SselectedTask.etaps == 2) {
+                            handleShowToast("Your task has been sent for verification", 'info')
+                        }else {
+                            handleShowToast("The checking was successful", 'success')
+                        }
+                    } else  {
+                        handleShowToast("The checking was successful", 'success')
+                    }
                     closeBottomSheet()
-                } else  {
-                    handleShowToast(requestToCheck, 'error')
+                } else {
+                    handleShowToast("You didn't fulfil the conditions ", 'error')
                 }
-            }catch (e) {
+            } catch (e) {
 
             } finally {
-                updateTaskState(SselectedTask.taskId, { isLoading: false });
+                updateTaskState(SselectedTask.taskId, {isLoading: false});
             }
 
         }
@@ -101,7 +115,7 @@ const TasksScreen: React.FC = () => {
 
     useEffect(() => {
         console.log("dataApp - ", dataApp.coins);
-        if(dataApp.userId == "") {
+        if (dataApp.userId == "") {
             handleNav("/loading")
         }
     }, [dataApp]);
@@ -115,7 +129,7 @@ const TasksScreen: React.FC = () => {
 
     const sendToTg = () => {
 
-        const shareMessage = `https://t.me/StenBitTestBot?start=${dataApp.codeToInvite}
+        const shareMessage = `t.me/TerminusCoinbot/Farm?startapp=${dataApp.codeToInvite}
 ` +
             "\n" +
             "Play with me and get the opportunity to become a token holder through airdrop!\n" +
@@ -127,34 +141,34 @@ const TasksScreen: React.FC = () => {
     };
 
 
-    const handleCheckUserInvited =async (selectedsTask: UserTask) => {
+    const handleCheckUserInvited = async (selectedsTask: UserTask) => {
         if (isCheckFriendsTask(selectedsTask.taskType)) {
             const numberOfFriends = selectedsTask.taskType.numberOfFriends;
             console.log('Number of friends:', numberOfFriends);
             const lengthUserInvited = dataApp.listUserInvited?.length ?? 0;
 
-            if(lengthUserInvited == numberOfFriends && dataApp.userId != null) {
+            if (lengthUserInvited == numberOfFriends && dataApp.userId != null) {
                 updateTaskState(selectedsTask.taskId, {isLoading: true})
                 const resultSendTorequest = await updateTaskCompletion(selectedsTask.taskId)
                 if (typeof resultSendTorequest === 'object') {
                     setDataApp(resultSendTorequest)
-                    updateTaskState(selectedsTask.taskId, { checkResult: true, errorMessage: null });
+                    updateTaskState(selectedsTask.taskId, {checkResult: true, errorMessage: null});
                     handleShowToast("The checking was successful", 'success')
                     closeBottomSheet()
                 } else {
-                    updateTaskState(selectedsTask.taskId, { checkResult: false, errorMessage: "" });
+                    updateTaskState(selectedsTask.taskId, {checkResult: false, errorMessage: ""});
                     console.error('Task type is not CheckFriendsTask');
                 }
-            } else  {
+            } else {
                 handleShowToast("The task is not completed", 'error')
-                updateTaskState(selectedsTask.taskId, { checkResult: false, errorMessage: "The task is not completed" });
+                updateTaskState(selectedsTask.taskId, {checkResult: false, errorMessage: "The task is not completed"});
             }
         } else {
             console.error('Task type is not CheckFriendsTask');
         }
     };
 
-    console.log("tasks - ",dataApp.tasks)
+    console.log("tasks - ", dataApp.tasks)
 
     return (
         <div className="tasks-container">
@@ -166,10 +180,10 @@ const TasksScreen: React.FC = () => {
                 </div>
                 <div className="list-task-container">
 
-                        <TaskSelector
-                            tabs={['All Tasks', 'Daily Tasks', 'Challenge']}
-                            onTabSelect={handleTabSelect}
-                        />
+                    <TaskSelector
+                        tabs={['All Tasks', 'Daily Tasks', 'Challenge']}
+                        onTabSelect={handleTabSelect}
+                    />
 
                     {dataApp.tasks != null && (
                         <div className="container-tasks-item-category">
@@ -284,9 +298,10 @@ const TasksScreen: React.FC = () => {
             <NavigationBar
                 initialSelected={"Tasks"}
                 onEarnClick={() => handleNav("tap")}
-                onInviteClick={() =>handleNav("friends")}
+                onInviteClick={() => handleNav("friends")}
                 onProfileClick={() => handleNav("profile")}
-                onTasksClick={() => {}}
+                onTasksClick={() => {
+                }}
             />
 
             {selectedTask && (
@@ -309,8 +324,9 @@ const TasksScreen: React.FC = () => {
 
                                     <div style={{width: '24px', height: '24px'}}/>
 
-                                    <SecondActionBtn txInBtn={selectedTask.actionBtnTx ? selectedTask.actionBtnTx : "Join"}
-                                                     onClick={() => OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)}/>
+                                    <SecondActionBtn
+                                        txInBtn={selectedTask.actionBtnTx ? selectedTask.actionBtnTx : "Join"}
+                                        onClick={() => OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 
                                     <MainActionBtn
@@ -331,8 +347,9 @@ const TasksScreen: React.FC = () => {
 
                                     <div style={{width: '24px', height: '24px'}}/>
 
-                                    <SecondActionBtn txInBtn={selectedTask.actionBtnTx ? selectedTask.actionBtnTx : "Join"}
-                                                     onClick={() => OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)}/>
+                                    <SecondActionBtn
+                                        txInBtn={selectedTask.actionBtnTx ? selectedTask.actionBtnTx : "Join"}
+                                        onClick={() => OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 
                                     <MainActionBtn
@@ -347,21 +364,26 @@ const TasksScreen: React.FC = () => {
                                     <div className="copy-container-task">
                                         <div className="text-container-task">
                                             <span
-                                                className="text-content">https://t.me/StenBitTestBot?start={dataApp.codeToInvite}</span>
+                                                className="text-content">t.me/TerminusCoinbot/Farm?startapp={dataApp.codeToInvite}</span>
                                         </div>
                                         <button className="copy-button"
-                                                onClick={() => handleCopy(`https://t.me/StenBitTestBot?start=${dataApp.codeToInvite}`)}>
+                                                onClick={() => {
+                                                    handleCopy(`t.me/TerminusCoinbot/Farm?startapp=${dataApp.codeToInvite}`)
+                                                    handleShowToast("Link copied", 'success')
+                                                }
+                                                }>
                                             <img src={IcCopy} alt="Copy"/>
                                         </button>
                                     </div>
                                     <div className="btn-action-containe-modal-inviter">
-                                        <SecondActionBtn txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'} onClick={() => handleCheckUserInvited(selectedTask)}/>
+                                        <SecondActionBtn
+                                            txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
+                                            onClick={() => handleCheckUserInvited(selectedTask)}/>
                                         <div style={{width: '16px', height: '16px'}}/>
                                         <MainActionBtn imageSourse={IcSend} txInBtn={"Send Link"} onClick={sendToTg}/>
                                     </div>
                                 </div>
                             )}
-
 
                             {isSampleTask(selectedTask.taskType) && (
                                 <button className="button-action-sheet" onClick={closeBottomSheet}>
@@ -380,7 +402,8 @@ const TasksScreen: React.FC = () => {
                                     </div>
                                     <div style={{width: '24px', height: '24px'}}/>
 
-                                    <SecondActionBtn txInBtn={"Buy NFT"} onClick={() => OpenUrl(`https://testnet.getgems.io/collection/${(selectedTask.taskType as CheckNftTask).checkCollectionsAddress}`)}/>
+                                    <SecondActionBtn txInBtn={"Buy NFT"}
+                                                     onClick={() => OpenUrl(`https://getgems.io/collection/${(selectedTask.taskType as CheckNftTask).checkCollectionsAddress}`)}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 
                                     <MainActionBtn
@@ -392,14 +415,15 @@ const TasksScreen: React.FC = () => {
 
                             {IsStockReg(selectedTask.taskType) && (
                                 <div className="bottom-sheet-content-task">
-                                    <p className="description-task">{selectedTask.txDescription}</p>
+                                    <p className="description-task">{selectedTask.etaps == 2 ? "Your KYC check was failed, send it again." : selectedTask.txDescription}</p>
                                     <div className="reward-container-task">
                                         <img src={IcCoins} className="ic-reward-container-coins"/>
                                         <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
                                     </div>
                                     <div style={{width: '24px', height: '24px'}}/>
 
-                                    <SecondActionBtn txInBtn={"Registration"} onClick={() => OpenUrl(`${(selectedTask.taskType as StockRegTask).url}`)}/>
+                                    <SecondActionBtn txInBtn={"Registration"}
+                                                     onClick={() => OpenUrl(`${(selectedTask.taskType as StockRegTask).url}`)}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 
                                     <MainActionBtn
