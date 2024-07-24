@@ -14,6 +14,8 @@ import {ModalBoostItem} from "./modalBoostItem/ModalBoostItem.tsx";
 import {BoostItem as boostestItems, updateLevel} from "../../../../core/dataWork/RemoteUtilsRequester.ts";
 import {useToast} from "../../../viewComponents/toast/ToastContext.tsx";
 import {formatNumberToK, useTelegramBackButton} from "../../../viewComponents/Utils.tsx";
+import {PremiumDie} from "../../../viewComponents/premiumDie/PremiumDie.tsx";
+import {PremiumModal} from "../../../viewComponents/premiumModal/PremiumModal.tsx";
 
 
 export const BoostScreen: React.FC = () => {
@@ -114,6 +116,7 @@ export const BoostScreen: React.FC = () => {
 
     const [isBottomSheetVisibleAbout, setBottomSheetVisibleAbout] = useState(false);
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+    const [isModalPremiumVisible, setModalPremiumVisible] = useState(false);
     const [selectedBottomSheetItem, setSelectedBottomSheetItem] = useState<boostestItems | null>(null);
 
     const openBottomSheet = () => {
@@ -123,6 +126,7 @@ export const BoostScreen: React.FC = () => {
     const closeBottomSheet = () => {
         setBottomSheetVisibleAbout(false);
         setBottomSheetVisible(false);
+        setModalPremiumVisible(false)
         setSelectedBottomSheetItem(null)
     };
 
@@ -130,6 +134,11 @@ export const BoostScreen: React.FC = () => {
         setSelectedBottomSheetItem(item)
         setBottomSheetVisible(true)
     }
+
+    const openModalPremium = () => {
+        setModalPremiumVisible(true)
+    }
+
 
     return (
         <div className="boost-container">
@@ -142,6 +151,10 @@ export const BoostScreen: React.FC = () => {
                 </div>
 
                 <div className="line-boost-information"/>
+
+                <div className="premium-die-ovner-contaiener">
+                    <PremiumDie onClick={openModalPremium}/>
+                </div>
 
                 <div className="boost-container-tx-inf">
                     <p className="tx-h2-boosts">Boosters</p>
@@ -181,6 +194,8 @@ export const BoostScreen: React.FC = () => {
                 <ModalBoostItem title={selectedBottomSheetItem?.boostName} description={getBoostDescription(selectedBottomSheetItem.boostName)} about={getBoostAbout(selectedBottomSheetItem.boostName, selectedBottomSheetItem.level)} lvl={selectedBottomSheetItem?.level} price={selectedBottomSheetItem?.price} image={getBoostImage(selectedBottomSheetItem.boostName)}
                                 isVisible={isBottomSheetVisible} onClose={closeBottomSheet} onBtnClick={updateLevelBoost}/>
             )}
+
+            <PremiumModal isVisible={isModalPremiumVisible} onClose={closeBottomSheet} onBtnClick={() => {}}/>
         </div>
     );
 };

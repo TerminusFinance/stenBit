@@ -20,12 +20,11 @@ import "./App.css"
 
 const App: React.FC = () => {
 
-
     return (
         <div className="app-container" >
             <DataProvider>
                 <ToastProvider>
-                    <Router>
+                    <Router >
                         <Routes>
                             <Route path="/" element={<LoadingScreen />} />
                             <Route path="/loading" element={<LoadingScreen />} />

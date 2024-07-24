@@ -66,3 +66,12 @@
 .boost-button:hover {
     background-color: #4a4a4a; /* Цвет кнопки при наведении */
 }
+
+.premium-small-button {
+    /*background-color: white;*/
+    margin-left: 6px;
+}
+
+.premium-small-button-ic {
+    height: 40px;
+}

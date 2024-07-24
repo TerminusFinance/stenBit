@@ -1,0 +1,117 @@
+.modal-overlay-premium {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+}
+
+.modal-overlay-premium.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(100%);
+    }
+}
+
+.modal-premium {
+    background-color: #161618;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 0 2px #38383A;
+    box-sizing: border-box;
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+.modal-premium.open {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+.container-premium-modal {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.img-premium-modal {
+    width: 32px;
+    height: 32px;
+}
+
+.tx-premium-modal {
+    color: white;
+    font-size: 28px;
+    font-family: MyCustomFont-bold, sans-serif;
+    margin-left: 8px;
+}
+
+.tx-title-premium-modal {
+    color: white;
+    font-size: 16px;
+    margin-bottom: 16px;
+    font-family: MyCustomFont, sans-serif;
+}
+
+.tx-sub-item-premium-modal {
+    color: white;
+    font-size: 14px;
+    font-family: MyCustomFont, sans-serif;
+}
+
+.ic-sub-item-premium-modal {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+}
+
+.tx-select-plan {
+    color: white;
+    font-family: MyCustomFont-bold, sans-serif;
+    font-size: 20px;
+}
+
+
+.main-btn-action-to-upgrade {
+    width: 100%;
+    border-radius: 16px;
+    padding: 24px 8px;
+    background: linear-gradient(60deg, #F527DD, #2B7FF2);
+    align-items: center;
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 16px;
+    /*border: 2px solid rgba(255, 255, 255, 24%);*/
+}
+
+.main-tx-to-btn-action-to-upgrade {
+    color: white;
+    font-size: 16px;
+    font-family: MyCustomFont-bold, sans-serif;
+    text-align: center;
+}

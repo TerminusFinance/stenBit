@@ -1,0 +1,60 @@
+.premium-die-container {
+
+}
+
+.premium-die-second-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 16px;
+    margin: 0; /* Remove margins from BoostItem */
+    border-radius: 16px;
+    text-align: center;
+    color: white;
+    font-family: 'MyCustomFontMedium', sans-serif;
+    box-sizing: border-box;
+    background-color: rgba(27, 27, 30, 100%);
+    border: 2px solid rgba(255, 255, 255, 4%); /* Add border */
+}
+
+.ic-premium-die-logo {
+    width: 48px;
+    height: 48px;
+    margin-left: 4px;
+}
+
+
+.premium-die-tx-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+    flex: 1;
+}
+.progress-text-premium-die {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 1;
+}
+
+.current-title-get-premium {
+    font-size: 20px;
+    text-align: start;
+    margin-left: 4px;
+    font-family: MyCustomFont-bold, sans-serif;
+    background: linear-gradient(60deg, #F527DD, #2B7FF2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.driver-subTitle-premium {
+text-align: start;
+    color: #9CA5B2;
+    font-family: MyCustomFont, sans-serif;
+    font-size: 16px;
+    margin-left: 4px;
+}

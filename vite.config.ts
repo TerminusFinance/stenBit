@@ -11,6 +11,13 @@ export default defineConfig({
       },
     }),
   ],
+  // base : '/test/front/',
+
+  build : {
+    minify : true ,
+    sourcemap : false ,
+    target : 'modules' ,
+  },
 })
 
 

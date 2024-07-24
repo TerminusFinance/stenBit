@@ -2,6 +2,7 @@ import React from 'react';
 import './EnergyBadge.css';
 import boltIcon from '../../../../assets/ic_bolt.svg';
 import rocketIcon from '../../../../assets/ic_rocket.svg';
+import PremiumIc from '../../../../assets/ic_premium_stroke.svg';
 
 interface EnergyBadgeProps {
     current: number;
@@ -9,7 +10,7 @@ interface EnergyBadgeProps {
     handlerNavBoost: () => void
 }
 
-const EnergyBadge: React.FC<EnergyBadgeProps> = ({ current, max, handlerNavBoost }) => {
+const EnergyBadge: React.FC<EnergyBadgeProps> = ({current, max, handlerNavBoost}) => {
     return (
         <div className="energy-badge-container">
             <div className="energy-info">
@@ -17,10 +18,18 @@ const EnergyBadge: React.FC<EnergyBadgeProps> = ({ current, max, handlerNavBoost
                 <span className="energy-text">{current}</span>
                 <span className="energy-text-gray">/{max}</span>
             </div>
-            <button className="boost-button" onClick={handlerNavBoost}>
-            <img src={rocketIcon} className="boost-icon" alt="boost icon" />
-                Boost
-            </button>
+            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', alignContent: 'center'}}>
+
+                <button className="boost-button" onClick={handlerNavBoost}>
+                    <img src={rocketIcon} className="boost-icon" alt="boost icon"/>
+                    Boost
+                </button>
+                <div className="premium-small-button">
+                    <img src={PremiumIc} className="premium-small-button-ic"/>
+                </div>
+
+            </div>
+
         </div>
     );
 };

@@ -2,10 +2,10 @@ import axios, {} from 'axios';
 import {TaskType} from "../../components/home/tasksScreen/itemTask/ItemTask.tsx";
 import {retrieveLaunchParams} from "@tma.js/sdk";
 
-const BASE_URL = "/api/"
+const BASE_URL = "/test/api/"
 
-    // const initDataRaw = "query_id=AAHpI4RkAAAAAOkjhGQZtt7I&user=%7B%22id%22%3A1686381545%2C%22first_name%22%3A%22Dmitrii%22%2C%22last_name%22%3A%22Kopeikin%22%2C%22username%22%3A%22kopeikindp%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721155597&hash=4e247f41d9e1dc4a2d09d64a87ec73d6cdaa7ec3a26ca663d8785b71f88b1efe"
-const { initDataRaw } = retrieveLaunchParams();
+    const initDataRaw = "query_id=AAHpI4RkAAAAAOkjhGQZtt7I&user=%7B%22id%22%3A1686381545%2C%22first_name%22%3A%22Dmitrii%22%2C%22last_name%22%3A%22Kopeikin%22%2C%22username%22%3A%22kopeikindp%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721155597&hash=4e247f41d9e1dc4a2d09d64a87ec73d6cdaa7ec3a26ca663d8785b71f88b1efe"
+// const { initDataRaw } = retrieveLaunchParams();
 
 export interface Invitee {
     userName: string;

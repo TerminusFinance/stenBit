@@ -24,7 +24,6 @@ const LoadingScreen: React.FC = () => {
     const params = new URLSearchParams(search);
     const inviteCode = params.get('inviteCode');
 
-
     const [data, setData] = useState<UserData | null>(null);
     const {setDataApp} = useData();
     const deviceType = (): string => {
@@ -39,7 +38,6 @@ const LoadingScreen: React.FC = () => {
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -117,7 +115,7 @@ const LoadingScreen: React.FC = () => {
                 console.error('Error:', error);
             }
         };
-
+        //
         fetchData();
         // navigate('/check');
         console.log("result - ", data);

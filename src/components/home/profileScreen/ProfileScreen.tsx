@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import "./ProfileScreen.css";
 import { useData } from "../../DataContext.tsx";
 import {useTonConnectUI, useTonWallet} from "@tonconnect/ui-react";
@@ -12,6 +12,8 @@ import {getCurrentLevel} from "../tapScreen/TapScreen.tsx";
 import {SettingsItem} from "./settingsItem/SettingsItem.tsx";
 import IcWallet from "../../../assets/ic_wallet.svg";
 import {formatNumberToK, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
+import {PremiumDie} from "../../viewComponents/premiumDie/PremiumDie.tsx";
+import {PremiumModal} from "../../viewComponents/premiumModal/PremiumModal.tsx";
 
 const ProfileScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
@@ -19,13 +21,14 @@ const ProfileScreen: React.FC = () => {
     const navigate = useNavigate();
     const [tonConnectUI] = useTonConnectUI();
 
+    const [isModalPremiumVisible, setModalPremiumVisible] = useState(false);
+
     try {
         useTelegramBackButton(true)
     } catch (e ) {
         console.log("error in postEvent - ", e)
     }
 
-    // @ts-ignore
     const currentLevel = getCurrentLevel(dataApp.coins);
 
     const handleNav = (marsh: string) => {
@@ -52,13 +55,20 @@ const ProfileScreen: React.FC = () => {
 
     }, [wallet]);
 
-    useEffect(() => {
-        console.log("dataApp - ", dataApp.coins);
-        if(dataApp.userId == "") {
-            handleNav("/loading")
-        }
-    }, [dataApp]);
+    // useEffect(() => {
+    //     console.log("dataApp - ", dataApp.coins);
+    //     if(dataApp.userId == "") {
+    //         handleNav("/loading")
+    //     }
+    // }, [dataApp]);
 
+    const openModalPremium = () => {
+        setModalPremiumVisible(true)
+    }
+
+    const closeBottomSheet = () => {
+        setModalPremiumVisible(false)
+    };
 
     return (
         <div className="profile-container">
@@ -71,7 +81,7 @@ const ProfileScreen: React.FC = () => {
                         ) :
                         (
                             <div className="image-profile">
-                                <p style={{fontSize :'24px', color: 'black'}}>{dataApp.userName[0]}</p>
+                                <p style={{fontSize: '24px', color: 'black'}}>{dataApp.userName[0]}</p>
                             </div>
                         )
                     }
@@ -82,12 +92,19 @@ const ProfileScreen: React.FC = () => {
 
                 <div className="card-row-profile">
                     <InviteCard title="Balance" reward={`${formatNumberToK(dataApp.coins)}`} imgSrc={coinIco}/>
-                    <InviteCard title="Invite friends with premium" reward={currentLevel.title} imgSrc={currentLevel.image}/>
+                    <InviteCard title="Invite friends with premium" reward={currentLevel.title}
+                                imgSrc={currentLevel.image}/>
+                </div>
+
+
+                <div className="premium-die-ovner-contaiener">
+                    <PremiumDie onClick={openModalPremium}/>
                 </div>
 
                 <p className="tx-settings">Settings</p>
 
-                <SettingsItem title={"Connect your wallet"} subtitle={dataApp.address ? "Connected" : "Not connected"} imgItem={IcWallet} onClick={callAddressMenu}/>
+                <SettingsItem title={"Connect your wallet"} subtitle={dataApp.address ? "Connected" : "Not connected"}
+                              imgItem={IcWallet} onClick={callAddressMenu}/>
 
             </div>
             <NavigationBar
@@ -98,6 +115,8 @@ const ProfileScreen: React.FC = () => {
                 }}
                 onTasksClick={() => handleNav("tasks")}
             />
+
+            <PremiumModal isVisible={isModalPremiumVisible} onClose={closeBottomSheet} onBtnClick={() => {}}/>
         </div>
     );
 }
