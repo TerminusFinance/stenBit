@@ -9,7 +9,6 @@
     gap: 10px;
 }
 
-
 .toast-success {
     background-color: #4caf50;
     font-family: MyCustomFont-bold, sans-serif;
@@ -31,31 +30,13 @@
     color: white;
     font-size: 16px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+.toast.hide {
     opacity: 0;
-    animation: fadein 0.5s forwards, fadeout 0.5s forwards 2.5s;
-}
-
-@keyframes fadein {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes fadeout {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateY(-10px);
-        visibility: hidden; /* Добавляем скрытие элемента после завершения анимации */
-    }
+    transform: translateY(-10px);
 }
 
 .toast-timer {

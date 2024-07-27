@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import "./Toast.css";
 
 interface ToastContextType {
-    showToast: (message: string, type: 'success' | 'error' | 'info', endTime?: string) => void;
+    showToast: (message: string, type: 'success' | 'error' | 'info', endTime?: string, endWork?: () => void) => void;
 }
 
 interface ToastProviderProps {
@@ -20,7 +20,7 @@ export const useToast = (): ToastContextType => {
 };
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
-    const [toasts, setToasts] = useState<Array<{ id: number; message: string; type: 'success' | 'error' | 'info'; endTime?: string }>>([]);
+    const [toasts, setToasts] = useState<Array<{ id: number; message: string; type: 'success' | 'error' | 'info'; endTime?: string, endWork?: () => void }>>([]);
 
     const showToast = (message: string, type: 'success' | 'error' | 'info', endTime?: string) => {
         const toast = { id: Date.now(), message, type, endTime };
@@ -30,7 +30,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
 
         if (endTime) {
             const endTimestamp = new Date(endTime).getTime();
-            console.log("endTimestamp - " , (endTimestamp - Date.now()))
+            console.log("endTimestamp - ", (endTimestamp - Date.now()));
             duration = endTimestamp - Date.now();
             if (duration <= 0) {
                 duration = 3000; // Fallback to default if the endTime is in the past
@@ -39,7 +39,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
 
         setTimeout(() => {
             removeToast(toast.id);
-        }, duration);
+        }, duration + 500); // Добавляем 500ms для завершения анимации
     };
 
     const removeToast = (id: number) => {
@@ -51,7 +51,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
             {children}
             <div className="toast-container">
                 {toasts.map((toast) => (
-                    <Toast key={toast.id} message={toast.message} type={toast.type} endTime={toast.endTime} />
+                    <Toast key={toast.id} message={toast.message} type={toast.type} endTime={toast.endTime} endWork={toast.endWork} />
                 ))}
             </div>
         </ToastContext.Provider>
@@ -62,12 +62,29 @@ interface ToastProps {
     message: string;
     type: 'success' | 'error' | 'info';
     endTime?: string;
+    endWork?: () => void;
 }
 
-const Toast: React.FC<ToastProps> = ({ message, type, endTime }) => {
+const Toast: React.FC<ToastProps> = ({ message, type, endTime, endWork }) => {
     const [timeLeft, setTimeLeft] = useState<number | null>(null);
+    const [visible, setVisible] = useState(true);
 
     useEffect(() => {
+        let duration = 3000; // Default duration
+
+        if (endTime) {
+            const endTimestamp = new Date(endTime).getTime();
+            const remainingTime = endTimestamp - Date.now();
+            duration = Math.max(remainingTime, 0);
+            if(endWork != null) {
+                endWork()
+            }
+        }
+
+        setTimeout(() => {
+            setVisible(false);
+        }, duration);
+
         if (endTime) {
             const endTimestamp = new Date(endTime).getTime();
             const updateCountdown = () => {
@@ -83,7 +100,7 @@ const Toast: React.FC<ToastProps> = ({ message, type, endTime }) => {
     }, [endTime]);
 
     return (
-        <div className={`toast toast-${type}`}>
+        <div className={`toast toast-${type} ${visible ? '' : 'hide'}`}>
             {message}
             {timeLeft !== null && (
                 <div className="toast-timer">
@@ -93,4 +110,3 @@ const Toast: React.FC<ToastProps> = ({ message, type, endTime }) => {
         </div>
     );
 };
-

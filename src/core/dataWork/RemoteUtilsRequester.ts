@@ -4,13 +4,15 @@ import {retrieveLaunchParams} from "@tma.js/sdk";
 
 const BASE_URL = "/test/api/"
 
-    const initDataRaw = "query_id=AAHpI4RkAAAAAOkjhGQZtt7I&user=%7B%22id%22%3A1686381545%2C%22first_name%22%3A%22Dmitrii%22%2C%22last_name%22%3A%22Kopeikin%22%2C%22username%22%3A%22kopeikindp%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721155597&hash=4e247f41d9e1dc4a2d09d64a87ec73d6cdaa7ec3a26ca663d8785b71f88b1efe"
-// const { initDataRaw } = retrieveLaunchParams();
+// const initDataRaw = "query_id=AAHpI4RkAAAAAOkjhGQZtt7I&user=%7B%22id%22%3A1686381545%2C%22first_name%22%3A%22Dmitrii%22%2C%22last_name%22%3A%22Kopeikin%22%2C%22username%22%3A%22kopeikindp%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721155597&hash=4e247f41d9e1dc4a2d09d64a87ec73d6cdaa7ec3a26ca663d8785b71f88b1efe"
+
+const {initDataRaw} = retrieveLaunchParams();
 
 export interface Invitee {
     userName: string;
     coinsReferral: number;
 }
+
 export interface GetUserByResponse {
     className?: string;
     codeToInvite?: string;
@@ -22,6 +24,7 @@ export interface GetUserByResponse {
     completedTasks?: number[] | null;
     error?: string;
 }
+
 export interface BoostItem {
     boostName: string,
     level: number,
@@ -46,11 +49,17 @@ export interface UserBasic {
     boosts: BoostItem[]
     completedTasks: number[] | null;
     tasks: UserTask[];
-    imageAvatar? : string | null;
+    imageAvatar?: string | null;
+    premium?: PremiumItem | null;
+}
+
+export interface PremiumItem {
+    amountSpent: number;
+    endDateOfWork?: string | null;
 }
 
 export interface BoostUpdateResult {
-    user : UserBasic;
+    user: UserBasic;
     boostEndTime?: string;
 }
 
@@ -66,8 +75,9 @@ export interface UserTask {
     actionBtnTx?: string | null;
     txDescription?: string | null;
     etaps?: number | null;
-    dataSendCheck?: string| null
+    dataSendCheck?: string | null
 }
+
 export const createUser = async (coins: number): Promise<UserBasic> => {
     try {
         const response = await axios.post<UserBasic>(
@@ -139,16 +149,15 @@ export const addCoinsToClickData = async (coins: number): Promise<UserBasic> => 
 };
 
 
-
 export const processInvitationFromInviteCode = async (inviteCode: string): Promise<UserBasic | string> => {
     try {
-          await axios.post<{
+        await axios.post<{
             result: GetUserByResponse
         }>(`${BASE_URL}users/processInvitation`,
             {inviteCode,}, {headers: {Authorization: `tma ${initDataRaw}`}}
         );
 
-        const userResult =await getUserById()
+        const userResult = await getUserById()
         return userResult;
     } catch (error) {
         console.error('Error processing invitation:', error);
@@ -196,10 +205,10 @@ export const updateTaskCompletion = async (taskId: number): Promise<UserBasic | 
         }, {headers: {Authorization: `tma ${initDataRaw}`}});
 
         console.log("response.data - ", response.data);
-        if(response.data.message == "Task completion status updated successfully") {
+        if (response.data.message == "Task completion status updated successfully") {
             const userGetResponse = await getUserById()
             return userGetResponse
-        } else  {
+        } else {
             return "error in update state task"
         }
     } catch (error) {
@@ -213,7 +222,7 @@ export const updateTaskCompletion = async (taskId: number): Promise<UserBasic | 
 }
 
 
-export const updateLevel = async (boostName: string) : Promise<BoostUpdateResult | string> => {
+export const updateLevel = async (boostName: string): Promise<BoostUpdateResult | string> => {
     try {
         const response = await axios.post<BoostUpdateResult>(`${BASE_URL}users/updateBoost`, {
             boostName
@@ -239,6 +248,67 @@ export const checkSuccessTask = async (taskId: number): Promise<UserBasic | stri
         }
         return response.data;
     } catch (e) {
+        return `error ${e}`
+    }
+}
+
+export interface SubscriptionOptions {
+    name: string;
+    price: number;
+}
+
+export const getListSubscriptionOptions = async (): Promise<SubscriptionOptions[] | string> => {
+    try {
+        const response = await axios.get<SubscriptionOptions[]>(`${BASE_URL}prem/getListSubscriptionOptions`,
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getListSubscriptionOptionsResponse - ", response)
+        if (typeof response.data == "object") {
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getListSubscriptionOptionsResponseError - ", e)
+        return `error ${e}`
+    }
+}
+
+interface SubscribeResult {
+    ok: boolean;
+    result: string
+}
+
+export const subscribeToPremium = async (subscriptionOptions: SubscriptionOptions): Promise<SubscribeResult | string> => {
+    try {
+        const response = await axios.post<SubscribeResult>(`${BASE_URL}prem/buyPremium`, {
+                selectedSubscriptionOptions: subscriptionOptions
+            },
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getListSubscriptionOptionsResponse - ", response.data)
+        if (typeof response.data == "object") {
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getListSubscriptionOptionsResponseError - ", e)
+        return `error ${e}`
+    }
+}
+
+
+export const getPremiumUsers = async () : Promise<PremiumItem | string> => {
+    try {
+        const response = await axios.get<PremiumItem>(`${BASE_URL}prem/getPremiumUsers`,
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getPremiumUsers - ", response.data)
+        if (typeof response.data == "object") {
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getPremiumUsers - ", e)
         return `error ${e}`
     }
 }

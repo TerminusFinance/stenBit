@@ -114,4 +114,27 @@
     font-size: 16px;
     font-family: MyCustomFont-bold, sans-serif;
     text-align: center;
+    user-select: none;
+}
+
+.premium-day-off-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    margin-bottom: 24px;
+}
+
+.premium-day-off-tx-h1 {
+    text-align: center;
+    font-family: MyCustomFont-bold, sans-serif;
+    color: white;
+    font-size: 36px;
+}
+
+.premium-day-off-tx-h2 {
+    text-align: center;
+    font-family: MyCustomFont, sans-serif;
+    color: white;
+    font-size: 18px;
 }

@@ -8,6 +8,8 @@ interface DataContextType {
     setDataApp: React.Dispatch<React.SetStateAction<UserBasic>>;
     energy: number;
     setEnergy: React.Dispatch<React.SetStateAction<number>>;
+    turboBoost: string;
+    setTurboBoost: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // Создание контекста
@@ -40,7 +42,11 @@ const DataProvider: React.FC<DataProviderProps> = ({children}) => {
         return storedData ? JSON.parse(storedData) : initialUserBasic;
     });
 
-    const [energy, setEnergy] = useState<number>(dataApp.maxEnergy);
+    const [energy, setEnergy] = useState<number>(dataApp.currentEnergy ?? dataApp.maxEnergy);
+    const [turboBoost, setTurboBoost] = useState<string>(() => {
+        const storedTurboBoost = localStorage.getItem('turboBoost');
+        return storedTurboBoost ?? "";
+    });
 
     useEffect(() => {
         if (dataApp.currentEnergy !== undefined) {
@@ -50,18 +56,21 @@ const DataProvider: React.FC<DataProviderProps> = ({children}) => {
 
     useEffect(() => {
         const energyRegenInterval = setInterval(() => {
-            setEnergy(prevEnergy => Math.min(prevEnergy + 1, dataApp.maxEnergy));
+            // Определите скорость регенерации на основе turboBoost
+            const plusItem = turboBoost === 'active' ? (dataApp.premium?.endDateOfWork !== undefined ? 4 : 2) : (dataApp.premium?.endDateOfWork !== undefined ? 2 : 1);
+            setEnergy(prevEnergy => Math.min(prevEnergy + plusItem, dataApp.maxEnergy));
         }, 1000);
 
         return () => clearInterval(energyRegenInterval);
-    }, [dataApp.maxEnergy]);
+    }, [dataApp.maxEnergy, dataApp.premium?.endDateOfWork, turboBoost]);
 
     useEffect(() => {
         localStorage.setItem('dataApp', JSON.stringify(dataApp));
-    }, [dataApp]);
+        localStorage.setItem('turboBoost', turboBoost);
+    }, [dataApp, turboBoost]);
 
     return (
-        <DataContext.Provider value={{dataApp, setDataApp, energy, setEnergy}}>
+        <DataContext.Provider value={{dataApp, setDataApp, energy, setEnergy, turboBoost, setTurboBoost}}>
             {children}
         </DataContext.Provider>
     );

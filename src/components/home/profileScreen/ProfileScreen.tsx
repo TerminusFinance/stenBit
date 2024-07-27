@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import "./ProfileScreen.css";
 import { useData } from "../../DataContext.tsx";
 import {useTonConnectUI, useTonWallet} from "@tonconnect/ui-react";
@@ -13,7 +13,7 @@ import {SettingsItem} from "./settingsItem/SettingsItem.tsx";
 import IcWallet from "../../../assets/ic_wallet.svg";
 import {formatNumberToK, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 import {PremiumDie} from "../../viewComponents/premiumDie/PremiumDie.tsx";
-import {PremiumModal} from "../../viewComponents/premiumModal/PremiumModal.tsx";
+
 
 const ProfileScreen: React.FC = () => {
     const { dataApp, setDataApp } = useData();
@@ -21,7 +21,7 @@ const ProfileScreen: React.FC = () => {
     const navigate = useNavigate();
     const [tonConnectUI] = useTonConnectUI();
 
-    const [isModalPremiumVisible, setModalPremiumVisible] = useState(false);
+
 
     try {
         useTelegramBackButton(true)
@@ -55,20 +55,15 @@ const ProfileScreen: React.FC = () => {
 
     }, [wallet]);
 
-    // useEffect(() => {
-    //     console.log("dataApp - ", dataApp.coins);
-    //     if(dataApp.userId == "") {
-    //         handleNav("/loading")
-    //     }
-    // }, [dataApp]);
+
 
     const openModalPremium = () => {
-        setModalPremiumVisible(true)
+        // setModalPremiumVisible(true)
+        navigate('/boost',
+        {state: {openPremModal: true}}
+        )
     }
 
-    const closeBottomSheet = () => {
-        setModalPremiumVisible(false)
-    };
 
     return (
         <div className="profile-container">
@@ -116,7 +111,6 @@ const ProfileScreen: React.FC = () => {
                 onTasksClick={() => handleNav("tasks")}
             />
 
-            <PremiumModal isVisible={isModalPremiumVisible} onClose={closeBottomSheet} onBtnClick={() => {}}/>
         </div>
     );
 }

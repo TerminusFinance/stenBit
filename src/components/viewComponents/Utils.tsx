@@ -62,3 +62,28 @@ export const useTelegramBackButton = (state: boolean) => {
     }, [navigate]);
 };
 
+export function calculateDaysDifference(dateString: string): number | string | null {
+    // Получаем текущую дату
+    const currentDate: Date = new Date();
+    // Преобразуем строку с датой в объект Date
+    const targetDate: Date = new Date(dateString);
+
+    // Проверка, является ли текущая дата больше целевой даты
+    if (currentDate > targetDate) {
+        return null;
+    }
+
+    // Вычисление разницы в миллисекундах
+    const differenceInMilliseconds: number = targetDate.getTime() - currentDate.getTime();
+
+    // Преобразование миллисекунд в дни
+    const differenceInDays: number = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
+
+    // Если даты равны, возвращаем соответствующее сообщение
+    if (differenceInDays === 0) {
+        return "Текущая дата равна целевой дате";
+    }
+
+    // Возвращаем разницу в днях
+    return differenceInDays;
+}

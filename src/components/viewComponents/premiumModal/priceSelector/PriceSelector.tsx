@@ -3,7 +3,7 @@ import './PriceSelector.css';
 
 interface Price {
     name: string;
-    price: string;
+    price: number;
 }
 
 interface PriceSelectorProps {
@@ -28,7 +28,7 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({ tabs, onTabSelect }) => {
                     onClick={() => handleTabClick(tab)}
                 >
                     <span className="price-value">{tab.name}</span>
-                    <span className="price-value">{tab.price}</span>
+                    <span className="price-value">${tab.price}</span>
                 </button>
             ))}
         </div>

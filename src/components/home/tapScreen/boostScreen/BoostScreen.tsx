@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./BoostScreen.css";
 import NavigationBar from "../../../navigationBar/NavigationBar.tsx";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useData} from "../../../DataContext.tsx";
 import {BoostItem} from "./boostItem/BoostItem.tsx";
 import IcCircle from "../../../../assets/ic_inco_circle.svg";
@@ -21,18 +21,19 @@ import {PremiumModal} from "../../../viewComponents/premiumModal/PremiumModal.ts
 export const BoostScreen: React.FC = () => {
     const navigate = useNavigate();
     const {dataApp, setDataApp} = useData();
-
-    const { showToast } = useToast();
+    const {setTurboBoost} = useData()
+    const {showToast} = useToast();
 
     try {
         useTelegramBackButton(true)
-    } catch (e ) {
+    } catch (e) {
         console.log("error in postEvent - ", e)
     }
 
 
-    const handleShowToast = (message: string, type: 'success' | 'error' | 'info', endTime?: string) => {
-        showToast(message, type, endTime);
+
+    const handleShowToast = (message: string, type: 'success' | 'error' | 'info', endTime?: string, endWork?: () => void) => {
+        showToast(message, type, endTime, endWork);
     };
 
     const getBoostImage = (boostName: string) => {
@@ -83,10 +84,20 @@ export const BoostScreen: React.FC = () => {
 
     useEffect(() => {
         console.log("dataApp - ", dataApp.coins);
-        if(dataApp.userId == "") {
+        if (dataApp.userId == "") {
             handleNav("loading")
         }
     }, [dataApp]);
+
+
+    const location = useLocation()
+    const {openPremModal} = location.state as { openPremModal: boolean | null }
+
+    useEffect(() => {
+        if(openPremModal) {
+            openModalPremium()
+        }
+    }, [openPremModal]);
 
     const handleNav = (marsh: string) => {
         navigate(`/${marsh}`);
@@ -94,21 +105,25 @@ export const BoostScreen: React.FC = () => {
 
     const updateLevelBoost = async () => {
         const boostId = selectedBottomSheetItem
-        if( boostId != undefined) {
-            if(boostId.price < dataApp.coins) {
+        if (boostId != undefined) {
+            if (boostId.price < dataApp.coins) {
 
                 const resultUpdate = await updateLevel(boostId.boostName)
                 if (typeof resultUpdate === 'object') {
                     setDataApp(resultUpdate.user)
-                    if(resultUpdate.boostEndTime != undefined) {
-                        handleShowToast("turbo boost is active", "success", resultUpdate.boostEndTime)
+                    if (resultUpdate.boostEndTime != undefined) {
+                        const endWork = () => {
+                            setTurboBoost("")
+                        }
+                        handleShowToast("turbo boost is active", "success", resultUpdate.boostEndTime, endWork)
+                        setTurboBoost(resultUpdate.boostEndTime)
                     } else {
                         handleShowToast("boost update level success", "success")
                     }
-                } else  {
+                } else {
                     handleShowToast("boost update level error", "error")
                 }
-            } else  {
+            } else {
                 handleShowToast("You don't have enough coins", "error")
             }
         }
@@ -172,7 +187,7 @@ export const BoostScreen: React.FC = () => {
                             lvl={boost.level}
                             checkIcon={getBoostImage(boost.boostName)}
                             onClick={() => openBottomSheetBoostItem(boost)}
-                            clickable={!(boost.boostName === "turbo" || boost.level === 50)}
+                            clickable={!(boost.level === 50)}
                             textAlertMessage={boost.boostName === "turbo" ? "Coming soon" : "Maximum level"}
                         />
 
@@ -191,11 +206,17 @@ export const BoostScreen: React.FC = () => {
             <ModalBoostAbout title={"How a boost works"} isVisible={isBottomSheetVisibleAbout}
                              onClose={closeBottomSheet}/>
             {selectedBottomSheetItem != null && (
-                <ModalBoostItem title={selectedBottomSheetItem?.boostName} description={getBoostDescription(selectedBottomSheetItem.boostName)} about={getBoostAbout(selectedBottomSheetItem.boostName, selectedBottomSheetItem.level)} lvl={selectedBottomSheetItem?.level} price={selectedBottomSheetItem?.price} image={getBoostImage(selectedBottomSheetItem.boostName)}
-                                isVisible={isBottomSheetVisible} onClose={closeBottomSheet} onBtnClick={updateLevelBoost}/>
+                <ModalBoostItem title={selectedBottomSheetItem?.boostName}
+                                description={getBoostDescription(selectedBottomSheetItem.boostName)}
+                                about={getBoostAbout(selectedBottomSheetItem.boostName, selectedBottomSheetItem.level)}
+                                lvl={selectedBottomSheetItem?.level} price={selectedBottomSheetItem?.price}
+                                image={getBoostImage(selectedBottomSheetItem.boostName)}
+                                isVisible={isBottomSheetVisible} onClose={closeBottomSheet}
+                                onBtnClick={updateLevelBoost}/>
             )}
 
-            <PremiumModal isVisible={isModalPremiumVisible} onClose={closeBottomSheet} onBtnClick={() => {}}/>
+            <PremiumModal isVisible={isModalPremiumVisible} onClose={closeBottomSheet} onBtnClick={() => {
+            }}/>
         </div>
     );
 };

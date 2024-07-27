@@ -7,10 +7,11 @@ import PremiumIc from '../../../../assets/ic_premium_stroke.svg';
 interface EnergyBadgeProps {
     current: number;
     max: number;
-    handlerNavBoost: () => void
+    handlerNavBoost: () => void;
+    handlerPremClick: () => void;
 }
 
-const EnergyBadge: React.FC<EnergyBadgeProps> = ({current, max, handlerNavBoost}) => {
+const EnergyBadge: React.FC<EnergyBadgeProps> = ({current, max, handlerNavBoost, handlerPremClick}) => {
     return (
         <div className="energy-badge-container">
             <div className="energy-info">
@@ -24,7 +25,7 @@ const EnergyBadge: React.FC<EnergyBadgeProps> = ({current, max, handlerNavBoost}
                     <img src={rocketIcon} className="boost-icon" alt="boost icon"/>
                     Boost
                 </button>
-                <div className="premium-small-button">
+                <div className="premium-small-button" onClick={handlerPremClick}>
                     <img src={PremiumIc} className="premium-small-button-ic"/>
                 </div>
 
