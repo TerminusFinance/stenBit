@@ -1,8 +1,7 @@
-import React, {createContext, useContext, useState, ReactNode, useEffect} from 'react';
-import {UserBasic} from "../core/dataWork/RemoteUtilsRequester.ts";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { UserBasic } from "../core/dataWork/RemoteUtilsRequester.ts";
 
 // Определение интерфейсов
-
 interface DataContextType {
     dataApp: UserBasic;
     setDataApp: React.Dispatch<React.SetStateAction<UserBasic>>;
@@ -13,11 +12,9 @@ interface DataContextType {
 }
 
 // Создание контекста
-
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 // Создание провайдера
-
 interface DataProviderProps {
     children: ReactNode;
 }
@@ -36,17 +33,14 @@ const initialUserBasic: UserBasic = {
     tasks: []
 };
 
-const DataProvider: React.FC<DataProviderProps> = ({children}) => {
+const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     const [dataApp, setDataApp] = useState<UserBasic>(() => {
         const storedData = localStorage.getItem('dataApp');
         return storedData ? JSON.parse(storedData) : initialUserBasic;
     });
 
     const [energy, setEnergy] = useState<number>(dataApp.currentEnergy ?? dataApp.maxEnergy);
-    const [turboBoost, setTurboBoost] = useState<string>(() => {
-        const storedTurboBoost = localStorage.getItem('turboBoost');
-        return storedTurboBoost ?? "";
-    });
+    const [turboBoost, setTurboBoost] = useState<string>("");
 
     useEffect(() => {
         if (dataApp.currentEnergy !== undefined) {
@@ -66,18 +60,17 @@ const DataProvider: React.FC<DataProviderProps> = ({children}) => {
 
     useEffect(() => {
         localStorage.setItem('dataApp', JSON.stringify(dataApp));
-        localStorage.setItem('turboBoost', turboBoost);
-    }, [dataApp, turboBoost]);
+        // Убираем сохранение turboBoost в localStorage
+    }, [dataApp]);
 
     return (
-        <DataContext.Provider value={{dataApp, setDataApp, energy, setEnergy, turboBoost, setTurboBoost}}>
+        <DataContext.Provider value={{ dataApp, setDataApp, energy, setEnergy, turboBoost, setTurboBoost }}>
             {children}
         </DataContext.Provider>
     );
 };
 
 // Кастомный хук для использования контекста
-
 const useData = (): DataContextType => {
     const context = useContext(DataContext);
     if (context === undefined) {
@@ -86,4 +79,4 @@ const useData = (): DataContextType => {
     return context;
 };
 
-export {DataProvider, useData};
+export { DataProvider, useData };

@@ -30,8 +30,6 @@ export const BoostScreen: React.FC = () => {
         console.log("error in postEvent - ", e)
     }
 
-
-
     const handleShowToast = (message: string, type: 'success' | 'error' | 'info', endTime?: string, endWork?: () => void) => {
         showToast(message, type, endTime, endWork);
     };
@@ -51,15 +49,14 @@ export const BoostScreen: React.FC = () => {
         }
     };
 
-
     const getBoostDescription = (boostName: string): string => {
         switch (boostName) {
             case "tapBoot":
                 return "Increase the amount of time that tapBoot will run after you exit the app, and bring you recurring revenue.";
             case "energy limit":
-                return "increase the limit of energy you spend with each tap";
+                return "Increase the limit of energy you spend with each tap";
             case "turbo":
-                return "";
+                return "Turbo mode makes it possible not to waste energy and increases revenue per click twice";
             case "multitap":
                 return "Increase the number of coins you can earn with each tap by taking advantage of this opportunity.";
             default:
@@ -78,7 +75,7 @@ export const BoostScreen: React.FC = () => {
             case "multitap":
                 return `+1 coin for tap for level ${level}`;
             default:
-                return "";
+                return "x2 your coins";
         }
     };
 
@@ -94,8 +91,10 @@ export const BoostScreen: React.FC = () => {
     const {openPremModal} = location.state as { openPremModal: boolean | null }
 
     useEffect(() => {
-        if(openPremModal) {
-            openModalPremium()
+        if(openPremModal !=null) {
+            if(openPremModal) {
+                openModalPremium()
+            }
         }
     }, [openPremModal]);
 
@@ -206,10 +205,11 @@ export const BoostScreen: React.FC = () => {
             <ModalBoostAbout title={"How a boost works"} isVisible={isBottomSheetVisibleAbout}
                              onClose={closeBottomSheet}/>
             {selectedBottomSheetItem != null && (
-                <ModalBoostItem title={selectedBottomSheetItem?.boostName}
+                <ModalBoostItem title={selectedBottomSheetItem.boostName}
                                 description={getBoostDescription(selectedBottomSheetItem.boostName)}
                                 about={getBoostAbout(selectedBottomSheetItem.boostName, selectedBottomSheetItem.level)}
-                                lvl={selectedBottomSheetItem?.level} price={selectedBottomSheetItem?.price}
+                                lvl={selectedBottomSheetItem.level}
+                                price={selectedBottomSheetItem.price}
                                 image={getBoostImage(selectedBottomSheetItem.boostName)}
                                 isVisible={isBottomSheetVisible} onClose={closeBottomSheet}
                                 onBtnClick={updateLevelBoost}/>

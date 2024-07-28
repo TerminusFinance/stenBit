@@ -21,7 +21,7 @@ interface ModalPremiumProps {
 }
 
 const extraBenefits = [
-    "2x Mining Speed", "Exclusive Coin Skin", "Gold Name in Leaderboard", "Gold Name in Leaderboard", "Support the Developers"
+    "2x Mining Speed", "Exclusive Coin Skin",  "Support the Developers"
 ]
 
 export const PremiumModal: React.FC<ModalPremiumProps> = ({isVisible, onClose}) => {
@@ -60,6 +60,7 @@ export const PremiumModal: React.FC<ModalPremiumProps> = ({isVisible, onClose}) 
             const result = await getListSubscriptionOptions()
             if (typeof result == "object") {
                 setPrices(result)
+                setSelectedItem(result[0])
             }
         }
         beber()

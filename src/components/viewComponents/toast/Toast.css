@@ -32,6 +32,9 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     opacity: 1;
     transition: opacity 0.5s, transform 0.5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .toast.hide {

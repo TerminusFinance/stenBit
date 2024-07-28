@@ -66,26 +66,46 @@ const TapScreen: React.FC = () => {
     const [animations, setAnimations] = useState<{ x: number, y: number, id: number }[]>([]);
     const { energy, setEnergy } = useData();
     const navigate = useNavigate();
-    const timeoutRef = useRef<number | null>(null);
-    const {turboBoost} = useData()
+    // const timeoutRef = useRef<number | null>(null);
+    const touchStartTimeRef = useRef<{ [key: number]: number }>({});
+    const { turboBoost } = useData();
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
     try {
         useTelegramBackButton(false);
     } catch (e) {
         console.log('error in postEvent - ', e);
     }
 
+    // useEffect(() => {
+    //     return () => {
+    //         if (timeoutRef.current) {
+    //             clearTimeout(timeoutRef.current);
+    //         }
+    //     };
+    // }, []);
+
+
     useEffect(() => {
+        intervalRef.current = setInterval(() => {
+            if (accumulatedClicks > 0) {
+                sendClickData(accumulatedClicks);
+                setAccumulatedClicks(0);
+            }
+        }, 700);
+
+        // Очистка интервала при размонтировании компонента
         return () => {
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
             }
         };
-    }, []);
+    }, [accumulatedClicks]);
+
 
     const sendClickData = async (clickCount: number) => {
         if (dataApp.userId !== undefined) {
             const result = await addCoinsToClickData(clickCount);
-            console.log('update result - ', result);
+            console.log("update result - ", result);
             setDataApp(prevDataApp => ({
                 ...prevDataApp,
                 ...result,
@@ -94,115 +114,95 @@ const TapScreen: React.FC = () => {
         }
     };
 
-    const scheduleDataSend = () => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-        timeoutRef.current = window.setTimeout(() => {
-            if (accumulatedClicks > 0) {
-                sendClickData(accumulatedClicks);
-                setAccumulatedClicks(0);
-            }
-        }, 1500);
+    // const scheduleDataSend = () => {
+    //     if (timeoutRef.current) {
+    //         clearTimeout(timeoutRef.current);
+    //     }
+    //     timeoutRef.current = window.setTimeout(() => {
+    //         if (accumulatedClicks > 0) {
+    //             sendClickData(accumulatedClicks);
+    //             setAccumulatedClicks(0);
+    //         }
+    //     }, 1500);
+    // };
+
+    const handleTouchStart = (event: React.TouchEvent<HTMLImageElement>) => {
+        Array.from(event.touches).forEach(touch => {
+            touchStartTimeRef.current[touch.identifier] = Date.now();
+        });
     };
 
-    const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
-        if (energy >= dataApp.boosts[1].level) {
-            if(turboBoost !== "") {
-                turboClick(event)
-            } else  {
-                simpleClicks(event)
+    const handleTouchEnd = (event: React.TouchEvent<HTMLImageElement>) => {
+        Array.from(event.changedTouches).forEach(touch => {
+            const touchDuration = Date.now() - touchStartTimeRef.current[touch.identifier];
+            if (touchDuration < 500) {
+                handleTouch(touch as unknown as Touch);
             }
+            delete touchStartTimeRef.current[touch.identifier];
+        });
+    };
+
+    const handleTouch = (touch: Touch) => {
+        const { clientX, clientY } = touch;
+        const coinElement = touch.target as HTMLImageElement;
+        const rect = coinElement.getBoundingClientRect();
+
+        coinElement.style.transition = 'transform 0.1s, transform-origin 0.1s';
+        coinElement.style.transformOrigin = `${(clientX - rect.left) / rect.width * 100}% ${(clientY - rect.top) / rect.height * 100}%`;
+        coinElement.style.transform = `scale(0.95)`;
+
+        setTimeout(() => {
+            coinElement.style.transition = 'transform 0.3s';
+            coinElement.style.transform = 'scale(1)';
+        }, 35);
+
+        // Проверяем значение turboBoost
+        const isTurboBoostActive = turboBoost && turboBoost.trim() !== "";
+        const boostLevel = isTurboBoostActive ? dataApp.boosts[1].level * 2 : dataApp.boosts[1].level;
+
+        const newClicks = clicks + boostLevel;
+        setClicks(newClicks);
+        const newAccumulatedClicks = accumulatedClicks + boostLevel;
+        setAccumulatedClicks(newAccumulatedClicks);
+
+        // Уменьшаем энергию только если turboBoost пуст
+        if (!isTurboBoostActive) {
+            setEnergy(prevEnergy => prevEnergy - dataApp.boosts[1].level);
         }
+
+        const id = Date.now();
+        setAnimations(prevAnimations => [...prevAnimations, { x: clientX, y: clientY, id }]);
+        setTimeout(() => {
+            setAnimations(prevAnimations => prevAnimations.filter(animation => animation.id !== id));
+        }, 1000);
+
+        // if (newAccumulatedClicks >= 10) {
+        //     sendClickData(newAccumulatedClicks);
+        //     setAccumulatedClicks(0);
+        // } else {
+        //     scheduleDataSend();
+        // }
+
         navigator.vibrate(50);
     };
-
-    const simpleClicks =(event: React.MouseEvent<HTMLImageElement>) => {
-        const { clientX, clientY } = event;
-        const rect = event.currentTarget.getBoundingClientRect();
-
-        const coinElement = event.currentTarget;
-        coinElement.style.transition = 'transform 0.1s, transform-origin 0.1s';
-        coinElement.style.transformOrigin = `${(clientX - rect.left) / rect.width * 100}% ${(clientY - rect.top) / rect.height * 100}%`;
-        coinElement.style.transform = `scale(0.95)`;
-
-        setTimeout(() => {
-            coinElement.style.transition = 'transform 0.3s';
-            coinElement.style.transform = 'scale(1)';
-        }, 35);
-
-        const newClicks = clicks + dataApp.boosts[1].level;
-        setClicks(newClicks);
-        const newAccumulatedClicks = accumulatedClicks + dataApp.boosts[1].level;
-        setAccumulatedClicks(newAccumulatedClicks);
-        setEnergy(prevEnergy => prevEnergy - dataApp.boosts[1].level);
-        const id = Date.now();
-        setAnimations(prevAnimations => [...prevAnimations, { x: clientX, y: clientY, id }]);
-        setTimeout(() => {
-            setAnimations(prevAnimations => prevAnimations.filter(animation => animation.id !== id));
-        }, 1000);
-
-        if (newAccumulatedClicks >= 10) {
-            sendClickData(newAccumulatedClicks);
-            setAccumulatedClicks(0);
-        } else {
-            scheduleDataSend();
-        }
-    }
-
-
-    const turboClick = (event: React.MouseEvent<HTMLImageElement>) => {
-        const { clientX, clientY } = event;
-        const rect = event.currentTarget.getBoundingClientRect();
-
-        const coinElement = event.currentTarget;
-        coinElement.style.transition = 'transform 0.1s, transform-origin 0.1s';
-        coinElement.style.transformOrigin = `${(clientX - rect.left) / rect.width * 100}% ${(clientY - rect.top) / rect.height * 100}%`;
-        coinElement.style.transform = `scale(0.95)`;
-
-        setTimeout(() => {
-            coinElement.style.transition = 'transform 0.3s';
-            coinElement.style.transform = 'scale(1)';
-        }, 35);
-
-        const newClicks = clicks + (dataApp.boosts[1].level * 2);
-        setClicks(newClicks);
-        const newAccumulatedClicks = accumulatedClicks + (dataApp.boosts[1].level * 2);
-        setAccumulatedClicks(newAccumulatedClicks);
-        // setEnergy(prevEnergy => prevEnergy - dataApp.boosts[1].level);
-        const id = Date.now();
-        setAnimations(prevAnimations => [...prevAnimations, { x: clientX, y: clientY, id }]);
-        setTimeout(() => {
-            setAnimations(prevAnimations => prevAnimations.filter(animation => animation.id !== id));
-        }, 1000);
-
-        if (newAccumulatedClicks >= 10) {
-            sendClickData(newAccumulatedClicks);
-            setAccumulatedClicks(0);
-        } else {
-            scheduleDataSend();
-        }
-    }
 
     const handleNav = (marsh: string) => {
         if (marsh === 'level') {
             navigate('/level', { state: { levelTypes, currentLevel } });
+        } else if (marsh === 'boost') {
+            navigate(`/${marsh}`, { state: { openPremModal: false } });
         } else {
             navigate(`/${marsh}`);
         }
     };
 
-
-
     const openModalPremium = () => {
         navigate('/boost',
-            {state: {openPremModal: true}}
+            { state: { openPremModal: true } }
         )
     }
 
-
     const currentLevel = getCurrentLevel(clicks);
-
     return (
         <div className='tap-container'>
             <div className='tap-raspred-container'>
@@ -224,7 +224,8 @@ const TapScreen: React.FC = () => {
                             alt='Coin'
                             className='tap-coin'
                             draggable='false'
-                            onClick={handleClick}
+                            onTouchStart={handleTouchStart}
+                            onTouchEnd={handleTouchEnd}
                         />
                     </div>
 
@@ -266,8 +267,6 @@ const TapScreen: React.FC = () => {
                 onProfileClick={() => handleNav('profile')}
                 onTasksClick={() => handleNav('tasks')}
             />
-
-
         </div>
     );
 };

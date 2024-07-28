@@ -26,6 +26,7 @@ const LoadingScreen: React.FC = () => {
 
     const [data, setData] = useState<UserData | null>(null);
     const {setDataApp} = useData();
+    const {setTurboBoost} = useData()
     const deviceType = (): string => {
         if (isMobile) return 'Mobile';
         if (isTablet) return 'Tablet';
@@ -65,6 +66,7 @@ const LoadingScreen: React.FC = () => {
 
                                 } else if (typeof result === 'object'){
                                     setData(result);
+                                    setTurboBoost("")
                                     setDataApp(result);
                                     navigate('/tap');
                                 }
