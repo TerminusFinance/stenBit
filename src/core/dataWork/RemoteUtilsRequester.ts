@@ -297,7 +297,7 @@ export const subscribeToPremium = async (subscriptionOptions: SubscriptionOption
 }
 
 
-export const getPremiumUsers = async () : Promise<PremiumItem | string> => {
+export const getPremiumUsers = async (): Promise<PremiumItem | string> => {
     try {
         const response = await axios.get<PremiumItem>(`${BASE_URL}prem/getPremiumUsers`,
             {headers: {Authorization: `tma ${initDataRaw}`}})
@@ -311,4 +311,43 @@ export const getPremiumUsers = async () : Promise<PremiumItem | string> => {
         console.log("getPremiumUsers - ", e)
         return `error ${e}`
     }
+}
+
+export interface Level {
+    minProgress: number;
+    maxProgress: number;
+}
+
+
+
+// Интерфейс для представления ответа от сервера
+export interface RatingUserLvlResponse {
+    [index: number]: UserResultion[];
+}
+export interface UserResultion {
+    userName: string;
+    coins: number;
+    currentEnergy: number;
+    // добавьте другие поля, если необходимо
+}
+
+export const getRatingUsersByLvl = async (levels: Level[]): Promise<RatingUserLvlResponse | string> => {
+
+    try {
+        const response = await axios.post<RatingUserLvlResponse>(`${BASE_URL}leagues/getUsersByLvl`, {
+                // selectedSubscriptionOptions: subscriptionOptions
+                levels
+            },
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getListSubscriptionOptionsResponse - ", response.data)
+        if (typeof response.data == "object") {
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getRatingUsersByLvl - ", e)
+        return `error ${e}`
+    }
+
 }

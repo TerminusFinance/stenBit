@@ -12,6 +12,7 @@ export interface SlidesType {
     image: string;
     currentProgress: number;
     maxProgress: number;
+    minProgress: number;
 }
 
 export interface SlidesTypeList {
@@ -25,16 +26,12 @@ const LevelScreen: React.FC = () => {
     const { dataApp } = useData();
     const { levelTypes, currentLevel } = location.state;
 
-    try {
-        useTelegramBackButton(true)
-    } catch (e ) {
-        console.log("error in postEvent - ", e)
-    }
+    useTelegramBackButton(true);
 
     useEffect(() => {
         console.log("dataApp - ", dataApp.coins);
-        if(dataApp.userId == "") {
-            handleNav("loading")
+        if (dataApp.userId === "") {
+            handleNav("loading");
         }
     }, [dataApp]);
 
@@ -45,12 +42,11 @@ const LevelScreen: React.FC = () => {
     if (levelTypes && currentLevel) {
         const slides: SlidesType[] = levelTypes.map((level: any, index: number) => {
             let currentProgress = 0;
-            const coinsCurrent = dataApp.coins
+            const coinsCurrent = dataApp.coins;
             if (index < levelTypes.indexOf(currentLevel)) {
                 currentProgress = level.maxProgress;
-            } else if (index === levelTypes.indexOf(currentLevel) && coinsCurrent != undefined) {
-                // currentProgress = Math.min(currentLevel.maxProgress, currentLevel.currentProgress);
-                currentProgress = coinsCurrent
+            } else if (index === levelTypes.indexOf(currentLevel) && coinsCurrent !== undefined) {
+                currentProgress = coinsCurrent;
             }
             return {
                 ...level,
@@ -62,9 +58,9 @@ const LevelScreen: React.FC = () => {
 
         return (
             <div className="level-container">
-                <div></div>
-                <Slider itemList={slides} initialSlide={initialSlide} />
-
+                <div className="sliders-wrapper">
+                    <Slider itemList={slides} initialSlide={initialSlide} />
+                </div>
                 <NavigationBar
                     initialSelected=""
                     onEarnClick={() => handleNav("Tap")}
@@ -72,7 +68,6 @@ const LevelScreen: React.FC = () => {
                     onProfileClick={() => handleNav("profile")}
                     onTasksClick={() => handleNav("tasks")}
                 />
-
             </div>
         );
     }

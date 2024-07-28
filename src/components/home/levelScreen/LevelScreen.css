@@ -25,3 +25,8 @@
     margin-left: 16px;
     margin-right: 16px;
 }
+
+.sliders-wrapper {
+    overflow-y: auto;
+    width: 100vw;
+}

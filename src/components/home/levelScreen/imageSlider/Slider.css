@@ -1,229 +1,83 @@
-.slider-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
+.main-container-slider {
     width: 100%;
-    max-width: 600px;
-    border-radius: 10px;
-    padding: 0 10px;
+    overflow: hidden;
+    position: relative;
 }
 
-.main-container-slider {
+.slider-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 100%;
+    height: 100%;
 }
 
 .slider-wrapper {
-    overflow: hidden;
+    display: flex;
     width: 100%;
-    position: relative;
-}
-
-.image-container-slider-Bronze {
-    position: relative;
-    width: 165px;
-    height: 165px;
-    align-content: center;
-    z-index: 1; /* Обновляем z-index */
-}
-
-
-.image-container-slider-Bronze::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200%; /* Регулируйте размер сияния */
-    height: 200%; /* Регулируйте размер сияния */
-    background: radial-gradient(circle, rgba(255, 131, 41, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
-    transform: translate(-50%, -50%);
-    z-index: -1; /* Обновляем z-index */
-    pointer-events: none; /* Убедитесь, что сияние не мешает взаимодействию */
-}
-
-.image-container-slider-Silver {
-    position: relative;
-    width: 165px;
-    height: 165px;
-    align-content: center;
-    z-index: 1; /* Обновляем z-index */
-}
-
-
-.image-container-slider-Silver::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200%; /* Регулируйте размер сияния */
-    height: 200%; /* Регулируйте размер сияния */
-    background: radial-gradient(circle, rgba(213, 219, 232, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
-    transform: translate(-50%, -50%);
-    z-index: -1; /* Обновляем z-index */
-    pointer-events: none; /* Убедитесь, что сияние не мешает взаимодействию */
-}
-
-.image-container-slider-Gold {
-    position: relative;
-    width: 165px;
-    height: 165px;
-    align-content: center;
-    z-index: 1; /* Обновляем z-index */
-}
-
-
-.image-container-slider-Gold::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200%; /* Регулируйте размер сияния */
-    height: 200%; /* Регулируйте размер сияния */
-    background: radial-gradient(circle, rgba(255, 169, 41, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
-    transform: translate(-50%, -50%);
-    z-index: -1; /* Обновляем z-index */
-    pointer-events: none; /* Убедитесь, что сияние не мешает взаимодействию */
-}
-
-.image-container-slider-Platinum {
-    position: relative;
-    width: 165px;
-    height: 165px;
-    align-content: center;
-    z-index: 1; /* Обновляем z-index */
-}
-
-
-.image-container-slider-Platinum::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200%; /* Регулируйте размер сияния */
-    height: 200%; /* Регулируйте размер сияния */
-    background: radial-gradient(circle, rgba(200, 235, 247, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
-    transform: translate(-50%, -50%);
-    z-index: -1; /* Обновляем z-index */
-    pointer-events: none; /* Убедитесь, что сияние не мешает взаимодействию */
+    height: 100%;
 }
 
 .slides {
     display: flex;
-    transition: transform 0.3s ease-in-out;
+    transition: transform 300ms ease-out;
 }
 
 .slide {
     min-width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 270px;
-    text-align: center;
-    transition: transform 0.3s ease-in-out;
-    opacity: 1;
+    box-sizing: border-box;
+    flex-shrink: 0;
 }
 
-.under-slider {
-    text-align: center;
-    width: 100%;
+.image-container-slider {
     display: flex;
-    margin-top: 20px;
+    justify-content: center;
     align-items: center;
-    flex-direction: column;
+    height: 300px;
+    /*background-color: lightgray; !* Пример фона *!*/
+}
+
+.image-container-slider img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .btn-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
-    padding: 0 10px;
-    box-sizing: border-box;
-    position: relative;
-}
-
-.sub-title-cristall {
-    padding: 0 10px;
-}
-
-.btn-container .nav-button {
-    flex: 0 0 auto; /* Кнопки не будут растягиваться */
-}
-
-.btn-container h2 {
-    flex: 1; /* Текст занимает оставшееся пространство */
-    text-align: center; /* Выравнивание текста по центру */
-    margin: 0; /* Убираем внешние отступы */
-    position: absolute; /* Позиционируем текст абсолютно */
-    left: 50%; /* Центрируем относительно контейнера */
-    transform: translateX(-50%); /* Смещаем текст на половину его ширины влево */
-}
-
-.div-btn-slider {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.slide-image-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative; /* Add this */
-    padding: 30px;
-}
-
-.slide-image {
-    width: 165px;
-    height: 165px;
-    /*transition: transform 0.3s ease-in-out;*/
-
-        /*width: 100%;*/
-        /*height: 100px;*/
-        /*transition: transform 0.3s;*/
-        /*position: relative;*/
-        /*user-select: none; !* Запрещаем выделение текста и изображений *!*/
-        /*z-index: 3; !* Добавляем z-index *!*/
-/**/
+    margin-top: 16px;
 }
 
 .nav-button {
- /* Center the button vertically */
     background: none;
     border: none;
     cursor: pointer;
-    user-select: none;
-    padding: 10px;
-    z-index: 10;
-    transition: background 0.3s;
-}
-
-.nav-button.left {
-    left: 10px;
-}
-
-.nav-button.right {
-    right: 10px;
-}
-
-.nav-button:disabled,
-.nav-button.disabled {
-    cursor: not-allowed;
+    padding: 0;
 }
 
 .image-nav {
-    filter: brightness(0) invert(1);
+    width: 48px; /* Увеличил размер иконок навигации */
+    height: 48px;
 }
 
-.image-nav.disabled {
-    filter: brightness(0) invert(0.5);
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
+
+.under-slider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-top: 16px;
+    padding-left: 12px;
+    padding-right: 12px;
+    box-sizing: border-box;
+}
+
 
 h2, p {
     font-family: 'MyCustomFontMedium', sans-serif;
