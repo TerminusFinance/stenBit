@@ -2,7 +2,7 @@ import axios, {} from 'axios';
 import {TaskType} from "../../components/home/tasksScreen/itemTask/ItemTask.tsx";
 import {retrieveLaunchParams} from "@tma.js/sdk";
 
-const BASE_URL = "/test/api/"
+const BASE_URL = "api/"
 
 // const initDataRaw = "query_id=AAHpI4RkAAAAAOkjhGQZtt7I&user=%7B%22id%22%3A1686381545%2C%22first_name%22%3A%22Dmitrii%22%2C%22last_name%22%3A%22Kopeikin%22%2C%22username%22%3A%22kopeikindp%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721155597&hash=4e247f41d9e1dc4a2d09d64a87ec73d6cdaa7ec3a26ca663d8785b71f88b1efe"
 
@@ -102,9 +102,9 @@ export const getUserById = async (): Promise<UserBasic | string> => {
         );
 
         console.log('Response data:', typeof response.data);
-        if ('message' in response.data) {
-            return `${response.data.message}`; // Возвращаем сообщение об ошибке
-        }
+        // if ('message' in response.data) {
+        //     return `${response.data.message}`; // Возвращаем сообщение об ошибке
+        // }
         return response.data; // Вернем результат из объекта response.data
     } catch (error) {
         console.error('Error getting user:', error);
@@ -319,11 +319,11 @@ export interface Level {
 }
 
 
-
 // Интерфейс для представления ответа от сервера
 export interface RatingUserLvlResponse {
     [index: number]: UserResultion[];
 }
+
 export interface UserResultion {
     userName: string;
     coins: number;
@@ -349,5 +349,180 @@ export const getRatingUsersByLvl = async (levels: Level[]): Promise<RatingUserLv
         console.log("getRatingUsersByLvl - ", e)
         return `error ${e}`
     }
-
 }
+
+// Интерфейс для представления ответа от сервера
+export interface ResultionClanResponse {
+    [index: number]: AllClanResponse[];
+}
+
+export interface AllClanResponse {
+    clanId: string;
+    clanName: string;
+    rating: number;
+}
+
+export const getClansByLeagueLevels = async (levels: Level[]) => {
+    try {
+        const response = await axios.post<ResultionClanResponse>(`${BASE_URL}clan/getClansByLeagueLevels`,
+            { levels },
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getListSubscriptionOptionsResponse - ", response.data)
+        if (typeof response.data == "object") {
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getRatingUsersByLvl - ", e)
+        return `error ${e}`
+    }
+}
+
+
+export interface Clan {
+    clanId: string;
+    clanName: string;
+    description: string;
+    rating: number;
+    createAt: string;
+}
+
+export interface ResultionGetClanById {
+    clan: Clan;
+    role: string;
+    contributedRating: number;
+}
+
+export const getClanByUserId = async () => {
+    try {
+        const response = await axios.get<ResultionGetClanById>(`${BASE_URL}clan/getUserClan`,
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getListSubscriptionOptionsResponse - ", response.data)
+        if (typeof response.data == "object") {
+            if(typeof response.data.clan != "object") {
+                return "Error request"
+            }
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getRatingUsersByLvl - ", e)
+        return `error ${e}`
+    }
+}
+
+
+export const getListSubscriptionOptionsClanUpgrateRunks = async (): Promise<SubscriptionOptions[] | string> => {
+    try {
+        const response = await axios.get<SubscriptionOptions[]>(`${BASE_URL}clan/getListSubscriptionOptions`,
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getListSubscriptionOptionsResponse - ", response)
+        if (typeof response.data == "object") {
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getListSubscriptionOptionsResponseError - ", e)
+        return `error ${e}`
+    }
+}
+
+interface ResultionClanCreate {
+    message: string;
+}
+
+export const createClan = async (clanName: string, descriptions: string): Promise<string> => {
+    try {
+        const response = await axios.post<ResultionClanCreate>(`${BASE_URL}clan/createClan`,
+            {clanName, descriptions},
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("createClan - ", response)
+        if (typeof response.data == "object") {
+            return response.data.message
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("createClan - ", e)
+        if (axios.isAxiosError(e)) {
+            if (e.response) {
+                // Сервер ответил с кодом статуса, который выходит за пределы 2xx
+                return `Error: ${e.response.data.message || e.response.statusText}`;
+            } else if (e.request) {
+                // Запрос был сделан, но ответа не было получено
+                return "Error: No response received from server";
+            } else {
+                // Произошла ошибка при настройке запроса
+                return `Error: ${e.message}`;
+            }
+        } else {
+            // Что-то еще произошло
+            return `Error: ${e}`;
+        }
+    }
+}
+
+
+export interface ResultGetClanWitchId {
+    clan: Clan;
+}
+
+export const getClanWitchClanId = async (clanId: string) => {
+    try {
+        const response = await axios.post<ResultGetClanWitchId>(`${BASE_URL}clan/getClanWithUsers`,
+            {clanId},
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getClanWitchClanId - ", response)
+        if (typeof response.data == "object") {
+            return response.data.clan
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getClanWitchClanId - ", e)
+        return `error ${e}`
+    }
+}
+
+
+export const addMeToClan = async (clanId: string): Promise<boolean | string> => {
+    try {
+        const response = await axios.post(`${BASE_URL}clan/addUserToClan`,
+            { clanId },
+            { headers: { Authorization: `tma ${initDataRaw}` } }
+        );
+
+        console.log("getClanWitchClanId - ", response);
+
+        if (typeof response.data == "object" ) {
+            if (response.data.message === "Success added") {
+                return true;
+            } else {
+                return response.data.message;
+            }
+        } else {
+            return "Error: Unexpected response format";
+        }
+    } catch (e) {
+        console.log("getClanWitchClanId - ", e);
+
+        if (axios.isAxiosError(e)) {
+            if (e.response) {
+                // Сервер ответил с кодом статуса, который выходит за пределы 2xx
+                return `Error: ${e.response.data.message || e.response.statusText}`;
+            } else if (e.request) {
+                // Запрос был сделан, но ответа не было получено
+                return "Error: No response received from server";
+            } else {
+                // Произошла ошибка при настройке запроса
+                return `Error: ${e.message}`;
+            }
+        } else {
+            // Что-то еще произошло
+            return `Error: ${e}`;
+        }
+    }
+};

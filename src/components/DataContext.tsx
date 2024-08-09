@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
 import { UserBasic } from "../core/dataWork/RemoteUtilsRequester.ts";
 
 // Определение интерфейсов
@@ -41,6 +41,27 @@ const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
     const [energy, setEnergy] = useState<number>(dataApp.currentEnergy ?? dataApp.maxEnergy);
     const [turboBoost, setTurboBoost] = useState<string>("");
+    const lastEnergyChangeTime = useRef<number | null>(null);
+    const energyRegenTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const plusItem = turboBoost === 'active' ? (dataApp.premium?.endDateOfWork !== undefined ? 4 : 2) : (dataApp.premium?.endDateOfWork !== undefined ? 2 : 1);
+
+    const debounceEnergyRegen = () => {
+        if (energyRegenTimeout.current) {
+            clearTimeout(energyRegenTimeout.current);
+        }
+
+        energyRegenTimeout.current = setTimeout(() => {
+            setEnergy(prevEnergy => {
+                if (prevEnergy < dataApp.maxEnergy) {
+                    const newEnergy = Math.min(prevEnergy + plusItem, dataApp.maxEnergy);
+                    lastEnergyChangeTime.current = Date.now();
+                    return newEnergy;
+                }
+                return prevEnergy;
+            });
+        }, 1000);
+    };
 
     useEffect(() => {
         if (dataApp.currentEnergy !== undefined) {
@@ -50,18 +71,22 @@ const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
     useEffect(() => {
         const energyRegenInterval = setInterval(() => {
-            // Определите скорость регенерации на основе turboBoost
-            const plusItem = turboBoost === 'active' ? (dataApp.premium?.endDateOfWork !== undefined ? 4 : 2) : (dataApp.premium?.endDateOfWork !== undefined ? 2 : 1);
-            setEnergy(prevEnergy => Math.min(prevEnergy + plusItem, dataApp.maxEnergy));
-        }, 1000);
+            if (lastEnergyChangeTime.current === null || Date.now() - lastEnergyChangeTime.current >= 1000) {
+                debounceEnergyRegen();
+            }
+        }, 100);
 
         return () => clearInterval(energyRegenInterval);
     }, [dataApp.maxEnergy, dataApp.premium?.endDateOfWork, turboBoost]);
 
     useEffect(() => {
         localStorage.setItem('dataApp', JSON.stringify(dataApp));
-        // Убираем сохранение turboBoost в localStorage
     }, [dataApp]);
+
+    useEffect(() => {
+        lastEnergyChangeTime.current = Date.now();
+        debounceEnergyRegen();
+    }, [energy]);
 
     return (
         <DataContext.Provider value={{ dataApp, setDataApp, energy, setEnergy, turboBoost, setTurboBoost }}>

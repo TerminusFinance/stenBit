@@ -5,12 +5,11 @@ import ItemTask, {
     OpenUrlTask,
     isSampleTask,
     CheckNftTask,
-    isCheckFriendsTask, IsSubscribeToTg, IsStockReg, StockRegTask,
+    isCheckFriendsTask, IsSubscribeToTg, IsStockReg, ISDailyTask, IsInternalChallengeTask,
 } from "./itemTask/ItemTask";
 import {useData} from "../../DataContext.tsx";
 import {
     checkSuccessTask,
-    updateTaskCompletion,
     UserTask
 } from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
@@ -42,7 +41,9 @@ const TasksScreen: React.FC = () => {
 
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
     const [selectedTask, setSelectedTask] = useState<UserTask | null>(null);
+    const [visitUrl, setVisitUrl] = useState<boolean>(false);
     const navigate = useNavigate();
+
     const openBottomSheet = (task: UserTask) => {
         if (!task.completed) {
             setSelectedTask(task);
@@ -60,6 +61,7 @@ const TasksScreen: React.FC = () => {
         setBottomSheetVisible(false);
         setSelectedTask(null);
         setTaskStates({})
+        setVisitUrl(false)
     };
 
 
@@ -81,19 +83,19 @@ const TasksScreen: React.FC = () => {
                 const requestToCheck = await checkSuccessTask(SselectedTask.taskId)
                 if (typeof requestToCheck === 'object') {
                     setDataApp(requestToCheck);
-                    if(IsStockReg(SselectedTask.taskType)) {
-                        if(SselectedTask.etaps == 0 || SselectedTask.etaps == 2) {
+                    if (IsStockReg(SselectedTask.taskType)) {
+                        if (SselectedTask.etaps == 0 || SselectedTask.etaps == 2) {
                             handleShowToast("Your task has been sent for verification", 'info')
-                        }else {
+                        } else {
                             handleShowToast("The checking was successful", 'success')
                         }
-                    } else if(isOpenUrlTask(SselectedTask.taskType)) {
-                        if(SselectedTask.etaps == 0 || SselectedTask.etaps == 2) {
+                    } else if (isOpenUrlTask(SselectedTask.taskType)) {
+                        if (SselectedTask.etaps == 0 || SselectedTask.etaps == 2) {
                             handleShowToast("Your task has been sent for verification", 'info')
-                        }else {
+                        } else {
                             handleShowToast("The checking was successful", 'success')
                         }
-                    } else  {
+                    } else {
                         handleShowToast("The checking was successful", 'success')
                     }
                     closeBottomSheet()
@@ -101,7 +103,7 @@ const TasksScreen: React.FC = () => {
                     handleShowToast("You didn't fulfil the conditions ", 'error')
                 }
             } catch (e) {
-
+                handleShowToast("You didn't fulfil the conditions ", 'error')
             } finally {
                 updateTaskState(SselectedTask.taskId, {isLoading: false});
             }
@@ -140,36 +142,7 @@ const TasksScreen: React.FC = () => {
         OpenUrl(telegramShareUrl)
     };
 
-
-    const handleCheckUserInvited = async (selectedsTask: UserTask) => {
-        if (isCheckFriendsTask(selectedsTask.taskType)) {
-            const numberOfFriends = selectedsTask.taskType.numberOfFriends;
-            console.log('Number of friends:', numberOfFriends);
-            const lengthUserInvited = dataApp.listUserInvited?.length ?? 0;
-
-            if (lengthUserInvited == numberOfFriends && dataApp.userId != null) {
-                updateTaskState(selectedsTask.taskId, {isLoading: true})
-                const resultSendTorequest = await updateTaskCompletion(selectedsTask.taskId)
-                if (typeof resultSendTorequest === 'object') {
-                    setDataApp(resultSendTorequest)
-                    updateTaskState(selectedsTask.taskId, {checkResult: true, errorMessage: null});
-                    handleShowToast("The checking was successful", 'success')
-                    closeBottomSheet()
-                } else {
-                    updateTaskState(selectedsTask.taskId, {checkResult: false, errorMessage: ""});
-                    console.error('Task type is not CheckFriendsTask');
-                }
-            } else {
-                handleShowToast("The task is not completed", 'error')
-                updateTaskState(selectedsTask.taskId, {checkResult: false, errorMessage: "The task is not completed"});
-            }
-        } else {
-            console.error('Task type is not CheckFriendsTask');
-        }
-    };
-
     console.log("tasks - ", dataApp.tasks)
-
     return (
         <div className="tasks-container">
             <div className="task-raspred-container">
@@ -181,7 +154,7 @@ const TasksScreen: React.FC = () => {
                 <div className="list-task-container">
 
                     <TaskSelector
-                        tabs={['All Tasks', 'Daily Tasks', 'Challenge']}
+                        tabs={['All Tasks', 'Daily Tasks', 'Challenge', "Stock", "Social"]}
                         onTabSelect={handleTabSelect}
                     />
 
@@ -216,6 +189,51 @@ const TasksScreen: React.FC = () => {
                                     {dataApp.tasks.map((task, index) => (
                                         <div>
                                             {task.type === "challenge" && (
+                                                <div>
+                                                    <ItemTask
+                                                        key={index}
+                                                        id={task.taskId}
+                                                        text={task.text}
+                                                        coins={task.coins}
+                                                        completed={task.completed}
+                                                        checkIcon={task.checkIcon}
+                                                        taskType={task.taskType}
+                                                        onClick={() => openBottomSheet(task)}
+                                                        isLoading={task.etaps === 1 || task.etaps === 3}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    ))}
+
+
+                                    <p className="tx-h1-container-tasks-item-category">Stock</p>
+                                    {dataApp.tasks.map((task, index) => (
+                                        <div>
+                                            {task.type === "Stock" && (
+                                                <div>
+                                                    <ItemTask
+                                                        key={index}
+                                                        id={task.taskId}
+                                                        text={task.text}
+                                                        coins={task.coins}
+                                                        completed={task.completed}
+                                                        checkIcon={task.checkIcon}
+                                                        taskType={task.taskType}
+                                                        onClick={() => openBottomSheet(task)}
+                                                        isLoading={task.etaps === 1 || task.etaps === 3}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    ))}
+
+                                    <p className="tx-h1-container-tasks-item-category">Social</p>
+                                    {dataApp.tasks.map((task, index) => (
+                                        <div>
+                                            {task.type === "Social" && (
                                                 <div>
                                                     <ItemTask
                                                         key={index}
@@ -289,6 +307,58 @@ const TasksScreen: React.FC = () => {
                                 </div>
                             )}
 
+                            {tabSelected === "Stock" && (
+                                <div>
+                                    <p className="tx-h1-container-tasks-item-category">Stock</p>
+                                    {dataApp.tasks.map((task, index) => (
+                                        <div>
+                                            {task.type === "Stock" && (
+                                                <div>
+                                                    <ItemTask
+                                                        key={index}
+                                                        id={task.taskId}
+                                                        text={task.text}
+                                                        coins={task.coins}
+                                                        completed={task.completed}
+                                                        checkIcon={task.checkIcon}
+                                                        taskType={task.taskType}
+                                                        onClick={() => openBottomSheet(task)}
+                                                        isLoading={task.etaps === 1 || task.etaps === 3}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    ))}
+                                </div>
+                            )}
+
+                            {tabSelected === "Social" && (
+                                <div>
+                                    <p className="tx-h1-container-tasks-item-category">Social</p>
+                                    {dataApp.tasks.map((task, index) => (
+                                        <div>
+                                            {task.type === "Social" && (
+                                                <div>
+                                                    <ItemTask
+                                                        key={index}
+                                                        id={task.taskId}
+                                                        text={task.text}
+                                                        coins={task.coins}
+                                                        completed={task.completed}
+                                                        checkIcon={task.checkIcon}
+                                                        taskType={task.taskType}
+                                                        onClick={() => openBottomSheet(task)}
+                                                        isLoading={task.etaps === 1 || task.etaps === 3}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                    ))}
+                                </div>
+                            )}
+
                         </div>
                     )}
                 </div>
@@ -326,12 +396,22 @@ const TasksScreen: React.FC = () => {
 
                                     <SecondActionBtn
                                         txInBtn={selectedTask.actionBtnTx ? selectedTask.actionBtnTx : "Join"}
-                                        onClick={() => OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)}/>
+                                        onClick={() => {
+                                            OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)
+                                            setVisitUrl(true)
+                                        }
+                                    }/>
                                     <div style={{width: '16px', height: '16px'}}/>
-
                                     <MainActionBtn
                                         txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
-                                        onClick={checkTask}/>
+                                        onClick={() => {
+                                            if (visitUrl) {
+                                                checkTask();
+                                            } else {
+                                                //
+                                            }
+                                        }}
+                                    />
                                 </div>
                             )}
 
@@ -349,12 +429,21 @@ const TasksScreen: React.FC = () => {
 
                                     <SecondActionBtn
                                         txInBtn={selectedTask.actionBtnTx ? selectedTask.actionBtnTx : "Join"}
-                                        onClick={() => OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)}/>
+                                        onClick={() => {
+                                            OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)
+                                            setVisitUrl(true)
+                                        }}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 
                                     <MainActionBtn
                                         txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
-                                        onClick={checkTask}/>
+                                        onClick={() => {
+                                            if (visitUrl) {
+                                                checkTask();
+                                            } else {
+                                                //
+                                            }
+                                        }}/>
                                 </div>
                             )}
 
@@ -378,7 +467,7 @@ const TasksScreen: React.FC = () => {
                                     <div className="btn-action-containe-modal-inviter">
                                         <SecondActionBtn
                                             txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
-                                            onClick={() => handleCheckUserInvited(selectedTask)}/>
+                                            onClick={() => checkTask()}/>
                                         <div style={{width: '16px', height: '16px'}}/>
                                         <MainActionBtn imageSourse={IcSend} txInBtn={"Send Link"} onClick={sendToTg}/>
                                     </div>
@@ -388,7 +477,7 @@ const TasksScreen: React.FC = () => {
                             {isSampleTask(selectedTask.taskType) && (
                                 <button className="button-action-sheet" onClick={closeBottomSheet}>
                                     <p className="tx-action-sheet">
-                                        Продолжить
+                                        Next
                                     </p>
                                 </button>
                             )}
@@ -403,12 +492,21 @@ const TasksScreen: React.FC = () => {
                                     <div style={{width: '24px', height: '24px'}}/>
 
                                     <SecondActionBtn txInBtn={"Buy NFT"}
-                                                     onClick={() => OpenUrl(`https://getgems.io/collection/${(selectedTask.taskType as CheckNftTask).checkCollectionsAddress}`)}/>
+                                                     onClick={() => {
+                                                         OpenUrl(`https://getgems.io/collection/${(selectedTask.taskType as CheckNftTask).checkCollectionsAddress}`)
+                                                         setVisitUrl(true)
+                                    }}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 
                                     <MainActionBtn
                                         txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
-                                        onClick={checkTask}/>
+                                        onClick={() => {
+                                            if (visitUrl) {
+                                                checkTask();
+                                            } else {
+                                                //
+                                            }
+                                        }}/>
 
                                 </div>
                             )}
@@ -423,13 +521,52 @@ const TasksScreen: React.FC = () => {
                                     <div style={{width: '24px', height: '24px'}}/>
 
                                     <SecondActionBtn txInBtn={"Registration"}
-                                                     onClick={() => OpenUrl(`${(selectedTask.taskType as StockRegTask).url}`)}/>
+                                                     onClick={() => {
+                                                         OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)
+                                                         setVisitUrl(true)
+                                                     }}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 
                                     <MainActionBtn
                                         txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
-                                        onClick={checkTask}/>
+                                        onClick={() => {
+                                            if (visitUrl) {
+                                                checkTask();
+                                            } else {
+                                                //
+                                            }
+                                        }}/>
 
+                                </div>
+                            )}
+
+                            {ISDailyTask(selectedTask.taskType) && (
+                                <div className="bottom-sheet-content-task">
+                                    <p className="description-task">{selectedTask.txDescription}</p>
+                                    <div className="reward-container-task">
+                                        <img src={IcCoins} className="ic-reward-container-coins"/>
+                                        <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
+                                    </div>
+                                    <div style={{width: '24px', height: '24px'}}/>
+
+                                    <MainActionBtn
+                                        txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : selectedTask.actionBtnTx ? selectedTask.actionBtnTx : 'Check'}
+                                        onClick={checkTask}/>
+                                </div>
+                            )}
+
+                            {IsInternalChallengeTask(selectedTask.taskType) && (
+                                <div className="bottom-sheet-content-task">
+                                    <p className="description-task">{selectedTask.txDescription}</p>
+                                    <div className="reward-container-task">
+                                        <img src={IcCoins} className="ic-reward-container-coins"/>
+                                        <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
+                                    </div>
+                                    <div style={{width: '24px', height: '24px'}}/>
+
+                                    <MainActionBtn
+                                        txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : selectedTask.actionBtnTx ? selectedTask.actionBtnTx : 'Check'}
+                                        onClick={checkTask}/>
                                 </div>
                             )}
 

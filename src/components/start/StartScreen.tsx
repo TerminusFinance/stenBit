@@ -2,8 +2,8 @@ import React from 'react';
 import './StartScreen.css';
 import ic_coins from '../../assets/ic_coins.svg';
 import ic_telegram from '../../assets/ic_telegram.svg';
-import ic_website from '../../assets/ic_facebook.svg';
-import ic_discord from '../../assets/ic_discord.svg';
+import ic_insta from '../../assets/ic_inst.png';
+import ic_vk from '../../assets/ic_vk.png';
 import ic_x from '../../assets/ic_x.svg';
 import {useLocation, useNavigate} from "react-router-dom";
 import {createUser, processInvitationFromInviteCode} from "../../core/dataWork/RemoteUtilsRequester.ts";
@@ -51,19 +51,19 @@ const StartScreen: React.FC = () => {
 
             <div className="logo-container">
                 <img src={ic_coins} alt="Logo" className="logo-start"/>
-                <p className="tx-logo-start">StenBit</p>
+                <p className="tx-logo-start">Terminus</p>
             </div>
             <div className="social-icons">
-                <div className="social-button" onClick={() => OpenUrl("https://www.facebook.com/?locale=ru_RU")}>
-                    <img src={ic_website} alt="Website" className="icon"/>
+                <div className="social-button" onClick={() => OpenUrl("https://www.instagram.com/terminusdex")}>
+                    <img src={ic_insta} alt="Website" className="icon"/>
                 </div>
-                <div className="social-button" onClick={() => OpenUrl("https://t.me/+5rOLByXlu_g0MmIy")}>
+                <div className="social-button" onClick={() => OpenUrl("https://t.me/TerminusFinance")}>
                     <img src={ic_telegram} alt="Telegram" className="icon"/>
                 </div>
-                <div className="social-button" onClick={() => OpenUrl("https://discord.com/")}>
-                    <img src={ic_discord} alt="Discord" className="icon"/>
+                <div className="social-button" onClick={() => OpenUrl("https://vk.com/club226730234")}>
+                    <img src={ic_vk} alt="Discord" className="icon"/>
                 </div>
-                <div className="social-button" onClick={() => OpenUrl("http://x.com")}>
+                <div className="social-button" onClick={() => OpenUrl("https://x.com/TerminusFinance")}>
                     <img src={ic_x} alt="X" className="icon"/>
                 </div>
             </div>

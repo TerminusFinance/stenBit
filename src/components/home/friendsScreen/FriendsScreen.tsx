@@ -14,6 +14,7 @@ export const FriendsScreen: React.FC = () => {
     const {dataApp} = useData();
     const navigate = useNavigate();
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+
     const handleNav = (marsh: string) => {
         navigate(`/${marsh}`);
     };
@@ -61,9 +62,9 @@ export const FriendsScreen: React.FC = () => {
         return resultCoins
     }
 
+
     return (
         <div className="friends-root-container">
-
 
             <div className="friends-raspred-container">
                 <p className="tx-friends-h1">Referral</p>
@@ -82,7 +83,7 @@ export const FriendsScreen: React.FC = () => {
                     <div>
                         {dataApp.listUserInvited.map((invite, pos) => (
                             <ItemFriends userName={invite.userName}
-                                         coinsReferral={invite.coinsReferral} position={pos + 1} />
+                                         coinsReferral={`+${formatNumberToK(invite.coinsReferral)}`} position={pos + 1}selected={false} />
                         ))}
                     </div>
                 ) : (

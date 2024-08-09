@@ -28,6 +28,10 @@ export const CheckNftTask = (taskType: TaskType): taskType is CheckNftTask => {
 export const IsStockReg = (taskType: TaskType): taskType is StockRegTask => {
     return taskType.type === 'StockReg';
 };
+export const ISDailyTask = (taskType: TaskType): taskType is DailyTask => {
+    return taskType.type === 'Daily';
+}
+
 
 export interface SampleTask {
     type: 'Sample';
@@ -36,6 +40,16 @@ export interface SampleTask {
 export interface OpenUrlTask {
     type: 'OpenUrl';
     url: string;
+}
+
+export interface InternalChallengeTask {
+    type: 'InternalChallenge';
+    nameChallenge: string;
+}
+
+export interface DailyTask {
+    type: 'Daily';
+    lastDateUpdates: string;
 }
 
 export interface CheckNftTask {
@@ -59,7 +73,12 @@ export interface CheckFriendsTask {
     numberOfFriends: number;
 }
 
-export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask | SubscribeToTg | StockRegTask;
+
+export const IsInternalChallengeTask =  (taskType: TaskType): taskType is InternalChallengeTask => {
+    return taskType.type === 'InternalChallenge';
+};
+
+export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask | SubscribeToTg | StockRegTask| DailyTask | InternalChallengeTask;
 
 export interface TaskCardProps {
     id: number; // Уникальный идентификатор задачи

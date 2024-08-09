@@ -13,6 +13,7 @@ import {
 import {initInvoice} from "@tma.js/sdk";
 import {useData} from "../../DataContext.tsx";
 import {calculateDaysDifference} from "../Utils.tsx";
+import ProgressBar from "../progressBar/ProgressBar.tsx";
 
 interface ModalPremiumProps {
     isVisible: boolean;
@@ -21,7 +22,7 @@ interface ModalPremiumProps {
 }
 
 const extraBenefits = [
-    "2x Mining Speed", "Exclusive Coin Skin",  "Support the Developers"
+    "2x Energy Recovery Rate", "Exclusive Coin Skin",  "Support the Developers"
 ]
 
 export const PremiumModal: React.FC<ModalPremiumProps> = ({isVisible, onClose}) => {
@@ -33,6 +34,7 @@ export const PremiumModal: React.FC<ModalPremiumProps> = ({isVisible, onClose}) 
     const [selectedItem, setSelectedItem] = useState<SubscriptionOptions>()
     const invoice = initInvoice();
     const {dataApp, setDataApp} = useData();
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         if (isVisible) {
             setIsAnimating(true);
@@ -76,11 +78,7 @@ export const PremiumModal: React.FC<ModalPremiumProps> = ({isVisible, onClose}) 
         console.log('Selected tab:', selectedTab);
     };
 
-    const handleOverlayClick = (e: React.MouseEvent) => {
-        if ((e.target as HTMLElement).classList.contains("modal-overlay-invite")) {
-            onClose();
-        }
-    };
+
 
     const onClickToBuy = async () => {
         if (selectedItem != undefined) {
@@ -105,15 +103,46 @@ export const PremiumModal: React.FC<ModalPremiumProps> = ({isVisible, onClose}) 
     }
 
     const ProcessingPaidResult = async () => {
-        const paidResult = await getPremiumUsers()
-        if(typeof paidResult == "object" ) {
-            setDataApp(prevDataApp => ({
-                ...prevDataApp,
-                premium: paidResult
-            }));
+        setLoading(true);
+        const checkAndUpdate = async () => {
+            const paidResult = await getPremiumUsers();
+            const currentPremium = dataApp.premium;
+
+            if (typeof paidResult === "object" && paidResult !== null) {
+                const { endDateOfWork, amountSpent } = paidResult;
+
+                if (
+                    (endDateOfWork !== null &&
+                        endDateOfWork !== currentPremium?.endDateOfWork &&
+                        (currentPremium?.amountSpent === undefined || currentPremium.amountSpent < amountSpent)) ||
+                    (currentPremium?.amountSpent === null)
+                ) {
+                    setDataApp(prevDataApp => ({
+                        ...prevDataApp,
+                        premium: paidResult
+                    }));
+                    onClose();
+                    setLoading(false);
+                } else {
+                    setTimeout(checkAndUpdate, 2000); // Повторный запрос через 2 секунды
+                }
+            } else {
+                setTimeout(checkAndUpdate, 2000); // Повторный запрос через 2 секунды
+            }
+        };
+
+        checkAndUpdate();
+    };
+
+
+
+
+    const handleOverlayClick = (e: React.MouseEvent) => {
+        console.log("handleOverlayClick setups")
+        if ((e.target as HTMLElement).classList.contains("modal-overlay-premium")) {
+            onClose();
         }
-        onClose()
-    }
+    };
 
 
     if (!isVisible && !isAnimating) return null;
@@ -183,10 +212,10 @@ export const PremiumModal: React.FC<ModalPremiumProps> = ({isVisible, onClose}) 
                     ) : (
                         <span className="main-tx-to-btn-action-to-upgrade">UPGRADE TO PREMIUM</span>
                     )}
-
                 </div>
 
             </div>
+            {loading && <ProgressBar />}
         </div>
     )
 }

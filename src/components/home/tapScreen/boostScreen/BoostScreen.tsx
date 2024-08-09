@@ -71,7 +71,7 @@ export const BoostScreen: React.FC = () => {
             case "energy limit":
                 return `+500 energy to limit for level ${level}`;
             case "turbo":
-                return "";
+                return "Available 2 times a day";
             case "multitap":
                 return `+1 coin for tap for level ${level}`;
             default:
@@ -103,30 +103,30 @@ export const BoostScreen: React.FC = () => {
     };
 
     const updateLevelBoost = async () => {
-        const boostId = selectedBottomSheetItem
+        const boostId = selectedBottomSheetItem;
         if (boostId != undefined) {
             if (boostId.price < dataApp.coins) {
-
-                const resultUpdate = await updateLevel(boostId.boostName)
+                const resultUpdate = await updateLevel(boostId.boostName);
                 if (typeof resultUpdate === 'object') {
-                    setDataApp(resultUpdate.user)
+                    setDataApp(resultUpdate.user);
                     if (resultUpdate.boostEndTime != undefined) {
                         const endWork = () => {
-                            setTurboBoost("")
-                        }
-                        handleShowToast("turbo boost is active", "success", resultUpdate.boostEndTime, endWork)
-                        setTurboBoost(resultUpdate.boostEndTime)
+                            setTurboBoost("");
+                        };
+                        handleShowToast("turbo boost is active", "success", resultUpdate.boostEndTime, endWork);
+                        setTurboBoost(resultUpdate.boostEndTime);
                     } else {
-                        handleShowToast("boost update level success", "success")
+                        handleShowToast("boost update level success", "success");
                     }
                 } else {
-                    handleShowToast("boost update level error", "error")
+                    handleShowToast("boost update level error", "error");
                 }
+                closeBottomSheet()
             } else {
-                handleShowToast("You don't have enough coins", "error")
+                handleShowToast("You don't have enough coins", "error");
             }
         }
-    }
+    };
 
     const [isBottomSheetVisibleAbout, setBottomSheetVisibleAbout] = useState(false);
     const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);

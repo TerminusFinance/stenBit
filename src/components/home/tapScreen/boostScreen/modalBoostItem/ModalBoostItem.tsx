@@ -45,7 +45,7 @@ export const ModalBoostItem: React.FC<ModalBoostItemProps> = ({isVisible, onClos
 
 
     const handleOverlayClick = (e: React.MouseEvent) => {
-        if ((e.target as HTMLElement).classList.contains("modal-overlay-invite")) {
+        if ((e.target as HTMLElement).classList.contains("modal-overlay-boost")) {
             onClose();
         }
     };

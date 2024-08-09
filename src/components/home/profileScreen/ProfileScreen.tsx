@@ -1,27 +1,28 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import "./ProfileScreen.css";
 import { useData } from "../../DataContext.tsx";
 import {useTonConnectUI, useTonWallet} from "@tonconnect/ui-react";
-import { updateUser } from "../../../core/dataWork/RemoteUtilsRequester.ts";
+import {getClanByUserId, ResultionGetClanById, updateUser} from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import { Address } from "ton-core";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
 import { useNavigate } from "react-router-dom";
 import coinIco from "../../../assets/ic_dollar.svg";
 import {InviteCard} from "../friendsScreen/FriendsScreen.tsx";
-import {getCurrentLevel} from "../tapScreen/TapScreen.tsx";
+import {getCurrentLevel, levelTypes} from "../tapScreen/TapScreen.tsx";
 import {SettingsItem} from "./settingsItem/SettingsItem.tsx";
 import IcWallet from "../../../assets/ic_wallet.svg";
 import {formatNumberToK, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 import {PremiumDie} from "../../viewComponents/premiumDie/PremiumDie.tsx";
-
+import IcManyPip from "../../../assets/ic_many_pip.svg";
 
 const ProfileScreen: React.FC = () => {
+
     const { dataApp, setDataApp } = useData();
     const wallet = useTonWallet();
     const navigate = useNavigate();
     const [tonConnectUI] = useTonConnectUI();
-
-
+    const [userClan, setUserClan] = useState<ResultionGetClanById | null>(null);
+    const [setUpAddress,setSetUpAddress ] = useState(false)
 
     try {
         useTelegramBackButton(true)
@@ -43,27 +44,48 @@ const ProfileScreen: React.FC = () => {
     const callAddressMenu = () => {
         console.log("address",dataApp.address)
         if(dataApp.address == undefined || dataApp.address === "") {
+            setSetUpAddress(true)
             tonConnectUI.modal.open()
         }
     }
 
-    useEffect(() => {
-        const addressWallet = wallet?.account?.address ? Address.parse(wallet?.account?.address as string) : undefined;
-        if ((dataApp.address === undefined || dataApp.address === "") && addressWallet !== undefined) {
-            updateAddressUsers(addressWallet.toString());
+    const getUserClanStats =async  () => {
+        const userClanResult = await getClanByUserId();
+        if (typeof userClanResult === "object") {
+            setUserClan(userClanResult);
+        } else {
+            console.log("resultuserClanResult - ", userClanResult);
         }
+    }
+
+    useEffect(() => {
+        getUserClanStats()
+    }, []);
+
+    useEffect(() => {
+        const mestConst = async () => {
+            const addressWallet = wallet?.account?.address ? Address.parse(wallet?.account?.address as string) : undefined;
+            console.log("addressWallet in mestConst, -", addressWallet)
+            if ((dataApp.address == undefined || dataApp.address == "" || dataApp.address == null) && addressWallet !== undefined && setUpAddress) {
+                await updateAddressUsers(addressWallet.toString());
+            } else {
+                await tonConnectUI.disconnect()
+            }
+        }
+        mestConst()
 
     }, [wallet]);
 
-
-
     const openModalPremium = () => {
-        // setModalPremiumVisible(true)
         navigate('/boost',
         {state: {openPremModal: true}}
         )
     }
 
+    const navToClan = () => {
+        const currentLevel = getCurrentLevel(dataApp.coins);
+        navigate('/level', { state: { levelTypes, currentLevel, startPos: "Clan" } });
+    }
 
     return (
         <div className="profile-container">
@@ -84,13 +106,11 @@ const ProfileScreen: React.FC = () => {
                     <div className="line-profile-information"/>
                 </div>
 
-
                 <div className="card-row-profile">
                     <InviteCard title="Balance" reward={`${formatNumberToK(dataApp.coins)}`} imgSrc={coinIco}/>
                     <InviteCard title="Invite friends with premium" reward={currentLevel.title}
                                 imgSrc={currentLevel.image}/>
                 </div>
-
 
                 <div className="premium-die-ovner-contaiener">
                     <PremiumDie onClick={openModalPremium}/>
@@ -100,6 +120,9 @@ const ProfileScreen: React.FC = () => {
 
                 <SettingsItem title={"Connect your wallet"} subtitle={dataApp.address ? "Connected" : "Not connected"}
                               imgItem={IcWallet} onClick={callAddressMenu}/>
+
+                <SettingsItem title={"Your clan"} subtitle={userClan ? `${userClan.clan.clanName}`: "You are not in the clan"}
+                              imgItem={IcManyPip} onClick={navToClan}/>
 
             </div>
             <NavigationBar
@@ -113,6 +136,7 @@ const ProfileScreen: React.FC = () => {
 
         </div>
     );
+
 }
 
 export default ProfileScreen;

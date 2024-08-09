@@ -23,7 +23,11 @@ const Slider: React.FC<SlidesTypeList> = ({ itemList, initialSlide }) => {
         try {
             const getResult = await getRatingUsersByLvl(newLevels);
             if (typeof getResult === "object") {
-                setUsers(getResult);
+                const sortedUsers: RatingUserLvlResponse = {};
+                Object.keys(getResult).forEach(key => {
+                    sortedUsers[Number(key)] = getResult[Number(key)].sort((a, b) => b.coins - a.coins);
+                });
+                setUsers(sortedUsers);
             } else {
                 console.error("Error in request:", getResult);
             }
@@ -139,9 +143,10 @@ const Slider: React.FC<SlidesTypeList> = ({ itemList, initialSlide }) => {
             {users[currentSlide] && users[currentSlide].map((user, index) => (
                 <div key={index} className="user-container">
                     <ItemFriends userName={user.userName}
-                                 coinsReferral={user.coins} position={index + 1} />
+                                 coinsReferral={`${user.coins}`} position={index + 1} selected={false}/>
                 </div>
             ))}
+            <div style={{height: '16px'}}/>
         </div>
     );
 };

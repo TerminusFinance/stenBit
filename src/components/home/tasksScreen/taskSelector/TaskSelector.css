@@ -1,5 +1,6 @@
 .task-selector {
     display: flex;
+    flex-wrap: wrap; /* Позволяет элементам переноситься на новую строку */
     gap: 10px;
     padding: 5px;
     background-color: #1B1B1E;
@@ -8,7 +9,7 @@
 }
 
 .task-tab {
-    flex: 1; /* Все элементы будут равной ширины */
+    flex: 1 1 calc(33.333% - 10px); /* Элементы будут занимать 33.333% ширины контейнера за вычетом gap */
     padding: 10px 0; /* Обновление отступов */
     border: none;
     border-radius: 8px;
@@ -19,6 +20,7 @@
     font-size: 14px;
     transition: background-color 0.3s;
     text-align: center; /* Центрирование текста */
+    box-sizing: border-box; /* Включает отступы и границы в общую ширину и высоту элемента */
 }
 
 .task-tab.active {

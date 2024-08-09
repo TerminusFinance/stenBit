@@ -37,7 +37,7 @@ export const ModalTaskMulti: React.FC<ModalTaskMultiProps> = ({ isVisible, onClo
 
 
     const handleOverlayClick = (e: React.MouseEvent) => {
-        if ((e.target as HTMLElement).classList.contains("modal-overlay-invite")) {
+        if ((e.target as HTMLElement).classList.contains("modal-overlay-task")) {
             onClose();
         }
     };

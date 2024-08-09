@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './TapScreen.css';
 import coin from '../../../assets/ic_coins.svg';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useData } from '../../DataContext.tsx';
 import { addCoinsToClickData } from '../../../core/dataWork/RemoteUtilsRequester.ts';
 import bronzeLevel from '../../../assets/diamont/diamond-level-bronze.svg';
@@ -14,6 +14,7 @@ import { CoinsLevelUpp } from '../progressBar/coinsLevelUpp/CoinsLevelUpp.tsx';
 import IcDollar from '../../../assets/ic_dollar.svg';
 import NavigationBar from '../../navigationBar/NavigationBar.tsx';
 import { calculateThousandsDifference, formatNumber, useTelegramBackButton } from '../../viewComponents/Utils.tsx';
+import { InviteClanModal } from "../../viewComponents/inviteClanModal/InviteClanModal.tsx";
 
 export interface LevelType {
     id: number;
@@ -24,7 +25,7 @@ export interface LevelType {
     maxProgress: number;
 }
 
-const levelTypes: LevelType[] = [
+export const levelTypes: LevelType[] = [
     {
         id: 1,
         title: 'Bronze',
@@ -66,41 +67,54 @@ const TapScreen: React.FC = () => {
     const [animations, setAnimations] = useState<{ x: number, y: number, id: number }[]>([]);
     const { energy, setEnergy } = useData();
     const navigate = useNavigate();
-    // const timeoutRef = useRef<number | null>(null);
     const touchStartTimeRef = useRef<{ [key: number]: number }>({});
     const { turboBoost } = useData();
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const location = useLocation();
+    const inviteCode = location.state?.inviteCode ?? null;
+    const [coinsAddedCount, setCoinsAddedCount] = useState<number>(1);
+    const [isTurboBoostEnding, setIsTurboBoostEnding] = useState<boolean>(false);
+
+    useEffect(() => {
+        console.log("inviteCodeTap - ", inviteCode);
+        const hasShownInviteSession = sessionStorage.getItem('hasShownInviteSession') === 'true';
+
+        if (inviteCode && !hasShownInviteSession) {
+            openBottomSheet();
+            sessionStorage.setItem('hasShownInviteSession', 'true');
+        }
+    }, [inviteCode]);
+
+    const [isModalPremiumVisible, setModalPremiumVisible] = useState(false);
+
+    const openBottomSheet = () => {
+        setModalPremiumVisible(true);
+    };
+
+    const closeBottomSheet = () => {
+        setModalPremiumVisible(false);
+    };
+
     try {
         useTelegramBackButton(false);
     } catch (e) {
         console.log('error in postEvent - ', e);
     }
 
-    // useEffect(() => {
-    //     return () => {
-    //         if (timeoutRef.current) {
-    //             clearTimeout(timeoutRef.current);
-    //         }
-    //     };
-    // }, []);
-
-
     useEffect(() => {
         intervalRef.current = setInterval(() => {
-            if (accumulatedClicks > 0) {
+            if (accumulatedClicks > 0 && !isTurboBoostEnding) {
                 sendClickData(accumulatedClicks);
                 setAccumulatedClicks(0);
             }
         }, 700);
 
-        // Очистка интервала при размонтировании компонента
         return () => {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
             }
         };
-    }, [accumulatedClicks]);
-
+    }, [accumulatedClicks, isTurboBoostEnding]);
 
     const sendClickData = async (clickCount: number) => {
         if (dataApp.userId !== undefined) {
@@ -109,40 +123,46 @@ const TapScreen: React.FC = () => {
             setDataApp(prevDataApp => ({
                 ...prevDataApp,
                 ...result,
-                coins: prevDataApp.coins + clickCount, // Обновляем локальное значение кликов
+                coins: prevDataApp.coins + clickCount,
             }));
         }
     };
 
-    // const scheduleDataSend = () => {
-    //     if (timeoutRef.current) {
-    //         clearTimeout(timeoutRef.current);
-    //     }
-    //     timeoutRef.current = window.setTimeout(() => {
-    //         if (accumulatedClicks > 0) {
-    //             sendClickData(accumulatedClicks);
-    //             setAccumulatedClicks(0);
+
+    const handlePointerDown = (event: React.PointerEvent<HTMLImageElement>) => {
+        touchStartTimeRef.current[event.pointerId] = Date.now();
+    };
+
+    const handlePointerUp = (event: React.PointerEvent<HTMLImageElement>) => {
+        const touchDuration = Date.now() - touchStartTimeRef.current[event.pointerId];
+        if (touchDuration < 500) {
+            handleTouch(event);
+        }
+        delete touchStartTimeRef.current[event.pointerId];
+    };
+
+    // const handleTouchStart = (event: React.TouchEvent<HTMLImageElement>) => {
+    //     Array.from(event.touches).forEach(touch => {
+    //         touchStartTimeRef.current[touch.identifier] = Date.now();
+    //     });
+    // };
+    //
+    // const handleTouchEnd = (event: React.TouchEvent<HTMLImageElement>) => {
+    //     Array.from(event.changedTouches).forEach(touch => {
+    //         const touchDuration = Date.now() - touchStartTimeRef.current[touch.identifier];
+    //         if (touchDuration < 500) {
+    //             handleTouch(touch as unknown as Touch);
     //         }
-    //     }, 1500);
+    //         delete touchStartTimeRef.current[touch.identifier];
+    //     });
     // };
 
-    const handleTouchStart = (event: React.TouchEvent<HTMLImageElement>) => {
-        Array.from(event.touches).forEach(touch => {
-            touchStartTimeRef.current[touch.identifier] = Date.now();
-        });
-    };
+    const handleTouch = async (touch: React.PointerEvent<HTMLImageElement>) => {
+        if (energy < dataApp.boosts[1].level) {
+            console.log("Недостаточно энергии для клика!");
+            return;
+        }
 
-    const handleTouchEnd = (event: React.TouchEvent<HTMLImageElement>) => {
-        Array.from(event.changedTouches).forEach(touch => {
-            const touchDuration = Date.now() - touchStartTimeRef.current[touch.identifier];
-            if (touchDuration < 500) {
-                handleTouch(touch as unknown as Touch);
-            }
-            delete touchStartTimeRef.current[touch.identifier];
-        });
-    };
-
-    const handleTouch = (touch: Touch) => {
         const { clientX, clientY } = touch;
         const coinElement = touch.target as HTMLImageElement;
         const rect = coinElement.getBoundingClientRect();
@@ -156,16 +176,14 @@ const TapScreen: React.FC = () => {
             coinElement.style.transform = 'scale(1)';
         }, 35);
 
-        // Проверяем значение turboBoost
         const isTurboBoostActive = turboBoost && turboBoost.trim() !== "";
         const boostLevel = isTurboBoostActive ? dataApp.boosts[1].level * 2 : dataApp.boosts[1].level;
-
+        setCoinsAddedCount(boostLevel);
         const newClicks = clicks + boostLevel;
         setClicks(newClicks);
         const newAccumulatedClicks = accumulatedClicks + boostLevel;
         setAccumulatedClicks(newAccumulatedClicks);
 
-        // Уменьшаем энергию только если turboBoost пуст
         if (!isTurboBoostActive) {
             setEnergy(prevEnergy => prevEnergy - dataApp.boosts[1].level);
         }
@@ -176,12 +194,18 @@ const TapScreen: React.FC = () => {
             setAnimations(prevAnimations => prevAnimations.filter(animation => animation.id !== id));
         }, 1000);
 
-        // if (newAccumulatedClicks >= 10) {
-        //     sendClickData(newAccumulatedClicks);
-        //     setAccumulatedClicks(0);
-        // } else {
-        //     scheduleDataSend();
-        // }
+        // Проверяем оставшееся время турбо-буста
+        const now = Date.now();
+        const endDateOfWork = new Date(turboBoost || now).getTime();
+        const timeLeft = endDateOfWork - now;
+        console.log('timeLeft is = ',timeLeft)
+        if (timeLeft > 0 && timeLeft <= 2000) {
+            console.log('Вошел в отправку данных турбобуста предварительно !!!')
+            setIsTurboBoostEnding(true);
+            await sendClickData(newAccumulatedClicks);
+            setAccumulatedClicks(0);
+            setIsTurboBoostEnding(false);
+        }
 
         navigator.vibrate(50);
     };
@@ -197,10 +221,8 @@ const TapScreen: React.FC = () => {
     };
 
     const openModalPremium = () => {
-        navigate('/boost',
-            { state: { openPremModal: true } }
-        )
-    }
+        navigate('/boost', { state: { openPremModal: true } });
+    };
 
     const currentLevel = getCurrentLevel(clicks);
     return (
@@ -211,6 +233,7 @@ const TapScreen: React.FC = () => {
                         <img src={IcDollar} alt='Coin' className='coin-small' />
                         <div className='click-count'>{formatNumber(clicks)}</div>
                     </div>
+
                     <CoinsLevelUpp
                         value={calculateThousandsDifference(clicks, currentLevel.maxProgress)}
                         onClick={() => handleNav('level')}
@@ -224,8 +247,8 @@ const TapScreen: React.FC = () => {
                             alt='Coin'
                             className='tap-coin'
                             draggable='false'
-                            onTouchStart={handleTouchStart}
-                            onTouchEnd={handleTouchEnd}
+                            onPointerDown={handlePointerDown}
+                            onPointerUp={handlePointerUp}
                         />
                     </div>
 
@@ -238,7 +261,7 @@ const TapScreen: React.FC = () => {
                                 top: animation.y - 240,
                             }}
                         >
-                            +{dataApp.boosts[1].level}
+                            +{coinsAddedCount}
                         </div>
                     ))}
                 </div>
@@ -266,6 +289,13 @@ const TapScreen: React.FC = () => {
                 onInviteClick={() => handleNav('friends')}
                 onProfileClick={() => handleNav('profile')}
                 onTasksClick={() => handleNav('tasks')}
+            />
+
+            <InviteClanModal
+                isVisible={isModalPremiumVisible}
+                onClose={closeBottomSheet}
+                onBtnClick={() => {}}
+                code={inviteCode || ""}
             />
         </div>
     );
