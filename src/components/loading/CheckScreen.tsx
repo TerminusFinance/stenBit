@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {parse, validate} from "@telegram-apps/init-data-node";
-import {postEvent, retrieveLaunchParams} from "@tma.js/sdk";
+import {postEvent, retrieveLaunchParams} from "@telegram-apps/sdk";
 
 export const CheckScreen : React.FC = () => {
 

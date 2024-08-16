@@ -17,6 +17,7 @@ import { ToastProvider } from "./components/viewComponents/toast/ToastContext.ts
 import { CheckScreen } from "./components/loading/CheckScreen.tsx";
 import { BoostScreen } from "./components/home/tapScreen/boostScreen/BoostScreen.tsx";
 import "./App.css"
+import UserLeagueScreen from "./components/home/userLeagueScreen/UserLeagueScreen.tsx";
 
 const App: React.FC = () => {
 
@@ -48,6 +49,7 @@ const App: React.FC = () => {
                             <Route path="/not-found" element={<NotFound />} />
                             <Route path="*" element={<NotFound />} />
                             <Route path="/redirects" element={<RedirectsScreen />} />
+                            <Route path="/userLeagues" element={<UserLeagueScreen/>} />
                         </Routes>
                     </Router>
                 </ToastProvider>

@@ -10,10 +10,10 @@ import {
     subscribeToPremium,
     SubscriptionOptions
 } from "../../../core/dataWork/RemoteUtilsRequester.ts";
-import {initInvoice} from "@tma.js/sdk";
 import {useData} from "../../DataContext.tsx";
 import {calculateDaysDifference} from "../Utils.tsx";
 import ProgressBar from "../progressBar/ProgressBar.tsx";
+import {initInvoice} from "@telegram-apps/sdk";
 
 interface ModalPremiumProps {
     isVisible: boolean;

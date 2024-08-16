@@ -200,6 +200,7 @@ export const BoostScreen: React.FC = () => {
                 onInviteClick={() => handleNav("friends")}
                 onProfileClick={() => handleNav("profile")}
                 onTasksClick={() => handleNav("tasks")}
+                onRatingClick={() => handleNav("userLeagues")}
             />
 
             <ModalBoostAbout title={"How a boost works"} isVisible={isBottomSheetVisibleAbout}

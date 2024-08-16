@@ -8,6 +8,8 @@ import InviteIc from "../../assets/navBar/ic-invite.svg";
 import InviteIcSelect from "../../assets/navBar/ic-invite-select.svg";
 import ProfileIc from "../../assets/navBar/ic-profile.svg";
 import ProfileIcSelect from "../../assets/navBar/ic-prolife-select.svg";
+import RatingIc from "../../assets/navBar/ic_rating.svg";
+import RatingIcSelect from "../../assets/navBar/ic_rating_select.svg";
 
 type NavigationBarProps = {
     initialSelected: string;
@@ -15,6 +17,7 @@ type NavigationBarProps = {
     onTasksClick: () => void;
     onInviteClick: () => void;
     onProfileClick: () => void;
+    onRatingClick: () => void;
 };
 
 const NavigationBar: React.FC<NavigationBarProps> = ({
@@ -22,7 +25,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                                                          onEarnClick,
                                                          onTasksClick,
                                                          onInviteClick,
-                                                         onProfileClick
+                                                         onProfileClick,
+                                                         onRatingClick
                                                      }) => {
     const [selected, setSelected] = useState<string | null>(
         initialSelected.trim() !== "" ? initialSelected : null
@@ -64,6 +68,24 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                     <span>Tasks</span>
                 </div>
             </div>
+
+
+            <div
+                className={`nav-item ${selected === 'Rating' ? 'selected' : ''}`}
+                onClick={() => {
+                    setSelected('Rating');
+                    onRatingClick();
+                }}
+            >
+                <div className="icon-text-wrapper">
+                    <img
+                        src={selected === 'Rating' ? RatingIcSelect : RatingIc}
+                        alt="Rating"
+                    />
+                    <span>Rating</span>
+                </div>
+            </div>
+
             <div
                 className={`nav-item ${selected === 'Invite' ? 'selected' : ''}`}
                 onClick={() => {
@@ -94,6 +116,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                     <span>Profile</span>
                 </div>
             </div>
+
         </div>
     );
 };

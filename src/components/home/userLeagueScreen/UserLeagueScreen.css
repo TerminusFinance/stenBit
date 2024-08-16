@@ -1,0 +1,164 @@
+.user-league-root-container {
+    background: linear-gradient(360deg, #161618, #191819, #171719);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    max-height: 95vh;
+    position: absolute;
+    overflow: hidden;
+}
+
+.user-league-container-raspred {
+    overflow-y: auto;
+    width: 100%;
+    padding-bottom: 120px;
+}
+
+.user-league-container {
+    width: 100%;
+}
+
+.catwalk-users-league {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-boost-rank-users-league {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(60deg, #F527DD, #2B7FF2);
+    border-radius: 16px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    height: 100%;
+    margin-top: 48px;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.tx-boost-rank-users-league {
+    font-family: MyCustomFont-bold, sans-serif;
+    font-size: 16px;
+    color: white;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+/* src/components/Podium.css */
+.podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 20px;
+    margin-top: 50px;
+    width: 100%; /* Ширина на всю страницу */
+}
+
+.podium__item {
+    text-align: center;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+    align-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    margin: 8px;
+}
+
+.podium__first {
+    background: linear-gradient(to top, rgba(0, 255, 0, 0.2) 0%, rgba(0, 255, 0, 0.1) 30%, rgba(0, 255, 0, 0.05) 60%, transparent 100%), #333;
+    transform: scale(1.3); /* Увеличиваем размер первого места */
+    /*margin-top: -30px; !* Поднимаем первое место *!*/
+    /*z-index: 2;*/
+    order: 2;
+}
+
+.podium__second {
+    transform: scale(1.1);
+    /*margin-top: -10px;*/
+    background: linear-gradient(to top, rgba(128, 0, 128, 0.2) 0%, rgba(128, 0, 128, 0.1) 30%, rgba(128, 0, 128, 0.05) 60%, transparent 100%), #333;
+    order: 1; /* Ставим второе место в порядок первым */
+}
+
+.podium__third {
+    background: linear-gradient(to top, rgba(192, 192, 192, 0.4) 0%, rgba(192, 192, 192, 0.2) 30%, rgba(192, 192, 192, 0.1) 60%, transparent 100%), #333;
+    order: 3; /* Ставим третье место в порядок последним */
+}
+
+.podium__item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.podium__item h3 {
+    margin: 5px 0;
+}
+
+.podium__item p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.img-container {
+    background: #282B30;
+    border-radius: 16px;
+    align-items: center;
+    align-content: center;
+    margin: 8px 0;
+    width: 48px;
+    height: 48px;
+}
+
+.labeling-place-podium {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 16px;
+    border-radius: 300px;
+    font-family: MyCustomFont-bold sans-serif;
+    background-color: white;
+    color: #351E22;
+}
+
+.third-place-labeling {
+    background-color: #DB7F13;
+}
+
+.second-place-labeling {
+    background-color: #8F9FAE;
+}
+
+.first-place-labeling {
+    background-color: #F5B931;
+}
+
+/*.catwalk-users-league {*/
+/*    position: sticky;*/
+/*    top: 0; !* Закрепляем элемент в верхней части контейнера *!*/
+/*    z-index: 1000; !* Увеличиваем z-index, чтобы элемент находился поверх других *!*/
+/*    background-color: #161618; !* Фон элемента, чтобы не перекрывать контент под ним *!*/
+/*    padding: 10px 0; !* Отступы для визуального улучшения *!*/
+/*}*/
+
+
+.gold-gradient-text {
+    background: linear-gradient(to right, #FFD700, #FFC107, #FFB300);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+    font-size: 16px;
+    position: relative;
+}
+

@@ -1,6 +1,7 @@
-import {on, postEvent} from "@tma.js/sdk";
+
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
+import {on, postEvent} from "@telegram-apps/sdk";
 
 
 export const handleCopy = (text: string) => {
@@ -11,7 +12,10 @@ export const OpenUrl = (url: string) =>{
     window.open(url, '_blank');
 }
 
-export  const calculateThousandsDifference = (current: number, max: number): number => {
+export const calculateThousandsDifference = (current: number, max: number): number => {
+    if (current >= max) {
+        return 0;
+    }
     const difference = max - current;
     return Math.ceil(difference / 1000);
 };

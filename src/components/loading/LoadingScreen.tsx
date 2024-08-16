@@ -6,7 +6,7 @@ import {useData} from "../DataContext.tsx";
 import {isDesktop, isMobile, isTablet} from 'react-device-detect';
 import coin from "../../assets/ic_coins.svg";
 import {useTelegramBackButton} from "../viewComponents/Utils.tsx";
-import {retrieveLaunchParams} from "@tma.js/sdk";
+import {retrieveLaunchParams} from "@telegram-apps/sdk";
 
 interface UserData {
     objectId?: string;

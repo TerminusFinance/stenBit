@@ -138,6 +138,7 @@ const LevelScreen: React.FC = () => {
                     onInviteClick={() => handleNav("friends")}
                     onProfileClick={() => handleNav("profile")}
                     onTasksClick={() => handleNav("tasks")}
+                    onRatingClick={() => handleNav("userLeagues")}
                 />
                 <ModalInvite
                     isVisible={isBottomSheetVisible}

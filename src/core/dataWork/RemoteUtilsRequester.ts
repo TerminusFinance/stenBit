@@ -1,6 +1,6 @@
 import axios, {} from 'axios';
 import {TaskType} from "../../components/home/tasksScreen/itemTask/ItemTask.tsx";
-import {retrieveLaunchParams} from "@tma.js/sdk";
+import {retrieveLaunchParams} from "@telegram-apps/sdk";
 
 const BASE_URL = "api/"
 
@@ -115,6 +115,32 @@ export const getUserById = async (): Promise<UserBasic | string> => {
         throw error;
     }
 };
+
+export interface UserCheckoutResult {
+    coins: number;
+    currentEnergy: number;
+}
+
+export const getUserCheckout = async () => {
+    try {
+        const response = await axios.get<UserCheckoutResult>(
+            `${BASE_URL}users/getUserSimple`, {headers: {Authorization: `tma ${initDataRaw}`}}
+        );
+
+        console.log('Response data:', typeof response.data);
+        // if ('message' in response.data) {
+        //     return `${response.data.message}`; // Возвращаем сообщение об ошибке
+        // }
+        return response.data;
+    } catch (error) {
+        console.error('Error getting user:', error);
+        if (axios.isAxiosError(error) && error.response) {
+            console.log('Axios error response data:', error.response.data);
+            return "User not found"
+        }
+        throw error;
+    }
+}
 
 export interface UpdateUserRequest {
     coins?: number;
@@ -488,6 +514,24 @@ export const getClanWitchClanId = async (clanId: string) => {
 }
 
 
+export const boosClanLevels = async (subscriptionOptions: SubscriptionOptions): Promise<SubscribeResult | string> => {
+    try {
+        const response = await axios.post<SubscribeResult>(`${BASE_URL}clan/boostRang`, {
+                selectedSubscriptionOptions: subscriptionOptions
+            },
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getListSubscriptionOptionsResponse - ", response.data)
+        if (typeof response.data == "object") {
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getListSubscriptionOptionsResponseError - ", e)
+        return `error ${e}`
+    }
+}
+
 export const addMeToClan = async (clanId: string): Promise<boolean | string> => {
     try {
         const response = await axios.post(`${BASE_URL}clan/addUserToClan`,
@@ -526,3 +570,116 @@ export const addMeToClan = async (clanId: string): Promise<boolean | string> => 
         }
     }
 };
+
+export interface UserLeague {
+    leagueId: number;
+    userId: string;
+    userName: string;
+    imageAvatar: string;
+    score: number;
+    buyscore: number;
+    freescore: number;
+}
+
+export const getAllUsersLeague = async (): Promise<UserLeague[] | string> => {
+    try {
+        const response = await axios.get<UserLeague[]>(`${BASE_URL}userLeague/getAllUsers`,
+            { headers: { Authorization: `tma ${initDataRaw}` } }
+        );
+
+        console.log("getClanWitchClanId - ", response);
+
+        if (typeof response.data == "object" ) {
+            return response.data
+        } else {
+            return "Error: Unexpected response format";
+        }
+    } catch (e) {
+        console.log("getClanWitchClanId - ", e);
+
+        if (axios.isAxiosError(e)) {
+            if (e.response) {
+                // Сервер ответил с кодом статуса, который выходит за пределы 2xx
+                return `Error: ${e.response.data.message || e.response.statusText}`;
+            } else if (e.request) {
+                // Запрос был сделан, но ответа не было получено
+                return "Error: No response received from server";
+            } else {
+                // Произошла ошибка при настройке запроса
+                return `Error: ${e.message}`;
+            }
+        } else {
+            // Что-то еще произошло
+            return `Error: ${e}`;
+        }
+    }
+}
+
+export const getUsersLeague = async (): Promise<UserLeague | string> => {
+    try {
+        const response = await axios.get<UserLeague>(`${BASE_URL}userLeague/getUserLeagueById`,
+            { headers: { Authorization: `tma ${initDataRaw}` } }
+        );
+
+        console.log("getClanWitchClanId - ", response);
+
+        if (typeof response.data == "object" ) {
+            return response.data
+        } else {
+            return "Error: Unexpected response format";
+        }
+    } catch (e) {
+        console.log("getClanWitchClanId - ", e);
+
+        if (axios.isAxiosError(e)) {
+            if (e.response) {
+                // Сервер ответил с кодом статуса, который выходит за пределы 2xx
+                return `Error: ${e.response.data.message || e.response.statusText}`;
+            } else if (e.request) {
+                // Запрос был сделан, но ответа не было получено
+                return "Error: No response received from server";
+            } else {
+                // Произошла ошибка при настройке запроса
+                return `Error: ${e.message}`;
+            }
+        } else {
+            // Что-то еще произошло
+            return `Error: ${e}`;
+        }
+    }
+}
+
+
+export const getListSubscriptionOptionsUserUpRatingLeague = async (): Promise<SubscriptionOptions[] | string> => {
+    try {
+        const response = await axios.get<SubscriptionOptions[]>(`${BASE_URL}userLeague/getListSubscriptionOptions`,
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getListSubscriptionOptionsResponse - ", response)
+        if (typeof response.data == "object") {
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getListSubscriptionOptionsResponseError - ", e)
+        return `error ${e}`
+    }
+}
+
+export const boostUserLevels = async (subscriptionOptions: SubscriptionOptions): Promise<SubscribeResult | string> => {
+    try {
+        const response = await axios.post<SubscribeResult>(`${BASE_URL}userLeague/boostUserLevels`, {
+                selectedSubscriptionOptions: subscriptionOptions
+            },
+            {headers: {Authorization: `tma ${initDataRaw}`}})
+        console.log("getListSubscriptionOptionsResponse - ", response.data)
+        if (typeof response.data == "object") {
+            return response.data
+        } else {
+            return "Error request"
+        }
+    } catch (e) {
+        console.log("getListSubscriptionOptionsResponseError - ", e)
+        return `error ${e}`
+    }
+}

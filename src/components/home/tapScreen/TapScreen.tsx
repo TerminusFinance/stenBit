@@ -3,7 +3,7 @@ import './TapScreen.css';
 import coin from '../../../assets/ic_coins.svg';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useData } from '../../DataContext.tsx';
-import { addCoinsToClickData } from '../../../core/dataWork/RemoteUtilsRequester.ts';
+import {addCoinsToClickData, getUserCheckout} from '../../../core/dataWork/RemoteUtilsRequester.ts';
 import bronzeLevel from '../../../assets/diamont/diamond-level-bronze.svg';
 import silverLevel from '../../../assets/diamont/diamond-level-silver.svg';
 import goldLevel from '../../../assets/diamont/diamond-level-gold.svg';
@@ -15,6 +15,7 @@ import IcDollar from '../../../assets/ic_dollar.svg';
 import NavigationBar from '../../navigationBar/NavigationBar.tsx';
 import { calculateThousandsDifference, formatNumber, useTelegramBackButton } from '../../viewComponents/Utils.tsx';
 import { InviteClanModal } from "../../viewComponents/inviteClanModal/InviteClanModal.tsx";
+import {postEvent} from "@telegram-apps/sdk";
 
 export interface LevelType {
     id: number;
@@ -74,6 +75,23 @@ const TapScreen: React.FC = () => {
     const inviteCode = location.state?.inviteCode ?? null;
     const [coinsAddedCount, setCoinsAddedCount] = useState<number>(1);
     const [isTurboBoostEnding, setIsTurboBoostEnding] = useState<boolean>(false);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [sendTurboEnd, setSendTurboEnd] = useState(false)
+    const startInactivityTimer = () => {
+        clearTimeout(timeoutRef.current!);
+        timeoutRef.current = setTimeout(async () => {
+            console.log("No clicks for 5 seconds, sending data...");
+            const resultAwaitCheckout = await getUserCheckout()
+            if(typeof resultAwaitCheckout == "object") {
+                setDataApp(prevDataApp => ({
+                    ...prevDataApp,
+                    coins: resultAwaitCheckout.coins,
+                }));
+                setEnergy(resultAwaitCheckout.currentEnergy)
+            }
+        }, 5000);
+    };
+
 
     useEffect(() => {
         console.log("inviteCodeTap - ", inviteCode);
@@ -119,7 +137,7 @@ const TapScreen: React.FC = () => {
     const sendClickData = async (clickCount: number) => {
         if (dataApp.userId !== undefined) {
             const result = await addCoinsToClickData(clickCount);
-            console.log("update result - ", result);
+            console.log("update result - addCoinsToClickData", result);
             setDataApp(prevDataApp => ({
                 ...prevDataApp,
                 ...result,
@@ -141,23 +159,10 @@ const TapScreen: React.FC = () => {
         delete touchStartTimeRef.current[event.pointerId];
     };
 
-    // const handleTouchStart = (event: React.TouchEvent<HTMLImageElement>) => {
-    //     Array.from(event.touches).forEach(touch => {
-    //         touchStartTimeRef.current[touch.identifier] = Date.now();
-    //     });
-    // };
-    //
-    // const handleTouchEnd = (event: React.TouchEvent<HTMLImageElement>) => {
-    //     Array.from(event.changedTouches).forEach(touch => {
-    //         const touchDuration = Date.now() - touchStartTimeRef.current[touch.identifier];
-    //         if (touchDuration < 500) {
-    //             handleTouch(touch as unknown as Touch);
-    //         }
-    //         delete touchStartTimeRef.current[touch.identifier];
-    //     });
-    // };
 
     const handleTouch = async (touch: React.PointerEvent<HTMLImageElement>) => {
+
+        startInactivityTimer(); // Перезапускаем таймер неактивности
         if (energy < dataApp.boosts[1].level) {
             console.log("Недостаточно энергии для клика!");
             return;
@@ -199,15 +204,23 @@ const TapScreen: React.FC = () => {
         const endDateOfWork = new Date(turboBoost || now).getTime();
         const timeLeft = endDateOfWork - now;
         console.log('timeLeft is = ',timeLeft)
-        if (timeLeft > 0 && timeLeft <= 2000) {
+        if (timeLeft > 0 && timeLeft <= 2000 && !sendTurboEnd) {
+            setSendTurboEnd(true)
             console.log('Вошел в отправку данных турбобуста предварительно !!!')
             setIsTurboBoostEnding(true);
             await sendClickData(newAccumulatedClicks);
             setAccumulatedClicks(0);
             setIsTurboBoostEnding(false);
+        } else if(timeLeft >= 2000) {
+            setSendTurboEnd(false)
         }
 
-        navigator.vibrate(50);
+        try {
+            postEvent('web_app_trigger_haptic_feedback',{type: 'notification', notification_type: 'warning'} );
+        } catch (e) {
+            console.log("erorr post event - ",e)
+        }
+
     };
 
     const handleNav = (marsh: string) => {
@@ -278,7 +291,7 @@ const TapScreen: React.FC = () => {
                         level={`Level: ${currentLevel.id}/${levelTypes.length}`}
                         progress={clicks}
                         maxProgress={currentLevel.maxProgress}
-                        onClick={() => handleNav('level')}
+                        onClick={() => handleNav('userLeagues')}
                     />
                 </div>
             </div>
@@ -289,6 +302,7 @@ const TapScreen: React.FC = () => {
                 onInviteClick={() => handleNav('friends')}
                 onProfileClick={() => handleNav('profile')}
                 onTasksClick={() => handleNav('tasks')}
+                onRatingClick={() => handleNav("userLeagues")}
             />
 
             <InviteClanModal

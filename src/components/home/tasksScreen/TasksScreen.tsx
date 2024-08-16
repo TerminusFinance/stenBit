@@ -5,7 +5,13 @@ import ItemTask, {
     OpenUrlTask,
     isSampleTask,
     CheckNftTask,
-    isCheckFriendsTask, IsSubscribeToTg, IsStockReg, ISDailyTask, IsInternalChallengeTask,
+    isCheckFriendsTask,
+    IsSubscribeToTg,
+    IsStockReg,
+    ISDailyTask,
+    IsInternalChallengeTask,
+    IsTransferToneTask,
+    IsCheckStarsSendersTask,
 } from "./itemTask/ItemTask";
 import {useData} from "../../DataContext.tsx";
 import {
@@ -23,6 +29,8 @@ import {SecondActionBtn} from "../../buttons/secondActionBtn/SecondActionBtn.tsx
 import {useToast} from "../../viewComponents/toast/ToastContext.tsx";
 import IcCoins from "../../../assets/ic_dollar.svg";
 import {handleCopy, OpenUrl, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
+import {useTonConnectUI, useTonWallet} from "@tonconnect/ui-react";
+import {Address, toNano} from "ton-core";
 
 const TasksScreen: React.FC = () => {
     const {dataApp, setDataApp} = useData();
@@ -43,7 +51,8 @@ const TasksScreen: React.FC = () => {
     const [selectedTask, setSelectedTask] = useState<UserTask | null>(null);
     const [visitUrl, setVisitUrl] = useState<boolean>(false);
     const navigate = useNavigate();
-
+    const [tonConnectUI] = useTonConnectUI();
+    const wallet = useTonWallet();
     const openBottomSheet = (task: UserTask) => {
         if (!task.completed) {
             setSelectedTask(task);
@@ -141,6 +150,35 @@ const TasksScreen: React.FC = () => {
 
         OpenUrl(telegramShareUrl)
     };
+
+    const SendTransactions =async () => {
+        if(selectedTask != null) {
+            if(IsTransferToneTask(selectedTask.taskType)) {
+                const amount = selectedTask.taskType.price
+                const address = selectedTask.taskType.addressToTransfer
+                const transaction = {
+                    validUntil: Date.now() + 1000000,
+                    messages: [
+                        {
+                            address: address,
+                            amount: toNano(amount).toString(),
+                        },
+                    ]
+                }
+                try {
+                    const addressWallet = wallet?.account?.address ? Address.parse(wallet?.account?.address as string) : undefined;
+                    if(addressWallet == undefined) {
+                        tonConnectUI.modal.open()
+                    } else {
+                        await tonConnectUI.sendTransaction(transaction)
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        }
+
+    }
 
     console.log("tasks - ", dataApp.tasks)
     return (
@@ -372,6 +410,7 @@ const TasksScreen: React.FC = () => {
                 onProfileClick={() => handleNav("profile")}
                 onTasksClick={() => {
                 }}
+                onRatingClick={() => handleNav("userLeagues")}
             />
 
             {selectedTask && (
@@ -556,6 +595,43 @@ const TasksScreen: React.FC = () => {
                             )}
 
                             {IsInternalChallengeTask(selectedTask.taskType) && (
+                                <div className="bottom-sheet-content-task">
+                                    <p className="description-task">{selectedTask.txDescription}</p>
+                                    <div className="reward-container-task">
+                                        <img src={IcCoins} className="ic-reward-container-coins"/>
+                                        <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
+                                    </div>
+                                    <div style={{width: '24px', height: '24px'}}/>
+
+                                    <MainActionBtn
+                                        txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : selectedTask.actionBtnTx ? selectedTask.actionBtnTx : 'Check'}
+                                        onClick={checkTask}/>
+                                </div>
+                            )}
+
+                            {IsTransferToneTask(selectedTask.taskType) && (
+                                <div className="bottom-sheet-content-task">
+                                    <p className="description-task">{selectedTask.txDescription}</p>
+                                    <div className="reward-container-task">
+                                        <img src={IcCoins} className="ic-reward-container-coins"/>
+                                        <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
+                                    </div>
+
+
+                                    <div style={{width: '24px', height: '24px'}}/>
+                                    <SecondActionBtn txInBtn={"Send"}
+                                                     onClick={() => {
+                                                         SendTransactions()
+                                                         setVisitUrl(true)
+                                                     }}/>
+                                    <div style={{width: '16px', height: '16px'}}/>
+                                    <MainActionBtn
+                                        txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : selectedTask.actionBtnTx ? selectedTask.actionBtnTx : 'Check'}
+                                        onClick={checkTask}/>
+                                </div>
+                            )}
+
+                            {IsCheckStarsSendersTask(selectedTask.taskType) && (
                                 <div className="bottom-sheet-content-task">
                                     <p className="description-task">{selectedTask.txDescription}</p>
                                     <div className="reward-container-task">

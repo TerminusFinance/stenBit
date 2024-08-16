@@ -4,6 +4,7 @@ import CoinsIco from '../../../../assets/ic_dollar.svg';
 import IcCheck from '../../../../assets/ic_check.svg';
 import icRightArrow from "../../../../assets/ic_arrow_right.svg";
 import IcLoading from "../../../../assets/ic_loading.svg";
+import IcRatingCoins from "../../../../assets/ic_rating-coin.svg";
 
 export const isSampleTask = (taskType: TaskType): taskType is SampleTask => {
     return taskType.type === 'Sample';
@@ -30,6 +31,18 @@ export const IsStockReg = (taskType: TaskType): taskType is StockRegTask => {
 };
 export const ISDailyTask = (taskType: TaskType): taskType is DailyTask => {
     return taskType.type === 'Daily';
+}
+
+export const IsInternalChallengeTask =  (taskType: TaskType): taskType is InternalChallengeTask => {
+    return taskType.type === 'InternalChallenge';
+};
+
+export const IsTransferToneTask = (taskType: TaskType): taskType is TransferToneTask => {
+    return taskType.type === 'TransferTone';
+}
+
+export const IsCheckStarsSendersTask = (taskType: TaskType): taskType is CheckStarsSendersTask => {
+    return taskType.type === 'CheckStarsSenders';
 }
 
 
@@ -73,12 +86,19 @@ export interface CheckFriendsTask {
     numberOfFriends: number;
 }
 
+export interface TransferToneTask {
+    type: 'TransferTone';
+    price: number;
+    addressToTransfer: string;
+    rewardType: string;
+}
 
-export const IsInternalChallengeTask =  (taskType: TaskType): taskType is InternalChallengeTask => {
-    return taskType.type === 'InternalChallenge';
-};
+export interface CheckStarsSendersTask {
+    type: 'CheckStarsSenders';
+    unnecessaryWaste: number;
+}
 
-export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask | SubscribeToTg | StockRegTask| DailyTask | InternalChallengeTask;
+export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask | SubscribeToTg | StockRegTask| DailyTask | InternalChallengeTask | TransferToneTask | CheckStarsSendersTask;
 
 export interface TaskCardProps {
     id: number; // Уникальный идентификатор задачи
@@ -91,7 +111,7 @@ export interface TaskCardProps {
     isLoading: boolean;
 }
 
-const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, onClick, isLoading }) => {
+const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, onClick, isLoading, taskType }) => {
     return (
         <div className={`tasks-container-${completed}`}  onClick={!isLoading ? onClick : undefined}>
             <img src={checkIcon} className='ic-logo' />
@@ -99,7 +119,19 @@ const ItemTask: React.FC<TaskCardProps> = ({ text, coins, completed, checkIcon, 
                 <div className="tx-container">
                     <span className="current">{text}</span>
                     <div className='coins-container'>
-                        <img src={CoinsIco} className='ic-coins' />
+                        {IsTransferToneTask(taskType) ?
+                            (
+                                <div>
+                                    {taskType.rewardType == "userLeague" ? (
+                                        <img src={IcRatingCoins} className='ic-coins' />
+                                    ) : (
+                                        <img src={CoinsIco} className='ic-coins'/>
+                                    )}
+                                </div>
+                            ) : (
+                                <img src={CoinsIco} className='ic-coins'/>
+                            )
+                        }
                         <span className="divider-task">{coins}</span>
                     </div>
                 </div>

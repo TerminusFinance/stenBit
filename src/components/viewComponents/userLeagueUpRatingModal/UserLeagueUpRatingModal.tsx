@@ -1,23 +1,24 @@
 import React, {useEffect, useRef, useState} from "react";
 import {
-    boosClanLevels,
-    getListSubscriptionOptionsClanUpgrateRunks,
+    boostUserLevels,
+    getListSubscriptionOptionsUserUpRatingLeague,
     SubscriptionOptions
 } from "../../../core/dataWork/RemoteUtilsRequester.ts";
+import {initInvoice} from "@telegram-apps/sdk";
 import PremiumIco from "../../../assets/ic_premium.svg";
 import CloseIc from "../../../assets/ic_close.svg";
 import PriceSelector from "../premiumModal/priceSelector/PriceSelector.tsx";
 import ProgressBar from "../progressBar/ProgressBar.tsx";
-import "./RatingModal.css";
-import {initInvoice} from "@telegram-apps/sdk";
+import "./UserLeagueUpRatingModal.css";
 
-interface ModalRatingProps {
+
+interface ModalUserLeagueUpRating {
     isVisible: boolean;
     onClose: () => void;
     onBtnClick: () => void
 }
 
-export const RatingModal: React.FC<ModalRatingProps> = ({isVisible, onClose, onBtnClick}) => {
+const UserLeagueUpRatingModal: React.FC<ModalUserLeagueUpRating> = ({isVisible, onClose, onBtnClick}) => {
 
     const overlayRef = useRef<HTMLDivElement>(null);
     const sheetRef = useRef<HTMLDivElement>(null);
@@ -46,17 +47,16 @@ export const RatingModal: React.FC<ModalRatingProps> = ({isVisible, onClose, onB
         }
     }, [isVisible]);
 
-
     useEffect(() => {
-        const beber = async () => {
+        const requesteResult = async () => {
 
-            const result = await getListSubscriptionOptionsClanUpgrateRunks()
+            const result = await getListSubscriptionOptionsUserUpRatingLeague()
             if (typeof result == "object") {
                 setPrices(result)
                 setSelectedItem(result[0])
             }
         }
-        beber()
+        requesteResult()
     }, []);
 
 
@@ -77,7 +77,7 @@ export const RatingModal: React.FC<ModalRatingProps> = ({isVisible, onClose, onB
 
     const onClickToBuy = async () => {
         if (selectedItem != undefined) {
-            const result = await boosClanLevels(selectedItem)
+            const result = await boostUserLevels(selectedItem)
             console.log("resultToBuyPremka - ", result)
             if (typeof result == 'object') {
                 if (result.ok) {
@@ -96,7 +96,6 @@ export const RatingModal: React.FC<ModalRatingProps> = ({isVisible, onClose, onB
                         });
                 }
             }
-
         }
     }
 
@@ -140,3 +139,5 @@ export const RatingModal: React.FC<ModalRatingProps> = ({isVisible, onClose, onB
         </div>
     )
 }
+
+export default UserLeagueUpRatingModal;

@@ -21,6 +21,7 @@
     visibility: visible;
 }
 
+
 @keyframes slideUp {
     from {
         transform: translateY(100%);

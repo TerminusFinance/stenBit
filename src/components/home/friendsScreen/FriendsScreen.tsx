@@ -102,6 +102,7 @@ export const FriendsScreen: React.FC = () => {
                 }}
                 onProfileClick={() => handleNav("profile")}
                 onTasksClick={() => handleNav("tasks")}
+                onRatingClick={() => handleNav("userLeagues")}
             />
 
             <ModalInvite isVisible={isBottomSheetVisible} onClose={closeBottomSheet}

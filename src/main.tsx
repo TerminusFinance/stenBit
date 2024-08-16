@@ -3,17 +3,22 @@ import App from './App.tsx';
 import './index.css';
 import React, { } from 'react';
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import { SDKProvider } from "@tma.js/sdk-react";
-// import {postEvent} from "@tma.js/sdk";
+import {initMiniApp, initSwipeBehavior, SDKProvider} from "@telegram-apps/sdk-react";
+import {postEvent} from "@telegram-apps/sdk";
 
 const manifestUrl = 'https://wm-mariupol.com/api/manifest';
-// import { initMiniApp } from '@telegram-apps/sdk';
 const AppContainer: React.FC = () => {
 
     try {
-        // postEvent('web_app_expand');
-        // const [miniApp] = initMiniApp();
-        // miniApp.setHeaderColor('#121215');
+        postEvent('web_app_expand');
+        const [miniApp] = initMiniApp();
+        miniApp.setHeaderColor('#121215');
+        try {
+            const [swipeBehavior] = initSwipeBehavior();
+            swipeBehavior.disableVerticalSwipe();
+        } catch (e) {
+            console.log("change behavor - err", e)
+        }
     }catch (e) {
         console.log("change theme - err", e)
     }

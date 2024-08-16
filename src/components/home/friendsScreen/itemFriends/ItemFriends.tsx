@@ -5,12 +5,13 @@ import CoinsImg from "../../../../assets/ic_dollar.svg";
 interface ItemFriendsParams {
     userName: string;
     coinsReferral: string;
-    position: number;
+    position: number | string;
     image?: string | null;
+    imageCoins?: string | null;
     selected: boolean;
 }
 
-export const ItemFriends: React.FC<ItemFriendsParams> = ({userName, coinsReferral, position, image, selected}) => {
+export const ItemFriends: React.FC<ItemFriendsParams> = ({userName, coinsReferral, position, image, selected, imageCoins}) => {
     return (
         <div className={`item-friend-container-${selected}`}>
 
@@ -31,13 +32,20 @@ export const ItemFriends: React.FC<ItemFriendsParams> = ({userName, coinsReferra
                 <div className="container-user-stats">
                 <p className="tx-name-friends">{userName}</p>
                     <div className="coins-ref-container">
-                        <img src={CoinsImg} className="ic-coins-friends"/>
+                        {imageCoins == null ? (
+                            <img src={CoinsImg} className="ic-coins-friends"/>
+                        ) : (
+                            <img src={imageCoins} className="ic-coins-friends"/>
+                        )}
                         <p className="tx-coin-plus-friends">{coinsReferral}</p>
                     </div>
                 </div>
             </div>
             <div/>
-            <p>#{position}</p>
+            {typeof position == "number" ? (
+                <p>#{position}</p>
+            ) : <p>{position}</p>}
+
         </div>
     );
 }
