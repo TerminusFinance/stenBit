@@ -579,6 +579,7 @@ export interface UserLeague {
     score: number;
     buyscore: number;
     freescore: number;
+    reward: number;
 }
 
 export const getAllUsersLeague = async (): Promise<UserLeague[] | string> => {

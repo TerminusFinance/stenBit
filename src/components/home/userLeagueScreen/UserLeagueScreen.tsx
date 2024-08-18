@@ -13,6 +13,9 @@ import "./UserLeagueScreen.css";
 import UserLeagueUpRatingModal from "../../viewComponents/userLeagueUpRatingModal/UserLeagueUpRatingModal.tsx";
 import IcCoinsRating from "../../../assets/ic_rating-coin.svg";
 import {formatNumberToK, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
+import TonIc from "../../../assets/ton-log-vec.svg";
+import icIncoCircle from "../../../assets/ic_inco_circle.svg";
+import {ModalAbout} from "../../viewComponents/modalAbout/ModalAbout.tsx";
 
 const UserLeagueScreen: React.FC = () => {
 
@@ -24,9 +27,8 @@ const UserLeagueScreen: React.FC = () => {
     const [secondPlace, setSecondPlace] = useState<UserLeague>();
     const [firstPlace, setFirstPlace] = useState<UserLeague>();
     const [thirdPlace, setThirdPlace] = useState<UserLeague>();
-
     const [isRatingBottomSheetVisible, setRatingBottomSheetVisible] = useState(false);
-
+    const [isBottomSheetVisibleAbout, setBottomSheetVisibleAbout] = useState(false);
 
     try {
         useTelegramBackButton(true)
@@ -37,17 +39,18 @@ const UserLeagueScreen: React.FC = () => {
 
     const closeBottomSheet = () => {
         setRatingBottomSheetVisible(false)
+        setBottomSheetVisibleAbout(false)
     };
 
     const ProcessingPaidResult = async () => {
         setLoading(true);
         const checkAndUpdate = async () => {
             const paidResult = await getUsersLeague();
-            const currentUsers=  users
+            const currentUsers = users
             if (typeof paidResult === "object" && paidResult !== null && currentUsers != null) {
-                const { userId, score } = paidResult;
+                const {userId, score} = paidResult;
 
-                if(userId == currentUsers.userId && score > currentUsers.score) {
+                if (userId == currentUsers.userId && score > currentUsers.score) {
                     await requestToServ()
                     setLoading(false);
                 } else {
@@ -61,13 +64,13 @@ const UserLeagueScreen: React.FC = () => {
         checkAndUpdate();
     };
 
-    const requestToServ = async()  => {
-        const result = await  getAllUsersLeague()
+    const requestToServ = async () => {
+        const result = await getAllUsersLeague()
         const userLegResult = await getUsersLeague()
-        if(typeof userLegResult == "object") {
+        if (typeof userLegResult == "object") {
             setUsers(userLegResult)
         }
-        if(typeof result == "object") {
+        if (typeof result == "object") {
             const sortedUsers = [...result].sort((a, b) => b.score - a.score);
             setusersList(sortedUsers)
 
@@ -93,10 +96,15 @@ const UserLeagueScreen: React.FC = () => {
         }
     }, []);
 
+
     return (
         <div className="user-league-root-container">
             <div className="user-league-container-raspred">
-
+                <div className="div-container-money-h">
+                    <p className="tx-h1">Top Users</p>
+                    <p className="div-tx-h2">Take Prizes and Get Prizes</p>
+                    <div className="line-task-information"/>
+                </div>
                 <div className="catwalk-users-league">
 
                     <div className="podium">
@@ -120,6 +128,27 @@ const UserLeagueScreen: React.FC = () => {
                                 <h3>{secondPlace.userName.length > 5 ? secondPlace.userName.slice(0, 5) + '...' : secondPlace.userName}</h3>
 
                                 <p className="gold-gradient-text">{formatNumberToK(secondPlace.score)}</p>
+
+
+                                <div style={{
+                                    display: "flex",
+                                    flexDirection: 'row',
+                                    alignContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                    <span className="reward-user-tx-place">100</span>
+                                    <img src={TonIc} style={{
+                                        width: '12px',
+                                        height: '12px',
+                                        marginRight: '4px',
+                                        objectFit: 'contain',
+                                        display: 'block',
+                                        verticalAlign: 'middle',
+                                        imageRendering: 'auto',
+                                        borderRadius: '0px',
+                                    }}/>
+                                </div>
+
                             </div>
                         )}
 
@@ -139,6 +168,25 @@ const UserLeagueScreen: React.FC = () => {
                                 <h3>{firstPlace.userName.length > 5 ? firstPlace.userName.slice(0, 5) + '...' : firstPlace.userName}</h3>
 
                                 <p className="gold-gradient-text">{formatNumberToK(firstPlace.score)}</p>
+                                <div style={{
+                                    display: "flex",
+                                    flexDirection: 'row',
+                                    alignContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                    <span className="reward-user-tx-place">200</span>
+                                    <img src={TonIc} style={{
+                                        width: '12px',
+                                        height: '12px',
+                                        marginRight: '4px',
+                                        objectFit: 'contain',
+                                        display: 'block',
+                                        verticalAlign: 'middle',
+                                        imageRendering: 'auto',
+                                        borderRadius: '0px',
+                                    }}/>
+                                </div>
+
                             </div>
                         )}
 
@@ -161,8 +209,64 @@ const UserLeagueScreen: React.FC = () => {
                                 <h3>{thirdPlace.userName.length > 5 ? thirdPlace.userName.slice(0, 5) + '...' : thirdPlace.userName}</h3>
 
                                 <p className="gold-gradient-text">{formatNumberToK(thirdPlace.score)}</p>
+
+
+                                <div style={{
+                                    display: "flex",
+                                    flexDirection: 'row',
+                                    alignContent: 'center',
+                                    alignItems: 'center',
+                                }}>
+                                    <span className="reward-user-tx-place">50</span>
+                                    <img src={TonIc} style={{
+                                        width: '12px',
+                                        height: '12px',
+                                        marginRight: '4px',
+                                        objectFit: 'contain',
+                                        display: 'block',
+                                        verticalAlign: 'middle',
+                                        imageRendering: 'auto',
+                                        borderRadius: '0px',
+                                    }}/>
+                                </div>
                             </div>
                         )}
+                    </div>
+
+                    <div className="reward-user">
+                        <div style={{
+                            display: "flex",
+                            flexDirection: 'row',
+                            alignContent: 'center',
+                            alignItems: 'center'
+                        }} onClick={() => {
+                            setBottomSheetVisibleAbout(true)
+                        }}>
+                            <span className="reward-user-tx">Your reward</span>
+                            <img className="coins-ico-stat" src={icIncoCircle}/>
+                        </div>
+
+                        <div style={{
+                            display: "flex",
+                            flexDirection: 'row',
+                            alignContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <span
+                                className="reward-user-tx-tw"> {users?.reward ? formatNumberToK(users.reward) : 0}</span>
+                            <img src={TonIc} style={{
+                                width: '16px',
+                                height: '16px',
+                                marginRight: '4px',
+                                objectFit: 'contain',
+                                display: 'block',
+                                verticalAlign: 'middle',
+                                imageRendering: 'auto',
+                                borderRadius: '0px',
+                                filter: 'invert(35%) sepia(100%) saturate(6000%) hue-rotate(200deg) brightness(100%) contrast(100%)'
+                            }}/>
+                        </div>
+
                     </div>
 
                     <div className="btn-boost-rank-users-league" onClick={() => {
@@ -212,6 +316,10 @@ const UserLeagueScreen: React.FC = () => {
 
             <UserLeagueUpRatingModal isVisible={isRatingBottomSheetVisible} onClose={closeBottomSheet}
                                      onBtnClick={ProcessingPaidResult}/>
+
+
+            <ModalAbout title={"How do rewards work"} isVisible={isBottomSheetVisibleAbout}
+                        onClose={closeBottomSheet} descriptions={"Rewards, get every week, 3 players with the highest rating, rating can be purchased, or get for completing tasks"}/>
 
             {loading && <ProgressBar/>}
         </div>

@@ -10,6 +10,7 @@ import CloseIc from "../../../assets/ic_close.svg";
 import PriceSelector from "../premiumModal/priceSelector/PriceSelector.tsx";
 import ProgressBar from "../progressBar/ProgressBar.tsx";
 import "./UserLeagueUpRatingModal.css";
+import IcoStars from "../../../assets/ic_stars.svg";
 
 
 interface ModalUserLeagueUpRating {
@@ -123,7 +124,7 @@ const UserLeagueUpRatingModal: React.FC<ModalUserLeagueUpRating> = ({isVisible, 
                 <div style={{height: "16px"}}/>
 
                 {prices != undefined ? (
-                    <PriceSelector tabs={prices} onTabSelect={handleTabSelect}/>
+                    <PriceSelector tabs={prices} onTabSelect={handleTabSelect} icoCoin={IcoStars}/>
                 ) : (
                     <div>
                         <span>Not found</span>

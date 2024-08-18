@@ -10,6 +10,7 @@ import PriceSelector from "../premiumModal/priceSelector/PriceSelector.tsx";
 import ProgressBar from "../progressBar/ProgressBar.tsx";
 import "./RatingModal.css";
 import {initInvoice} from "@telegram-apps/sdk";
+import IcoStars from "../../../assets/ic_stars.svg";
 
 interface ModalRatingProps {
     isVisible: boolean;
@@ -124,7 +125,7 @@ export const RatingModal: React.FC<ModalRatingProps> = ({isVisible, onClose, onB
                 <div style={{height: "16px"}}/>
 
                 {prices != undefined ? (
-                    <PriceSelector tabs={prices} onTabSelect={handleTabSelect}/>
+                    <PriceSelector tabs={prices} onTabSelect={handleTabSelect} icoCoin={IcoStars}/>
                 ) : (
                     <div>
                         <span>Not found</span>

@@ -9,9 +9,10 @@ interface Price {
 interface PriceSelectorProps {
     tabs: Price[];
     onTabSelect: (selectedTab: Price) => void;
+    icoCoin?: string | null
 }
 
-const PriceSelector: React.FC<PriceSelectorProps> = ({ tabs, onTabSelect }) => {
+const PriceSelector: React.FC<PriceSelectorProps> = ({ tabs, onTabSelect, icoCoin }) => {
     const [selectedTab, setSelectedTab] = useState<Price>(tabs[0]);
 
     const handleTabClick = (tab: Price) => {
@@ -28,7 +29,14 @@ const PriceSelector: React.FC<PriceSelectorProps> = ({ tabs, onTabSelect }) => {
                     onClick={() => handleTabClick(tab)}
                 >
                     <span className="price-value">{tab.name}</span>
-                    <span className="price-value">${tab.price}</span>
+                    <div style={{display: 'flex', alignItems: 'center', alignContent:"center", flexDirection: 'row'}}>
+                        {icoCoin ? (
+                            <img src={icoCoin} style={{width:'18px', height:'18px', marginRight :'4px'}} />
+                        ):(
+                            <span className="price-value">$</span>
+                        )}
+                        <span className="price-value">{tab.price}</span>
+                    </div>
                 </button>
             ))}
         </div>

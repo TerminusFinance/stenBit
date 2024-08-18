@@ -9,13 +9,13 @@ import IcBot from "../../../../assets/boost/ic_bot.svg";
 import IcBatery from "../../../../assets/boost/ic_battery.svg";
 import IcRocket from "../../../../assets/boost/ic_rocket.svg";
 import IcTap from "../../../../assets/boost/ic_tap-hand.svg";
-import {ModalBoostAbout} from "./modalBoostAbout/ModalBoostAbout.tsx";
 import {ModalBoostItem} from "./modalBoostItem/ModalBoostItem.tsx";
 import {BoostItem as boostestItems, updateLevel} from "../../../../core/dataWork/RemoteUtilsRequester.ts";
 import {useToast} from "../../../viewComponents/toast/ToastContext.tsx";
 import {formatNumberToK, useTelegramBackButton} from "../../../viewComponents/Utils.tsx";
 import {PremiumDie} from "../../../viewComponents/premiumDie/PremiumDie.tsx";
 import {PremiumModal} from "../../../viewComponents/premiumModal/PremiumModal.tsx";
+import {ModalAbout} from "../../../viewComponents/modalAbout/ModalAbout.tsx";
 
 
 export const BoostScreen: React.FC = () => {
@@ -203,8 +203,13 @@ export const BoostScreen: React.FC = () => {
                 onRatingClick={() => handleNav("userLeagues")}
             />
 
-            <ModalBoostAbout title={"How a boost works"} isVisible={isBottomSheetVisibleAbout}
-                             onClose={closeBottomSheet}/>
+            <ModalAbout title={"How a boost works"} isVisible={isBottomSheetVisibleAbout}
+                             onClose={closeBottomSheet} descriptions={"Boosts are powerful tools in gaming that amplify your abilities, allowing you to achieve more in less time. In clicker games like those on Telegram, boosts typically enhance your tapping efficiency or increase the rewards you earn per action.\n" +
+                "\n" +
+                "                        When activated, a boost optimizes your tapping power, often by multiplying the coins you collect per tap or reducing the time needed to achieve certain goals. This temporary surge in performance empowers players to progress faster through levels, earn more rewards, and reach higher scores.\n" +
+                "                        Boosts can vary in duration and effect, offering short-term advantages that players strategically use to overcome challenges or accelerate their gameplay. Whether it's doubling your tapping speed or tripling your coin earnings for a limited time, boosts add excitement and strategic depth to the gaming experience.\n" +
+                "\n" +
+                "                        In essence, mastering the use of boosts is key to maximizing your efficiency and achieving peak performance in clicker games, making them essential tools for ambitious players aiming to climb leaderboards and surpass their own limits."}/>
             {selectedBottomSheetItem != null && (
                 <ModalBoostItem title={selectedBottomSheetItem.boostName}
                                 description={getBoostDescription(selectedBottomSheetItem.boostName)}

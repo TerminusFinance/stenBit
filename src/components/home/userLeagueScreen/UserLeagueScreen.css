@@ -37,7 +37,7 @@
     padding: 0 12px;
     box-sizing: border-box;
     height: 100%;
-    margin-top: 48px;
+    margin-top: 8px;
     margin-left: 16px;
     margin-right: 16px;
 }
@@ -76,30 +76,34 @@
 }
 
 .podium__first {
-    background: linear-gradient(to top, rgba(0, 255, 0, 0.2) 0%, rgba(0, 255, 0, 0.1) 30%, rgba(0, 255, 0, 0.05) 60%, transparent 100%), #333;
+    /*background: linear-gradient(to top, rgba(0, 255, 0, 0.2) 0%, rgba(0, 255, 0, 0.1) 30%, rgba(0, 255, 0, 0.05) 60%, transparent 100%), #333;*/
     transform: scale(1.3); /* Увеличиваем размер первого места */
     /*margin-top: -30px; !* Поднимаем первое место *!*/
     /*z-index: 2;*/
     order: 2;
+    background: linear-gradient(180deg, rgba(27, 27, 30, 0) 0%, #3E3428 100%);
+
 }
 
 .podium__second {
     transform: scale(1.1);
     /*margin-top: -10px;*/
-    background: linear-gradient(to top, rgba(128, 0, 128, 0.2) 0%, rgba(128, 0, 128, 0.1) 30%, rgba(128, 0, 128, 0.05) 60%, transparent 100%), #333;
+    /*background: linear-gradient(to top, rgba(128, 0, 128, 0.2) 0%, rgba(128, 0, 128, 0.1) 30%, rgba(128, 0, 128, 0.05) 60%, transparent 100%), #333;*/
     order: 1; /* Ставим второе место в порядок первым */
+    background: linear-gradient(180deg, rgba(22, 22, 24, 0) 0%, #2C2E33 100%);
 }
 
 .podium__third {
-    background: linear-gradient(to top, rgba(192, 192, 192, 0.4) 0%, rgba(192, 192, 192, 0.2) 30%, rgba(192, 192, 192, 0.1) 60%, transparent 100%), #333;
+    /*background: linear-gradient(to top, rgba(192, 192, 192, 0.4) 0%, rgba(192, 192, 192, 0.2) 30%, rgba(192, 192, 192, 0.1) 60%, transparent 100%), #333;*/
     order: 3; /* Ставим третье место в порядок последним */
+    background: linear-gradient(180deg, rgba(27, 27, 30, 0) 0%, #392319 100%);
+
 }
 
 .podium__item img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-bottom: 10px;
 }
 
 .podium__item h3 {
@@ -160,5 +164,45 @@
     font-weight: bold;
     font-size: 16px;
     position: relative;
+}
+
+.reward-user {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1B1B1E;
+    border-radius: 16px;
+    padding: 0 12px;
+    box-sizing: border-box;
+    height: 100%;
+    margin-top: 48px;
+    margin-left: 16px;
+    box-shadow: inset 0px 1px 2px rgba(255, 255, 255, 0.03);
+    margin-right: 16px;
+    flex-direction: row;
+}
+
+.reward-user-tx-tw {
+    color: #2B7FF2;
+    font-family: MyCustomFont-bold, sans-serif;
+    font-size: 18px;
+    margin-right: 2px;
+}
+
+.reward-user-tx-place {
+    color: white;
+    font-family: MyCustomFont-bold, sans-serif;
+    font-size: 14px;
+    margin-right: 2px;
+}
+
+.reward-user-tx {
+    font-family: MyCustomFont-bold, sans-serif;
+    color: #9CA5B2;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    font-size: 16px;
+    margin-right: 6px;
 }
 
