@@ -1,6 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './TapScreen.css';
 import coin from '../../../assets/ic_coins.svg';
+import IcSilverCoins from "../../../assets/ic_silver-coins.svg";
+import IcBronzeCoins from "../../../assets/ic_bornze-coins.svg";
+import IcGoldCoins from "../../../assets/ic_gold-coins.svg";
+import IcPlatinumCoins from "../../../assets/ic_platinum-coins.svg";
+import IcJadeCoins from "../../../assets/ic_jade-coins.svg";
+import IcRubyCoins from "../../../assets/ic_ruby-coins.svg";
+import IcSapphireCoins from "../../../assets/ic_sapphire-coins.svg";
+import IcEmeraldCoins from "../../../assets/ic_emerald-coins.svg";
+import IcAmethystCoins from "../../../assets/ic_amethyst-coins.svg";
+import IcAquamarineCoins from "../../../assets/ic_aquamarine-coins.svg";
+import IcCobaltCoins from "../../../assets/ic_cobalt-coins.svg";
+import IcObsidianCoins from "../../../assets/ic_obsidian-coins.svg";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useData } from '../../DataContext.tsx';
 import {addCoinsToClickData, getUserCheckout} from '../../../core/dataWork/RemoteUtilsRequester.ts';
@@ -8,6 +20,15 @@ import bronzeLevel from '../../../assets/diamont/diamond-level-bronze.svg';
 import silverLevel from '../../../assets/diamont/diamond-level-silver.svg';
 import goldLevel from '../../../assets/diamont/diamond-level-gold.svg';
 import platinumLevel from '../../../assets/diamont/diamond-level-platinum.svg';
+import jadeLevel from '../../../assets/diamont/diamond-level-jade.svg';
+import rubyLevel from '../../../assets/diamont/diamond-level-ruby.svg';
+import sapphireLevel from '../../../assets/diamont/diamond-level-sapphire.svg';
+import emeraldLevel from '../../../assets/diamont/diamond-level-emerald.svg';
+import amethystLevel from '../../../assets/diamont/diamond-level-amethyst.svg';
+import aquamarineLevel from '../../../assets/diamont/diamond-level-aquamarine.svg';
+import cobaltLevel from '../../../assets/diamont/diamond-level-cobalt.svg';
+import obsidianLevel from '../../../assets/diamont/diamond-level-obsidian.svg';
+
 import ProgressBarLevel from '../progressBar/progressBarLevel/ProgressBarLevel.tsx';
 import EnergyBadge from '../progressBar/energyBadge/EnergyBadge.tsx';
 import { CoinsLevelUpp } from '../progressBar/coinsLevelUpp/CoinsLevelUpp.tsx';
@@ -45,19 +66,84 @@ export const levelTypes: LevelType[] = [
     },
     {
         id: 3,
-        title: 'Gold',
+        title: 'Jade',
         description: 'Your number of shares determines the league you enter',
-        image: goldLevel,
+        image: jadeLevel,
         minProgress: 50000,
         maxProgress: 150000,
     },
     {
         id: 4,
+        title: 'Gold',
+        description: 'Your number of shares determines the league you enter',
+        image: goldLevel,
+        minProgress: 150000,
+        maxProgress: 350000,
+    },
+    {
+        id: 5,
+        title: 'Ruby',
+        description: 'Your number of shares determines the league you enter',
+        image: rubyLevel,
+        minProgress: 350000,
+        maxProgress: 700000,
+    },
+    {
+        id: 6,
+        title: 'Sapphire',
+        description: 'Your number of shares determines the league you enter',
+        image: sapphireLevel,
+        minProgress: 700000,
+        maxProgress: 1500000,
+    },
+
+    {
+        id: 7,
+        title: 'Emerald',
+        description: 'Your number of shares determines the league you enter',
+        image: emeraldLevel,
+        minProgress: 1500000,
+        maxProgress: 3500000,
+    },
+    {
+        id: 8,
+        title: 'Amethyst',
+        description: 'Your number of shares determines the league you enter',
+        image: amethystLevel,
+        minProgress: 3500000,
+        maxProgress: 5500000,
+    },
+    {
+        id: 9,
+        title: 'Aquamarine',
+        description: 'Your number of shares determines the league you enter',
+        image: aquamarineLevel,
+        minProgress: 5500000,
+        maxProgress: 7500000,
+    },
+    {
+        id: 10,
+        title: 'Cobalt',
+        description: 'Your number of shares determines the league you enter',
+        image: cobaltLevel,
+        minProgress: 7500000,
+        maxProgress: 10000000,
+    },
+    {
+        id: 11,
+        title: 'Obsidian',
+        description: 'Your number of shares determines the league you enter',
+        image: obsidianLevel,
+        minProgress: 10000000,
+        maxProgress: 15000000,
+    },
+    {
+        id: 12,
         title: 'Platinum',
         description: 'Your number of shares determines the league you enter',
         image: platinumLevel,
-        minProgress: 150000,
-        maxProgress: 500000,
+        minProgress: 15000000,
+        maxProgress: 25000000,
     },
 ];
 
@@ -76,7 +162,9 @@ const TapScreen: React.FC = () => {
     const [coinsAddedCount, setCoinsAddedCount] = useState<number>(1);
     const [isTurboBoostEnding, setIsTurboBoostEnding] = useState<boolean>(false);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
     const [sendTurboEnd, setSendTurboEnd] = useState(false)
+
     const startInactivityTimer = () => {
         clearTimeout(timeoutRef.current!);
         timeoutRef.current = setTimeout(async () => {
@@ -122,8 +210,11 @@ const TapScreen: React.FC = () => {
     useEffect(() => {
         intervalRef.current = setInterval(() => {
             if (accumulatedClicks > 0 && !isTurboBoostEnding) {
-                sendClickData(accumulatedClicks);
-                setAccumulatedClicks(0);
+                const isTurboBoostActive = turboBoost && turboBoost.trim() !== "";
+                if(!isTurboBoostActive) {
+                    sendClickData(accumulatedClicks);
+                    setAccumulatedClicks(0);
+                }
             }
         }, 700);
 
@@ -135,15 +226,17 @@ const TapScreen: React.FC = () => {
     }, [accumulatedClicks, isTurboBoostEnding]);
 
     const sendClickData = async (clickCount: number) => {
-        if (dataApp.userId !== undefined) {
-            const result = await addCoinsToClickData(clickCount);
-            console.log("update result - addCoinsToClickData", result);
-            setDataApp(prevDataApp => ({
-                ...prevDataApp,
-                ...result,
-                coins: prevDataApp.coins + clickCount,
-            }));
-        }
+
+            if (dataApp.userId !== undefined) {
+                const result = await addCoinsToClickData(clickCount);
+                console.log("update result - addCoinsToClickData", result);
+                setDataApp(prevDataApp => ({
+                    ...prevDataApp,
+                    ...result,
+                    coins: prevDataApp.coins + clickCount,
+                }));
+            }
+
     };
 
 
@@ -238,6 +331,7 @@ const TapScreen: React.FC = () => {
     };
 
     const currentLevel = getCurrentLevel(clicks);
+
     return (
         <div className='tap-container'>
             <div className='tap-raspred-container'>
@@ -254,9 +348,9 @@ const TapScreen: React.FC = () => {
                 </div>
 
                 <div className='coin-container'>
-                    <div className='image-container'>
+                    <div className={`image-container-${currentLevel.title}`}>
                         <img
-                            src={coin}
+                            src={getCoinIc(currentLevel.title)}
                             alt='Coin'
                             className='tap-coin'
                             draggable='false'
@@ -291,7 +385,7 @@ const TapScreen: React.FC = () => {
                         level={`Level: ${currentLevel.id}/${levelTypes.length}`}
                         progress={clicks}
                         maxProgress={currentLevel.maxProgress}
-                        onClick={() => handleNav('userLeagues')}
+                        onClick={() => handleNav('level')}
                     />
                 </div>
             </div>
@@ -316,6 +410,40 @@ const TapScreen: React.FC = () => {
 };
 
 export default TapScreen;
+
+
+const getCoinIc = (nameLvl: string) => {
+
+    switch (nameLvl){
+        case "Gold" :
+            return IcGoldCoins
+        case "Bronze" :
+            return IcBronzeCoins
+        case "Silver" :
+            return IcSilverCoins
+        case "Platinum" :
+            return IcPlatinumCoins;
+        case "Jade" :
+            return IcJadeCoins
+        case "Ruby" :
+            return IcRubyCoins
+        case "Sapphire" :
+            return IcSapphireCoins
+        case "Emerald" :
+            return IcEmeraldCoins;
+        case "Amethyst" :
+            return IcAmethystCoins
+        case "Aquamarine" :
+            return IcAquamarineCoins
+        case "Cobalt" :
+            return IcCobaltCoins
+        case "Obsidian" :
+            return IcObsidianCoins;
+        default :
+            return coin
+    }
+}
+
 
 export const getCurrentLevel = (clicks: number): LevelType => {
     const level = levelTypes.find(level => clicks >= level.minProgress && clicks < level.maxProgress);

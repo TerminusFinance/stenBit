@@ -20,8 +20,11 @@ const Slider: React.FC<SlidesTypeList> = ({ itemList, initialSlide }) => {
             maxProgress: item.maxProgress
         }));
 
+        console.log("newLevels - ",newLevels)
+
         try {
             const getResult = await getRatingUsersByLvl(newLevels);
+            console.log("newLevels getResult- ",getResult)
             if (typeof getResult === "object") {
                 const sortedUsers: RatingUserLvlResponse = {};
                 Object.keys(getResult).forEach(key => {

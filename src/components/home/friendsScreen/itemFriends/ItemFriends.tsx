@@ -9,11 +9,12 @@ interface ItemFriendsParams {
     image?: string | null;
     imageCoins?: string | null;
     selected: boolean;
+    onClick?: () => void | null;
 }
 
-export const ItemFriends: React.FC<ItemFriendsParams> = ({userName, coinsReferral, position, image, selected, imageCoins}) => {
+export const ItemFriends: React.FC<ItemFriendsParams> = ({userName, coinsReferral, position, image, selected, imageCoins, onClick}) => {
     return (
-        <div className={`item-friend-container-${selected}`}>
+        <div className={`item-friend-container-${selected}`} onClick={onClick}>
 
             <div className="container-left-item">
                 <div className="dog-container">

@@ -56,6 +56,63 @@
     border-radius: 16px;
 }
 
+.progress-league-Jade {
+    height: 100%;
+    background: linear-gradient(90deg, #00897B, #00796B);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Ruby {
+    height: 100%;
+    background: linear-gradient(90deg, #D32F2F, #E53935);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Sapphire {
+    height: 100%;
+    background: linear-gradient(90deg, #1A237E, #303F9F);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Emerald {
+    height: 100%;
+    background: linear-gradient(90deg, #1B5E20, #388E3C);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Amethyst {
+    height: 100%;
+    background: linear-gradient(90deg, #6A1B9A, #8E24AA);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Aquamarine {
+    height: 100%;
+    background: linear-gradient(90deg, #0277BD, #01579B);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+.progress-league-Cobalt {
+    height: 100%;
+    background: linear-gradient(90deg, #0D47A1, #1565C0);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
+
+.progress-league-Obsidian {
+    height: 100%;
+    background: linear-gradient(90deg, #263238, #37474F);
+    transition: width 0.3s ease-in-out;
+    border-radius: 16px;
+}
+
 .tx-progress-leagues {
     color: white;
     font-family: MyCustomFont-bold, sans-serif;

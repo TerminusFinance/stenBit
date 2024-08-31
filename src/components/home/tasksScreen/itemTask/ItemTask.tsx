@@ -45,6 +45,9 @@ export const IsCheckStarsSendersTask = (taskType: TaskType): taskType is CheckSt
     return taskType.type === 'CheckStarsSenders';
 }
 
+export const IsDaysChallengeTask = (taskType: TaskType): taskType is DaysChallengeTask => {
+    return taskType.type === 'DaysChallenge';
+}
 
 export interface SampleTask {
     type: 'Sample';
@@ -98,7 +101,25 @@ export interface CheckStarsSendersTask {
     unnecessaryWaste: number;
 }
 
-export type TaskType = SampleTask | OpenUrlTask | CheckNftTask | CheckFriendsTask | SubscribeToTg | StockRegTask| DailyTask | InternalChallengeTask | TransferToneTask | CheckStarsSendersTask;
+export interface DaysChallengeTask {
+    type : "DaysChallenge",
+    price: number;
+    addressToTransfer: string;
+    days: number;
+}
+
+
+export type TaskType = SampleTask
+    | OpenUrlTask
+    | CheckNftTask
+    | CheckFriendsTask
+    | SubscribeToTg
+    | StockRegTask
+    | DailyTask
+    | InternalChallengeTask
+    | TransferToneTask
+    | CheckStarsSendersTask
+    | DaysChallengeTask;
 
 export interface TaskCardProps {
     id: number; // Уникальный идентификатор задачи

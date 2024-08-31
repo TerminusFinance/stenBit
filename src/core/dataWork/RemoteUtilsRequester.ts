@@ -4,8 +4,6 @@ import {retrieveLaunchParams} from "@telegram-apps/sdk";
 
 const BASE_URL = "api/"
 
-// const initDataRaw = "query_id=AAHpI4RkAAAAAOkjhGQZtt7I&user=%7B%22id%22%3A1686381545%2C%22first_name%22%3A%22Dmitrii%22%2C%22last_name%22%3A%22Kopeikin%22%2C%22username%22%3A%22kopeikindp%22%2C%22language_code%22%3A%22ru%22%2C%22is_premium%22%3Atrue%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1721155597&hash=4e247f41d9e1dc4a2d09d64a87ec73d6cdaa7ec3a26ca663d8785b71f88b1efe"
-
 const {initDataRaw} = retrieveLaunchParams();
 
 export interface Invitee {
@@ -75,7 +73,14 @@ export interface UserTask {
     actionBtnTx?: string | null;
     txDescription?: string | null;
     etaps?: number | null;
-    dataSendCheck?: string | null
+    dataSendCheck?: string | null;
+    storedValues? : StoredValues | null;
+    sortLocal?: string | null;
+}
+
+export interface StoredValues {
+    dayCompleted: number;
+    dateLastComplete: string;
 }
 
 export const createUser = async (coins: number): Promise<UserBasic> => {
@@ -386,6 +391,8 @@ export interface AllClanResponse {
     clanId: string;
     clanName: string;
     rating: number;
+    description: string;
+    Urlchanel: string | null;
 }
 
 export const getClansByLeagueLevels = async (levels: Level[]) => {
@@ -460,10 +467,10 @@ interface ResultionClanCreate {
     message: string;
 }
 
-export const createClan = async (clanName: string, descriptions: string): Promise<string> => {
+export const createClan = async (clanName: string, descriptions: string, urlChannel: string | null): Promise<string> => {
     try {
         const response = await axios.post<ResultionClanCreate>(`${BASE_URL}clan/createClan`,
-            {clanName, descriptions},
+            {clanName, descriptions, urlChannel},
             {headers: {Authorization: `tma ${initDataRaw}`}})
         console.log("createClan - ", response)
         if (typeof response.data == "object") {
@@ -616,9 +623,15 @@ export const getAllUsersLeague = async (): Promise<UserLeague[] | string> => {
     }
 }
 
-export const getUsersLeague = async (): Promise<UserLeague | string> => {
+export interface UserLeagueResponse {
+    userLeague: UserLeague;
+    rank: number;
+}
+
+
+export const getUsersLeague = async (): Promise<UserLeagueResponse | string> => {
     try {
-        const response = await axios.get<UserLeague>(`${BASE_URL}userLeague/getUserLeagueById`,
+        const response = await axios.get<UserLeagueResponse>(`${BASE_URL}userLeague/getUserLeagueById`,
             { headers: { Authorization: `tma ${initDataRaw}` } }
         );
 

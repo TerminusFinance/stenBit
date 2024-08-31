@@ -4,7 +4,7 @@ import {
     getAllUsersLeague,
     getUsersLeague,
 
-    UserLeague
+    UserLeague, UserLeagueResponse
 } from "../../../core/dataWork/RemoteUtilsRequester.ts";
 import NavigationBar from "../../navigationBar/NavigationBar.tsx";
 import {useNavigate} from "react-router-dom";
@@ -21,7 +21,7 @@ const UserLeagueScreen: React.FC = () => {
 
     const navigate = useNavigate();
     const [usersList, setusersList] = useState<UserLeague[]>([]);
-    const [users, setUsers] = useState<UserLeague>();
+    const [users, setUsers] = useState<UserLeagueResponse>();
     const hasFetchedData = useRef(false);
     const [loading, setLoading] = useState(false);
     const [secondPlace, setSecondPlace] = useState<UserLeague>();
@@ -46,9 +46,9 @@ const UserLeagueScreen: React.FC = () => {
         setLoading(true);
         const checkAndUpdate = async () => {
             const paidResult = await getUsersLeague();
-            const currentUsers = users
+            const currentUsers = users?.userLeague
             if (typeof paidResult === "object" && paidResult !== null && currentUsers != null) {
-                const {userId, score} = paidResult;
+                const {userId, score} = paidResult.userLeague;
 
                 if (userId == currentUsers.userId && score > currentUsers.score) {
                     await requestToServ()
@@ -253,7 +253,7 @@ const UserLeagueScreen: React.FC = () => {
                             alignItems: 'center'
                         }}>
                             <span
-                                className="reward-user-tx-tw"> {users?.reward ? formatNumberToK(users.reward) : 0}</span>
+                                className="reward-user-tx-tw"> {users?.userLeague?.reward ? formatNumberToK(users.userLeague.reward) : 0}</span>
                             <img src={TonIc} style={{
                                 width: '16px',
                                 height: '16px',
@@ -292,9 +292,9 @@ const UserLeagueScreen: React.FC = () => {
             <div className="user-league-container">
                 {users && (
                     <ItemFriends
-                        coinsReferral={`${users.score}`}
-                        userName={users.userName}
-                        position={"Your position"}
+                        coinsReferral={`${users.userLeague.score}`}
+                        userName={users.userLeague.userName}
+                        position={`Your position ${users.rank}`}
                         selected={true}
                         imageCoins={IcCoinsRating}
                     />

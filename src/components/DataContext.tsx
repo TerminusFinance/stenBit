@@ -42,26 +42,31 @@ const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     const [energy, setEnergy] = useState<number>(dataApp.currentEnergy ?? dataApp.maxEnergy);
     const [turboBoost, setTurboBoost] = useState<string>("");
     const lastEnergyChangeTime = useRef<number | null>(null);
-    const energyRegenTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const plusItem = turboBoost === 'active' ? (dataApp.premium?.endDateOfWork !== undefined ? 4 : 2) : (dataApp.premium?.endDateOfWork !== undefined ? 2 : 1);
 
-    const debounceEnergyRegen = () => {
-        if (energyRegenTimeout.current) {
-            clearTimeout(energyRegenTimeout.current);
-        }
-
-        energyRegenTimeout.current = setTimeout(() => {
+    useEffect(() => {
+        // Функция обновления энергии
+        const updateEnergy = () => {
             setEnergy(prevEnergy => {
                 if (prevEnergy < dataApp.maxEnergy) {
-                    const newEnergy = Math.min(prevEnergy + plusItem, dataApp.maxEnergy);
-                    lastEnergyChangeTime.current = Date.now();
-                    return newEnergy;
+                    const timeElapsed = lastEnergyChangeTime.current ? Date.now() - lastEnergyChangeTime.current : 0;
+                    const increments = Math.floor(timeElapsed / 1000);
+                    if (increments > 0) {
+                        const newEnergy = Math.min(prevEnergy + increments * plusItem, dataApp.maxEnergy);
+                        lastEnergyChangeTime.current = Date.now();
+                        return newEnergy;
+                    }
                 }
                 return prevEnergy;
             });
-        }, 1000);
-    };
+        };
+
+        // Интервал для постоянного обновления энергии
+        const energyRegenInterval = setInterval(updateEnergy, 1000);
+
+        return () => clearInterval(energyRegenInterval);
+    }, [dataApp.maxEnergy, dataApp.premium?.endDateOfWork, turboBoost]);
 
     useEffect(() => {
         if (dataApp.currentEnergy !== undefined) {
@@ -70,22 +75,11 @@ const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     }, [dataApp.currentEnergy]);
 
     useEffect(() => {
-        const energyRegenInterval = setInterval(() => {
-            if (lastEnergyChangeTime.current === null || Date.now() - lastEnergyChangeTime.current >= 1000) {
-                debounceEnergyRegen();
-            }
-        }, 100);
-
-        return () => clearInterval(energyRegenInterval);
-    }, [dataApp.maxEnergy, dataApp.premium?.endDateOfWork, turboBoost]);
-
-    useEffect(() => {
         localStorage.setItem('dataApp', JSON.stringify(dataApp));
     }, [dataApp]);
 
     useEffect(() => {
         lastEnergyChangeTime.current = Date.now();
-        debounceEnergyRegen();
     }, [energy]);
 
     return (

@@ -3,7 +3,7 @@ import App from './App.tsx';
 import './index.css';
 import React, { } from 'react';
 import { TonConnectUIProvider } from "@tonconnect/ui-react";
-import {initMiniApp, initSwipeBehavior, SDKProvider} from "@telegram-apps/sdk-react";
+import { initSwipeBehavior, SDKProvider} from "@telegram-apps/sdk-react";
 import {postEvent} from "@telegram-apps/sdk";
 
 const manifestUrl = 'https://wm-mariupol.com/api/manifest';
@@ -11,8 +11,8 @@ const AppContainer: React.FC = () => {
 
     try {
         postEvent('web_app_expand');
-        const [miniApp] = initMiniApp();
-        miniApp.setHeaderColor('#121215');
+        // const [miniApp] = initMiniApp();
+        // miniApp.setHeaderColor('#121215');
         try {
             const [swipeBehavior] = initSwipeBehavior();
             swipeBehavior.disableVerticalSwipe();
@@ -24,7 +24,7 @@ const AppContainer: React.FC = () => {
     }
 
     return (
-            <SDKProvider acceptCustomStyles debug>
+            <SDKProvider>
                 <TonConnectUIProvider manifestUrl={manifestUrl}>
                     <React.StrictMode>
                         <App />

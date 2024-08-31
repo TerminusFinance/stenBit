@@ -1,8 +1,19 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+// export default defineConfig({
+//   plugins: [
+//       react(),
+//         nodePolyfills({
+//       globals: {
+//         Buffer: true,
+//       },
+//     }),
+//   ],
+// })
 
 export default defineConfig({
+  base: './',
   plugins: [
     react(),
     nodePolyfills({
@@ -19,6 +30,8 @@ export default defineConfig({
     target : 'modules' ,
   },
 })
+
+
 
 
 

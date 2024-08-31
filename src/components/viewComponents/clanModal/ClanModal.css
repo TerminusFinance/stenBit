@@ -1,0 +1,68 @@
+.modal-overlay-clan {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+}
+
+.modal-overlay-clan.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(100%);
+    }
+}
+
+.modal-clan {
+    background-color: #161618;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 0 0 2px #38383A;
+    box-sizing: border-box;
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+.modal-clan.open {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+.chanel-container {
+    border: 1px solid #242427;
+    background: #242427;
+    border-radius: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px 12px;
+    margin: 10px 0;
+    outline: none;
+    transition: border-color 0.3s ease;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

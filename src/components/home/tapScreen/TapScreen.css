@@ -125,7 +125,139 @@
     z-index: 1;
 }
 
-.image-container::before {
+.image-container-Ruby::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(211, 47, 47, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Sapphire::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(48, 63, 159, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Emerald::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(56, 142, 60, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Amethyst::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(142, 36, 170, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Amber::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 143, 0, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Topaz::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 111, 0, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Jade::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 121, 107, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Aquamarine::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(2, 119, 189, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+
+
+.image-container-Cobalt::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(21, 101, 192, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Obsidian::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(55, 71, 79, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Gold::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -133,6 +265,45 @@
     width: 200%;
     height: 200%;
     background: radial-gradient(circle, rgba(255, 223, 0, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Silver::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(185, 197, 222, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Bronze::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(249, 147, 53, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.image-container-Platinum::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(153, 209, 229, 0.25) 0%, rgba(255, 223, 0, 0) 60%);
     transform: translate(-50%, -50%);
     z-index: -1;
     pointer-events: none;

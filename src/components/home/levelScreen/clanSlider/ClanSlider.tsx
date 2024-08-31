@@ -18,17 +18,25 @@ interface CLanSliderTypeList {
     onSendHandler: (param: string) => void;
     onOpenClanRatingHandler: () => void;
     openCreateClanBottomSheet: (onSuccess: () => void) => void;
+    openClanModel: (item: ClanItem) => void;
 }
 
 export interface ClanSliderHandle {
     requestCheckedChanged: () => void;
 }
 
+export interface ClanItem {
+    name: string;
+    description: string;
+    urlChanel: string | null;
+    rating: number;
+}
+
 const ClanSlider = forwardRef<ClanSliderHandle, CLanSliderTypeList>(({
                                                                          itemList,
                                                                          onSendHandler,
                                                                          onOpenClanRatingHandler,
-                                                                         openCreateClanBottomSheet,
+                                                                         openCreateClanBottomSheet, openClanModel
                                                                      }, ref) => {
 
     const [currentSlide, setCurrentSlide] = useState(0); // Начальный слайд по умолчанию 0
@@ -39,6 +47,7 @@ const ClanSlider = forwardRef<ClanSliderHandle, CLanSliderTypeList>(({
     const [userClan, setUserClan] = useState<ResultionGetClanById | null>(null);
     const [loading, setLoading] = useState(false);
     const hasFetchedData = useRef(false);
+    const [initialSlideSet, setInitialSlideSet] = useState(false); // Добавляем это состояние
 
     useImperativeHandle(ref, () => ({ requestCheckedChanged }));
 
@@ -82,16 +91,17 @@ const ClanSlider = forwardRef<ClanSliderHandle, CLanSliderTypeList>(({
 
     // Определяем начальный слайд на основе userClan
     useEffect(() => {
-        if (userClan && userClan.clan) {
+        if (userClan && userClan.clan && !initialSlideSet) { // Проверяем, что начальный слайд не был установлен
             const { rating } = userClan.clan;
             for (let i = 0; i < itemList.length; i++) {
                 if (rating >= itemList[i].minProgress && rating <= itemList[i].maxProgress) {
                     setCurrentSlide(i);
+                    setInitialSlideSet(true); // Отмечаем, что начальный слайд установлен
                     break;
                 }
             }
         }
-    }, [userClan, itemList]);
+    }, [userClan, itemList, initialSlideSet]); // Добавляем initialSlideSet в зависимости
 
     useEffect(() => {
         if (!hasFetchedData.current) {
@@ -138,28 +148,41 @@ const ClanSlider = forwardRef<ClanSliderHandle, CLanSliderTypeList>(({
     };
 
     const calculateProgress = () => {
+        // Получаем пользователей для текущего слайда
         const usersInCurrentSlide = users[currentSlide];
+
+        // Если нет пользователей на текущем слайде, возвращаем текущий 0 и max для текущего слайда
         if (!usersInCurrentSlide) return { current: 0, max: itemList[currentSlide].maxProgress };
 
+        // Вычисляем общий рейтинг для пользователей на текущем слайде
         let totalRating = usersInCurrentSlide.reduce((sum, user) => sum + user.rating, 0);
-        let maxProgress = 0;
 
-        for (let i = 0; i < itemList.length; i++) {
-            maxProgress = itemList[i].maxProgress;
-            if (totalRating <= maxProgress) {
-                return {
-                    current: totalRating,
-                    max: maxProgress
-                };
-            }
-            totalRating -= maxProgress;
+        // Определяем maxProgress для текущего слайда
+        const maxProgress = itemList[currentSlide].maxProgress;
+
+        // Если общий рейтинг не превышает maxProgress текущего слайда, возвращаем текущее значение и max
+        if (totalRating <= maxProgress) {
+            return {
+                current: totalRating,
+                max: maxProgress
+            };
         }
 
-        return { current: maxProgress, max: maxProgress }; // Если превышает все уровни
+        // Если общий рейтинг превышает maxProgress текущего слайда, возвращаем текущий maxProgress как максимальное значение
+        return { current: maxProgress, max: maxProgress };
     };
 
     const { current, max } = calculateProgress();
 
+    const openModelI = (name: string, rating: number, description: string, UrlChanel: string| null) => {
+        const model : ClanItem = {
+            name: name,
+            description: description,
+            rating: rating,
+            urlChanel: UrlChanel
+        }
+        openClanModel(model)
+    }
     return (
         <div className="main-container-slider">
             <div className="slider-container"
@@ -222,6 +245,27 @@ const ClanSlider = forwardRef<ClanSliderHandle, CLanSliderTypeList>(({
                         }} type={itemList[currentSlide].title}/>
                     )}
                 </div>
+
+                <div style={{marginLeft: '16px', marginRight: '16px', width: '100%'}}>
+                    {userClan?.clan != undefined ? (
+                        <div className="container-clan-up-btn">
+                            <div className="main-btn-action-to-upgrade-clan" onClick={onOpenClanRatingHandler}>
+                                <span className="main-tx-to-btn-action-to-upgrade">Upgrade your clan rating</span>
+                            </div>
+                            <div className="btn-clan-share" onClick={() => onSendHandler(userClan?.clan.clanId)}>
+                                <img src={IcInvite} alt="Invite Icon"/>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="container-clan-up-btn">
+                            <div className="main-btn-action-to-upgrade-clan"
+                                 onClick={() => openCreateClanBottomSheet(requestCheckedChanged)}>
+                                <span className="main-tx-to-btn-action-to-upgrade">Create your clan</span>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
             </div>
 
             {users[currentSlide] && users[currentSlide].map((user, index) => (
@@ -231,30 +275,11 @@ const ClanSlider = forwardRef<ClanSliderHandle, CLanSliderTypeList>(({
                         coinsReferral={`${user.rating}`}
                         position={index + 1}
                         selected={!!(userClan?.clan && user.clanName === userClan.clan.clanName)}
+                        onClick={() => openModelI(user.clanName, user.rating, user.description, user.Urlchanel)}
                     />
                 </div>
             ))}
 
-
-            <div style={{marginLeft: '16px', marginRight: '16px'}}>
-                {userClan?.clan != undefined ? (
-                    <div className="container-clan-up-btn">
-                        <div className="main-btn-action-to-upgrade-clan" onClick={onOpenClanRatingHandler}>
-                            <span className="main-tx-to-btn-action-to-upgrade">Upgrade your clan rating</span>
-                        </div>
-                        <div className="btn-clan-share" onClick={() => onSendHandler(userClan?.clan.clanId)}>
-                            <img src={IcInvite} alt="Invite Icon" />
-                        </div>
-                    </div>
-                ) : (
-                    <div className="container-clan-up-btn">
-                        <div className="main-btn-action-to-upgrade-clan"
-                             onClick={() => openCreateClanBottomSheet(requestCheckedChanged)}>
-                            <span className="main-tx-to-btn-action-to-upgrade">Create your clan</span>
-                        </div>
-                    </div>
-                )}
-            </div>
 
             {loading && <ProgressBar/>}
         </div>

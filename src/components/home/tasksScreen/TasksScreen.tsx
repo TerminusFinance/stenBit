@@ -11,7 +11,7 @@ import ItemTask, {
     ISDailyTask,
     IsInternalChallengeTask,
     IsTransferToneTask,
-    IsCheckStarsSendersTask,
+    IsCheckStarsSendersTask, IsDaysChallengeTask,
 } from "./itemTask/ItemTask";
 import {useData} from "../../DataContext.tsx";
 import {
@@ -30,7 +30,7 @@ import {useToast} from "../../viewComponents/toast/ToastContext.tsx";
 import IcCoins from "../../../assets/ic_dollar.svg";
 import {handleCopy, OpenUrl, useTelegramBackButton} from "../../viewComponents/Utils.tsx";
 import {useTonConnectUI, useTonWallet} from "@tonconnect/ui-react";
-import {Address, toNano} from "ton-core";
+import {Address, beginCell, toNano} from "ton-core";
 
 const TasksScreen: React.FC = () => {
     const {dataApp, setDataApp} = useData();
@@ -53,6 +53,20 @@ const TasksScreen: React.FC = () => {
     const navigate = useNavigate();
     const [tonConnectUI] = useTonConnectUI();
     const wallet = useTonWallet();
+
+
+    const [userLanguage, setUserLanguage] = useState<string>('');
+    useEffect(() => {
+        // Получаем основной язык пользователя
+        const language = navigator.language || navigator.languages[0];
+
+        const primaryLanguage = language.split('-')[0];
+
+        // Устанавливаем язык в состояние компонента
+        setUserLanguage(primaryLanguage);
+        console.log("userLanguage - ",primaryLanguage, userLanguage)
+    }, []);
+
     const openBottomSheet = (task: UserTask) => {
         if (!task.completed) {
             setSelectedTask(task);
@@ -151,25 +165,32 @@ const TasksScreen: React.FC = () => {
         OpenUrl(telegramShareUrl)
     };
 
-    const SendTransactions =async () => {
-        if(selectedTask != null) {
-            if(IsTransferToneTask(selectedTask.taskType)) {
+
+    const SendTransactions = async () => {
+        if (selectedTask != null) {
+            if (IsTransferToneTask(selectedTask.taskType) || IsDaysChallengeTask(selectedTask.taskType)) {
                 const amount = selectedTask.taskType.price
                 const address = selectedTask.taskType.addressToTransfer
+                const body = beginCell()
+                    .storeUint(0, 32) // write 32 zero bits to indicate that a text comment will follow
+                    .storeStringTail(dataApp.userId) // write our text comment
+                    .endCell()
                 const transaction = {
                     validUntil: Date.now() + 1000000,
                     messages: [
                         {
                             address: address,
                             amount: toNano(amount).toString(),
+                            payload: body.toBoc().toString("base64") // payload with comment in body
                         },
                     ]
                 }
                 try {
                     const addressWallet = wallet?.account?.address ? Address.parse(wallet?.account?.address as string) : undefined;
-                    if(addressWallet == undefined) {
+                    if (addressWallet == undefined) {
                         tonConnectUI.modal.open()
                     } else {
+
                         await tonConnectUI.sendTransaction(transaction)
                     }
                 } catch (e) {
@@ -192,7 +213,7 @@ const TasksScreen: React.FC = () => {
                 <div className="list-task-container">
 
                     <TaskSelector
-                        tabs={['All Tasks', 'Daily Tasks', 'Challenge', "Stock", "Social"]}
+                        tabs={['All Tasks', 'Daily Tasks', 'Challenge', "Stock", "Social", "Apps"]}
                         onTabSelect={handleTabSelect}
                     />
 
@@ -202,93 +223,188 @@ const TasksScreen: React.FC = () => {
                                 <div>
 
                                     <p className="tx-h1-container-tasks-item-category">Daily Tasks</p>
-                                    {dataApp.tasks.map((task, index) => (
-                                        <div>
-                                            {task.type === "DailyTask" && (
-                                                <div>
-                                                    <ItemTask
-                                                        key={index}
-                                                        id={task.taskId}
-                                                        text={task.text}
-                                                        coins={task.coins}
-                                                        completed={task.completed}
-                                                        checkIcon={task.checkIcon}
-                                                        taskType={task.taskType}
-                                                        onClick={() => openBottomSheet(task)}
-                                                        isLoading={false}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
+                                    {dataApp.tasks.map((task, index) => {
 
-                                    ))}
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "DailyTask" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+
 
                                     <p className="tx-h1-container-tasks-item-category">Challenge</p>
-                                    {dataApp.tasks.map((task, index) => (
-                                        <div>
-                                            {task.type === "challenge" && (
-                                                <div>
-                                                    <ItemTask
-                                                        key={index}
-                                                        id={task.taskId}
-                                                        text={task.text}
-                                                        coins={task.coins}
-                                                        completed={task.completed}
-                                                        checkIcon={task.checkIcon}
-                                                        taskType={task.taskType}
-                                                        onClick={() => openBottomSheet(task)}
-                                                        isLoading={task.etaps === 1 || task.etaps === 3}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
+                                    {dataApp.tasks.map((task, index) => {
 
-                                    ))}
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "challenge" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
 
 
                                     <p className="tx-h1-container-tasks-item-category">Stock</p>
-                                    {dataApp.tasks.map((task, index) => (
-                                        <div>
-                                            {task.type === "Stock" && (
-                                                <div>
-                                                    <ItemTask
-                                                        key={index}
-                                                        id={task.taskId}
-                                                        text={task.text}
-                                                        coins={task.coins}
-                                                        completed={task.completed}
-                                                        checkIcon={task.checkIcon}
-                                                        taskType={task.taskType}
-                                                        onClick={() => openBottomSheet(task)}
-                                                        isLoading={task.etaps === 1 || task.etaps === 3}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
+                                    {dataApp.tasks.map((task, index) => {
 
-                                    ))}
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "Stock" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
 
                                     <p className="tx-h1-container-tasks-item-category">Social</p>
-                                    {dataApp.tasks.map((task, index) => (
-                                        <div>
-                                            {task.type === "Social" && (
-                                                <div>
-                                                    <ItemTask
-                                                        key={index}
-                                                        id={task.taskId}
-                                                        text={task.text}
-                                                        coins={task.coins}
-                                                        completed={task.completed}
-                                                        checkIcon={task.checkIcon}
-                                                        taskType={task.taskType}
-                                                        onClick={() => openBottomSheet(task)}
-                                                        isLoading={task.etaps === 1 || task.etaps === 3}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
+                                    {dataApp.tasks.map((task, index) => {
 
-                                    ))}
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "Social" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+
+
+
+                                    <p className="tx-h1-container-tasks-item-category">Apps</p>
+                                    {dataApp.tasks.map((task, index) => {
+
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "Apps" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+
 
                                 </div>
                             )}
@@ -296,104 +412,196 @@ const TasksScreen: React.FC = () => {
                             {tabSelected === "Daily Tasks" && (
                                 <div>
                                     <p className="tx-h1-container-tasks-item-category">Daily Tasks</p>
-                                    {dataApp.tasks.map((task, index) => (
-                                        <div>
-                                            {task.type === "DailyTask" && (
-                                                <div>
-                                                    <ItemTask
-                                                        key={index}
-                                                        id={task.taskId}
-                                                        text={task.text}
-                                                        coins={task.coins}
-                                                        completed={task.completed}
-                                                        checkIcon={task.checkIcon}
-                                                        taskType={task.taskType}
-                                                        onClick={() => openBottomSheet(task)}
-                                                        isLoading={false}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
+                                    {dataApp.tasks.map((task, index) => {
 
-                                    ))}
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "DailyTask" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             )}
 
                             {tabSelected === "Challenge" && (
                                 <div>
                                     <p className="tx-h1-container-tasks-item-category">Challenge</p>
-                                    {dataApp.tasks.map((task, index) => (
-                                        <div>
-                                            {task.type === "challenge" && (
-                                                <div>
-                                                    <ItemTask
-                                                        key={index}
-                                                        id={task.taskId}
-                                                        text={task.text}
-                                                        coins={task.coins}
-                                                        completed={task.completed}
-                                                        checkIcon={task.checkIcon}
-                                                        taskType={task.taskType}
-                                                        onClick={() => openBottomSheet(task)}
-                                                        isLoading={false}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
+                                    {dataApp.tasks.map((task, index) => {
 
-                                    ))}
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "challenge" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             )}
 
                             {tabSelected === "Stock" && (
                                 <div>
                                     <p className="tx-h1-container-tasks-item-category">Stock</p>
-                                    {dataApp.tasks.map((task, index) => (
-                                        <div>
-                                            {task.type === "Stock" && (
-                                                <div>
-                                                    <ItemTask
-                                                        key={index}
-                                                        id={task.taskId}
-                                                        text={task.text}
-                                                        coins={task.coins}
-                                                        completed={task.completed}
-                                                        checkIcon={task.checkIcon}
-                                                        taskType={task.taskType}
-                                                        onClick={() => openBottomSheet(task)}
-                                                        isLoading={task.etaps === 1 || task.etaps === 3}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
+                                    {dataApp.tasks.map((task, index) => {
 
-                                    ))}
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "Stock" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             )}
 
                             {tabSelected === "Social" && (
                                 <div>
                                     <p className="tx-h1-container-tasks-item-category">Social</p>
-                                    {dataApp.tasks.map((task, index) => (
-                                        <div>
-                                            {task.type === "Social" && (
-                                                <div>
-                                                    <ItemTask
-                                                        key={index}
-                                                        id={task.taskId}
-                                                        text={task.text}
-                                                        coins={task.coins}
-                                                        completed={task.completed}
-                                                        checkIcon={task.checkIcon}
-                                                        taskType={task.taskType}
-                                                        onClick={() => openBottomSheet(task)}
-                                                        isLoading={task.etaps === 1 || task.etaps === 3}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
+                                    {dataApp.tasks.map((task, index) => {
 
-                                    ))}
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "Social" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+
+
+                            {tabSelected === "Apps" && (
+                                <div>
+                                    <p className="tx-h1-container-tasks-item-category">Social</p>
+                                    {dataApp.tasks.map((task, index) => {
+
+                                        if (task.completed) {
+                                            return null;
+                                        }
+
+                                        if(typeof task.sortLocal == "string") {
+                                            if(task.sortLocal != "" || userLanguage != "") {
+                                                if(task.sortLocal != userLanguage) {
+                                                    return null;
+                                                }
+                                            }
+                                        }
+
+                                        return (
+                                            <div key={index}>
+                                                {task.type === "Apps" && (
+                                                    <div>
+                                                        <ItemTask
+                                                            id={task.taskId}
+                                                            text={task.text}
+                                                            coins={task.coins}
+                                                            completed={task.completed}
+                                                            checkIcon={task.checkIcon}
+                                                            taskType={task.taskType}
+                                                            onClick={() => openBottomSheet(task)}
+                                                            isLoading={task.etaps === 1 || task.etaps === 3}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             )}
 
@@ -439,7 +647,7 @@ const TasksScreen: React.FC = () => {
                                             OpenUrl(`${(selectedTask.taskType as OpenUrlTask).url}`)
                                             setVisitUrl(true)
                                         }
-                                    }/>
+                                        }/>
                                     <div style={{width: '16px', height: '16px'}}/>
                                     <MainActionBtn
                                         txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : 'Check'}
@@ -534,7 +742,7 @@ const TasksScreen: React.FC = () => {
                                                      onClick={() => {
                                                          OpenUrl(`https://getgems.io/collection/${(selectedTask.taskType as CheckNftTask).checkCollectionsAddress}`)
                                                          setVisitUrl(true)
-                                    }}/>
+                                                     }}/>
                                     <div style={{width: '16px', height: '16px'}}/>
 
                                     <MainActionBtn
@@ -640,6 +848,33 @@ const TasksScreen: React.FC = () => {
                                     </div>
                                     <div style={{width: '24px', height: '24px'}}/>
 
+                                    <MainActionBtn
+                                        txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : selectedTask.actionBtnTx ? selectedTask.actionBtnTx : 'Check'}
+                                        onClick={checkTask}/>
+                                </div>
+                            )}
+
+
+                            {IsDaysChallengeTask(selectedTask.taskType) && (
+                                <div className="bottom-sheet-content-task">
+                                    <p className="description-task">{selectedTask.txDescription}</p>
+                                    <div className="reward-container-task">
+                                        <img src={IcCoins} className="ic-reward-container-coins"/>
+                                        <p className="tx-reward-container-coins">+ {selectedTask.coins}</p>
+                                    </div>
+                                    {selectedTask.storedValues != null &&
+                                        (
+                                            <div className="text-content">Executed
+                                                transactions: {selectedTask.storedValues?.dayCompleted ? selectedTask.storedValues?.dayCompleted: 0 }/{selectedTask.taskType.days}</div>
+                                        )}
+
+                                    <div style={{width: '24px', height: '24px'}}/>
+                                    <SecondActionBtn txInBtn={"Send"}
+                                                     onClick={() => {
+                                                         SendTransactions()
+                                                         setVisitUrl(true)
+                                                     }}/>
+                                    <div style={{width: '16px', height: '16px'}}/>
                                     <MainActionBtn
                                         txInBtn={taskStates[selectedTask.taskId]?.isLoading ? 'Checking...' : selectedTask.actionBtnTx ? selectedTask.actionBtnTx : 'Check'}
                                         onClick={checkTask}/>
